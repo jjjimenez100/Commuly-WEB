@@ -25,7 +25,7 @@
       "pre-commit": "lint-staged",
       "commit-msg": "sh scripts/check-commit-msg.sh"
     }
-  },
+  }, 
   "lint-staged": {
     "*.js": [
       "yarn lint",
