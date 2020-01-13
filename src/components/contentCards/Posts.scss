@@ -1,0 +1,39 @@
+.Posts-body {
+  background-color: rgb(247, 248, 251);
+  border-color: rgb(228, 232, 246);
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 3px;
+  width: 600px;
+  height: 165px;
+  color: rgb(46, 50, 62);
+  text-align: left;
+  padding-left: 15px;
+
+  .Text-body {
+    .Header {
+      padding-top: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .Body {
+      padding-top: 10px;
+      font-size: 15px;
+      font-weight: 100;
+      margin-bottom: 20px;
+    }
+  }
+  .React-body {
+    img {
+      height: 100%;
+      margin-right: 10px;
+    }
+    img:hover {
+      transform: scale(1.2);
+    }
+    .Reacts {
+      height: 40px;
+    }
+  }
+}
