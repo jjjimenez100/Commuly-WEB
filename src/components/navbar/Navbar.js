@@ -6,14 +6,17 @@ import TempAvatar from 'assets/images/avatar.jpg';
 
 class Navbar extends Component {
   render() {
+    const { handleSidebarOpen } = this.props;
     return (
       <nav className="navigation">
-        <img src={MenuIcon} alt="menu-icon" />
+        <button type="button" className="navigation-button" onClick={handleSidebarOpen}>
+          <img src={MenuIcon} alt="menu-icon" />
+        </button>
         <div className="navigation-right">
-          <button type="button" className="navigation-right-button notification">
+          <button type="button" className="navigation-button notification">
             <img src={NotifIcon} alt="notif" className="notification-icon" />
           </button>
-          <button type="button" className="navigation-right-button avatar">
+          <button type="button" className="navigation-button avatar">
             <img src={TempAvatar} alt="avatar" className="avatar-icon" />
             <img src={ArrowDownIcon} alt="arrow-down" className="avatar-arrow-down" />
           </button>

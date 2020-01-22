@@ -1,0 +1,98 @@
+$sidebar-width-open: 300px;
+$sidebar-width-closed: 100px;
+$sidebar-color: #2E323E;
+
+.sidebar {
+  height: 100%;
+  background-color: $sidebar-color;
+  padding: $spacing-small 0;
+  
+  &-open {
+    width: $sidebar-width-open;
+  }
+  
+  &-close {
+    width: $sidebar-width-closed;
+  }
+
+  &-avatar {
+    padding: 0;
+    border: none;
+    outline: none;
+    margin: 0 $spacing-base;
+    padding: $spacing-tiny;
+    background-color: $sidebar-color;
+
+    .avatar-icon {
+      width: 100%;
+      height: 100%;
+      
+    }
+    
+    .avatar-open {
+      border-radius: 12px;        
+    }
+
+    .avatar-close {
+      border-radius: 50%;
+    }
+  }
+
+  &-button {
+    padding: $spacing-tiny 0;
+    border: none;
+    outline: none;
+    background-color: $sidebar-color;
+    width: 100%;
+    display: flex;
+    margin-top: $spacing-small;
+    align-items: center;
+
+    &-close {
+      justify-content: center;
+    }
+
+    &-open {
+      justify-content: flex-start;
+      padding: $spacing-tiny 0 $spacing-tiny $spacing-base;
+    }
+
+    &-text {
+      margin-left: $spacing-small;
+      color: $white-color;
+    }
+    
+    &:hover {
+      background-color: darken($sidebar-color, 5);
+    }
+  }
+
+  &-info {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: $spacing-base 0;
+
+    &-username {
+      font-weight: bold;
+    }
+
+    &-statistics {
+      display: flex;
+      padding: $spacing-small $spacing-large;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+
+      .statistic {
+        text-align: center;
+      }
+    }
+
+    &-text {
+      text-transform: uppercase;
+    }
+  }
+}

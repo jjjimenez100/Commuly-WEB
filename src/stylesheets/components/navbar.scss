@@ -8,18 +8,20 @@ $navbar-height: 72px;
   height: $navbar-height;
   box-shadow: 0 1px 3px rgba($neutral-d-color, 0.2);
   padding: $spacing-small;
-
+  width: 100%;
+  
+  &-button {
+    height: calc(#{$navbar-height} - (#{$spacing-small} * 2));
+    outline: none;
+    border: none;
+    padding: 0;
+    background-color: $white-color;
+    border-radius: 50%;
+  }
+  
   &-right {
     display: flex;
 
-    &-button {
-      height: calc(#{$navbar-height} - (#{$spacing-small} * 2));
-      outline: none;
-      border: none;
-      padding: 0;
-      background-color: $white-color;
-      border-radius: 50%;
-    }
 
     .notification {
       padding: $spacing-tiny;
