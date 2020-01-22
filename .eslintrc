@@ -1,31 +1,40 @@
 {
-    "extends": [
-      "react-app",
-      "airbnb",
-      "plugin:jsx-a11y/recommended",
-      "prettier",
-      "prettier/react"
+  "extends": [
+    "react-app",
+    "airbnb",
+    "plugin:jsx-a11y/recommended",
+    "prettier",
+    "prettier/react",
+  ],
+  "plugins": ["jsx-a11y", "prettier"],
+  "rules": {
+    "react/prefer-stateless-function": 0,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/no-cycle": 0,
+    "no-console": 1,
+    "no-nested-ternary": 0,
+    "no-redeclare": 0,
+    "no-shadow": 0,
+    "no-param-reassign": 0,
+    "prettier/prettier": [
+      "warn",
+      {
+        "printWidth": 100,
+        "singleQuote": true,
+        "trailingComma": "es5"
+      }
     ],
-    "plugins": [
-      "jsx-a11y",
-      "prettier"
-    ],
-    "rules": {
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-      "import/no-cycle": 0,
-      "no-console": 1,
-      "no-nested-ternary": 0,
-      "no-redeclare": 0,
-      "no-shadow": 0,  
-      "prettier/prettier": [
-        "warn",
-        {
-          "printWidth": 100,
-          "singleQuote": true,
-          "trailingComma": "es5"
-        }  
-      ],
-      "react/destructuring-assignment": 0,
-      "react/prop-types": 0  
+    "react/destructuring-assignment": 0,
+    "react/prop-types": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": [
+          "node_modules",
+          "src/"
+        ]
+      }
     }
+  }
 }

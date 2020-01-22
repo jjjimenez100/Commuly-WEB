@@ -1,0 +1,37 @@
+// font constants
+$font-stack-fallback: Helvetica, Arial, sans-serif;
+$font-stack-heading: "Lato", sans-serif;
+$font-stack-body: "Lato", sans-serif;
+$font-body-size: 16px;
+
+$font-thin: 100;
+$font-xlight: 200;
+$font-light: 300;
+$font-normal: normal;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
+$font-xbold: 800;
+$font-black: 900;
+
+// spacing constants
+$spacing-tiny: 8px;
+$spacing-small: 16px;
+$spacing-base: 24px;
+$spacing-medium: 32px;
+$spacing-large: 48px;
+$spacing-xlarge: 56px;
+$spacing-xxlarge: 64px;
+ 
+// color constants
+$neutral-d-color: #191919;
+$neutral-m-color: #8F8F8F;
+$neutral-l-color: #EBEBEB;
+$neutral-xl-color: #F3F3F3;
+$neutral-xxl-color: #FAFAFA;
+
+$white-color: #FFF;
+$black-color: #000;
+
+$text-color: $neutral-d-color;
+$link-color: red;

@@ -1,0 +1,9 @@
+// import scss files here
+@import './../assets/fonts/lato.scss';
+
+// base files first
+@import 'constants.scss';
+@import 'base.scss';
+
+// component styles
+@import './components/navbar.scss'
