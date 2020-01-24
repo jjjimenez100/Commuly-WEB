@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Typography } from 'components';
+import { Button, Typography, Card, HorizontalLine as Line } from 'components';
+
+// For reference, here's some examples of what reusable components look like
 
 const StyleGuide = () => (
   <div className="styleguide">
@@ -11,6 +13,9 @@ const StyleGuide = () => (
     <Typography variant="h1">Hello world!</Typography>
     <Typography variant="h2">Hello world!</Typography>
     <Typography variant="h3">Hello world!</Typography>
+    <Typography variant="subtitle">Hello world!</Typography>
+    <Card>Hello world</Card>
+    <Line />
   </div>
 );
 

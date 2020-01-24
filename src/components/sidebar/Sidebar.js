@@ -1,3 +1,9 @@
+/*
+TODO:
+1. Change way of importing icons
+2. Change button and use reusable component instead
+*/
+
 import React, { Component } from 'react';
 import HomeIcon from 'assets/icons/home.svg';
 import CalendarIcon from 'assets/icons/calendar.svg';

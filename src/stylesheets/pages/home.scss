@@ -1,0 +1,13 @@
+.home {
+  padding: $spacing-medium;
+  display: flex;
+  flex-direction: column;
+
+  &-events {
+    margin-top: $spacing-base;
+    &-title {
+      flex: 1;
+      margin-bottom: $spacing-tiny;
+    }
+  }
+}

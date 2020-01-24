@@ -1,4 +1,4 @@
-import { Dashboard, StyleGuide } from 'pages/';
+import { Home, StyleGuide } from 'pages/';
 
 export const routes = [
   {
@@ -9,6 +9,6 @@ export const routes = [
   {
     type: 'route',
     path: '/',
-    component: Dashboard,
+    component: Home,
   },
 ];

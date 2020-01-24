@@ -1,3 +1,8 @@
+/*
+TODO:
+1. Change way of importing icons
+*/
+
 import React, { Component } from 'react';
 import MenuIcon from 'assets/icons/menu.svg';
 import NotifIcon from 'assets/icons/notification.svg';
