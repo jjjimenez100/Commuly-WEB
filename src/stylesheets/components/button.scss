@@ -1,0 +1,25 @@
+.button {
+  @include font-size(16px);
+  border: none;
+  outline: none;
+  padding: $spacing-small;
+  border-radius: 8px;
+  background-color: $primary-color;
+  color: $white-color;
+  font-weight: $font-bold;
+  width: max-content;
+
+  &-small {
+    padding: $spacing-tiny $spacing-small;
+    border-radius: 4px;
+  }
+
+  &-medium {
+    padding: $spacing-small;
+  }
+
+  &-large {
+    padding: $spacing-small $spacing-xxlarge;
+    border-radius: 0px; 
+  }
+}

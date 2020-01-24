@@ -22,6 +22,13 @@ $spacing-medium: 32px;
 $spacing-large: 48px;
 $spacing-xlarge: 56px;
 $spacing-xxlarge: 64px;
+
+// Breakpoint Sizes
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop-small: 960px;
+$breakpoint-desktop-large: 1152px;
+$breakpoint-desktop-xlarge: 1600px;
  
 // color constants
 $neutral-d-color: #191919;
@@ -35,3 +42,5 @@ $black-color: #000;
 
 $text-color: $neutral-d-color;
 $link-color: red;
+
+$primary-color: #4C52BC;

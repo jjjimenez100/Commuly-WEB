@@ -3,11 +3,16 @@
 
 // base files first
 @import 'constants.scss';
+@import 'mixins.scss';
 @import 'base.scss';
 
 // component styles
 @import './components/navbar.scss';
 @import './components/sidebar.scss';
 
+// button styles
+@import './components/button.scss';
+
 // page styles
 @import 'pages/app.scss';
+@import 'pages/styleguide.scss';

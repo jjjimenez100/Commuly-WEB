@@ -1,4 +1,7 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { routes } from './routes';
 import { Navbar, Sidebar } from '../components';
 
 class App extends Component {
@@ -18,6 +21,15 @@ class App extends Component {
         />
         <div className="app-container">
           <Navbar handleSidebarOpen={this.handleSidebarOpen} />
+          <main className="app-main">
+            <Router>
+              <Switch>
+                {routes.map(route => (
+                  <Route key={route.path} {...route} />
+                ))}
+              </Switch>
+            </Router>
+          </main>
         </div>
       </div>
     );
