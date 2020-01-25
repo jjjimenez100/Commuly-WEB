@@ -7,13 +7,15 @@ Button variants:
 4. TODO: Inline (No style)
 5. TODO: Ghost
 6. TODO: Primary and Secondary Variants
+7. TODO: Disabled
+8. Add box-shadow to these variants
 */
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Button = ({ onClick, children, size, className, type }) => {
-  const cn = `button button-${size} ${className}`;
+const Button = ({ onClick, children, variant, className, type }) => {
+  const cn = `button button-${variant} ${className}`;
 
   return (
     <button type={type} onClick={onClick} className={cn.trim()}>
@@ -25,11 +27,11 @@ const Button = ({ onClick, children, size, className, type }) => {
 Button.defaultProps = {
   className: '',
   type: 'submit',
-  size: 'medium',
+  variant: 'medium',
 };
 
 Button.propTypes = {
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  variant: PropTypes.oneOf(['small', 'medium', 'large', 'inline']),
   className: PropTypes.string,
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
 };

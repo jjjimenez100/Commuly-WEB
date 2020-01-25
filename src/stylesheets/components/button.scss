@@ -22,4 +22,20 @@
     padding: $spacing-small $spacing-xxlarge;
     border-radius: 0px; 
   }
+
+  &-inline {
+    @include font-size(14px);
+    font-weight: $font-bold;
+    color: $primary-color;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0;
+
+    &:hover {
+      background-color: transparent;
+      border: none;
+      color: rgba($primary-color, 0.65);
+    }
+  }
 }

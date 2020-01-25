@@ -18,10 +18,10 @@ const Typography = ({ as, variant, inline, children, className }) => {
 
   if (variant) {
     cn += `typography-${variant}`;
-  }
 
-  if (!variant.startsWith('h')) {
-    Text = as || 'div';
+    if (!variant.startsWith('h')) {
+      Text = as || 'div';
+    }
   }
 
   if (inline) {
@@ -32,7 +32,6 @@ const Typography = ({ as, variant, inline, children, className }) => {
 };
 
 Typography.defaultProps = {
-  variant: 'p',
   className: '',
 };
 

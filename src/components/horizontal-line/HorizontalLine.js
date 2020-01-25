@@ -4,10 +4,10 @@ TODO: Small variant for Horizontal Line
 
 import React from 'react';
 
-const HorizontalLine = () => (
-  <div className="line">
-    <div className="line-fixed" />
-    <div className="line-extend" />
+const HorizontalLine = ({ className = '', small = false }) => (
+  <div className={`line ${className}`.trim()}>
+    <div className={`${small ? 'line-small' : 'line-fixed'}`} />
+    {!small && <div className="line-extend" />}
   </div>
 );
 
