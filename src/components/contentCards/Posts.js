@@ -15,10 +15,10 @@ function Posts() {
         </div>
         <div className="React-body">
           <div className="Reacts">
-            <img alt="img" src={SmileReact} />
-            <img alt="img" src={HahaReact} />
-            <img alt="img" src={MehReact} />
-            <img alt="img" src={SadReact} />
+            <img alt="smile-react" src={SmileReact} />
+            <img alt="haha-react" src={HahaReact} />
+            <img alt="blank-react" src={MehReact} />
+            <img alt="sad-react" src={SadReact} />
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ const Button = ({
   inline,
   disabled,
   icon,
-  className: cn,
+  className: styleClass,
   type,
 }) => {
   const className = classnames(
@@ -35,12 +35,12 @@ const Button = ({
       'button-disabled': disabled,
       [`button-${variant}`]: variant,
     },
-    cn
+    styleClass
   );
 
   return (
     <button type={type} onClick={onClick} className={className.trim()}>
-      {icon && <img src={icon} alt="icon" className="button-icon" />}
+      {icon && <img src={icon} alt="icon-for-button" className="button-icon" />}
       {children}
     </button>
   );

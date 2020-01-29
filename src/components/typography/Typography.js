@@ -13,13 +13,13 @@ import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const Typography = ({ as, variant, inline, children, className: cn }) => {
+const Typography = ({ as, variant, inline, children, className: styleClass }) => {
   let Text = as || variant || 'p';
   if (variant && !variant.startsWith('h')) {
     Text = as || 'div';
   }
 
-  const className = classnames('typography', cn, {
+  const className = classnames('typography', styleClass, {
     [`typography-${variant}`]: variant,
     'typography-inline': inline,
   });
