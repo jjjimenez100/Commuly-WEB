@@ -1,0 +1,202 @@
+.home {
+  display: flex;
+  flex: 1 0 auto;
+
+  &-container {
+    padding: $spacing-medium;
+  }
+
+  &-sidebar {
+    flex: 0 0 310px;
+    background-color: $white-color;
+    border-left: 1px solid $border-color;
+    padding: $spacing-base;
+  }
+
+  &-announcements {
+    margin-top: $spacing-medium;
+
+    &-title {
+      flex: 1;
+      margin-bottom: $spacing-tiny;
+    }
+
+    &-cards {
+      margin-top: $spacing-base;
+
+      .card {
+        margin-bottom: $spacing-tiny;
+
+        &:hover {
+          background-color: $bg-color;
+        }
+
+        &-line {
+          margin-bottom: $spacing-small;
+        }
+
+        &-title {
+          margin-bottom: $spacing-tiny;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          & > h5 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 250px;
+          }
+        }
+
+        &-body {
+          margin: $spacing-small 0;
+          width: 100%;
+        }
+
+        &-reacts {
+          display: flex;
+          
+        }
+
+        &-react {
+          margin-right: calc(#{$spacing-tiny} / 2);
+        }
+      }
+    }
+  }
+
+  &-events {
+    margin-top: $spacing-base;
+    display: flex;
+    flex-direction: column;
+
+    &-title {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-tiny;
+
+      &-buttons {
+        display: flex;
+      }
+    }
+
+    &-card {
+      margin-right: $spacing-small;
+      width: 250px;
+    }
+
+    &-cards {
+      margin-top: $spacing-base;
+      display: flex;
+      width: calc((250px * 4) + (#{$spacing-small} * 4));
+      overflow: auto;
+
+      .card {
+        &-date {
+          margin-bottom: $spacing-tiny;
+        }
+
+        &-line {
+          margin-bottom: $spacing-small;
+        }
+
+        &-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: calc(250px - #{$spacing-small * 2});
+        }
+      }
+    }
+  }
+
+  &-leaderboard {
+    &-title {
+      margin-bottom: $spacing-tiny;
+    }
+
+    &-board {
+      margin-top: $spacing-small;
+    }
+
+    &-person {
+      margin-top: $spacing-tiny;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .person-image-wrapper {
+        width: 32px;
+        height: 32px;
+        margin-right: $spacing-tiny;
+        
+        img {
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+
+      .person-text {
+        display: flex;
+        justify-content: space-between;
+        flex: 1;
+      }
+      
+      .person-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: calc(310px - ((#{$spacing-base} * 2) + 32px + #{$spacing-tiny} + 70px))
+      }
+    }
+  }
+
+  &-calendar {
+    margin-top: $spacing-base;
+    
+    &-title {
+      margin-bottom: $spacing-tiny;
+    }
+
+    .react-calendar {
+      border: none;
+      width: calc(310px - (#{$spacing-base} * 2));
+      font-family: $font-stack-heading;
+      margin-top: $spacing-small;
+
+      .react-calendar__tile {
+        padding: $spacing-tiny;
+        @include font-size(14px);
+
+        &:hover {
+          border-radius: 50%;
+        }
+      }
+
+      .react-calendar__tile--active {
+        border-radius: 50%;
+      }
+    }
+
+  }
+
+  &-todo {
+    margin-top: $spacing-base;
+    
+    &-title {
+      margin-bottom: $spacing-tiny;
+    }
+
+    &-list {
+      margin-top: $spacing-small;
+
+    }
+
+    &-radio {
+      margin-bottom: $spacing-base;
+    }
+  }
+}

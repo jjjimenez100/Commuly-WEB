@@ -1,0 +1,75 @@
+.button {
+  @include font-size(16px);
+  border: none;
+  outline: none;
+  padding: $spacing-small;
+  border-radius: 8px;
+  font-weight: $font-bold;
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &-primary {
+    background-color: $primary-color;
+    color: $white-color;
+    
+    &:hover {
+      background-color: darken($primary-color, 7);
+    }
+  }
+
+  &-ghost {
+    background-color: $white-color;
+    color: $primary-color;
+
+    &:hover {
+      background-color: lighten($primary-color, 40);
+    }
+  }
+
+  &-small {
+    @include font-size(14px);
+    padding: $spacing-tiny $spacing-small;
+    border-radius: 4px;
+  }
+
+  &-medium {
+    padding: $spacing-small;
+  }
+
+  &-large {
+    padding: $spacing-small $spacing-xxlarge;
+    border-radius: 0px; 
+  }
+
+  &-disabled {
+    background-color: $neutral-m-color;
+    color: $white-color;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: lighten($neutral-m-color, 10)
+    }
+  }
+
+  &-inline {
+    @include font-size(14px);
+    font-weight: $font-bold;
+    color: $primary-color;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0;
+
+    &:hover {
+      background-color: transparent;
+      border: none;
+      color: rgba($primary-color, 0.65);
+    }
+  }
+
+  &-icon {
+    margin-right: $spacing-tiny;
+  }
+}

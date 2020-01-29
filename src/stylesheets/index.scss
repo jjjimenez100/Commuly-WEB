@@ -1,0 +1,23 @@
+// import scss files here
+@import './../assets/fonts/lato.scss';
+
+// base files first
+@import 'constants.scss';
+@import 'mixins.scss';
+@import 'base.scss';
+
+// reusable component styles
+@import './components/button.scss';
+@import './components/typography.scss';
+@import './components/card.scss';
+@import './components/line.scss';
+@import './components/radio-button.scss';
+
+// layout styles
+@import './components/navbar.scss';
+@import './components/sidebar.scss';
+
+// page styles
+@import 'pages/app.scss';
+@import 'pages/styleguide.scss';
+@import 'pages/home.scss';
