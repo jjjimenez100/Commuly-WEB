@@ -4,6 +4,8 @@ TODO:
 */
 
 import React, { Component } from 'react';
+import { Button } from 'components';
+
 import MenuIcon from 'assets/icons/menu.svg';
 import NotifIcon from 'assets/icons/notification.svg';
 import ArrowDownIcon from 'assets/icons/arrow-down.svg';
@@ -14,17 +16,17 @@ class Navbar extends Component {
     const { handleSidebarOpen } = this.props;
     return (
       <nav className="navigation">
-        <button type="button" className="navigation-button" onClick={handleSidebarOpen}>
+        <Button inline type="button" className="navigation-button" onClick={handleSidebarOpen}>
           <img src={MenuIcon} alt="menu-icon" />
-        </button>
+        </Button>
         <div className="navigation-right">
-          <button type="button" className="navigation-button notification">
+          <Button inline type="button" className="navigation-button notification">
             <img src={NotifIcon} alt="notif" className="notification-icon" />
-          </button>
-          <button type="button" className="navigation-button avatar">
+          </Button>
+          <Button inline type="button" className="navigation-button avatar">
             <img src={TempAvatar} alt="avatar" className="avatar-icon" />
             <img src={ArrowDownIcon} alt="arrow-down" className="avatar-arrow-down" />
-          </button>
+          </Button>
         </div>
       </nav>
     );

@@ -1,18 +1,24 @@
 .app {
   display: flex;
-  width: 100%;
   height: 100%;
-  overflow: hidden;
+  z-index: 0;
+  flex: 1;
+  position: relative;
 
-  &-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    overflow: auto;
+  .container {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    position: relative;
   }
 
-  &-main {
-    flex: 1 0 auto;
+  .main {
     background-color: $bg-color;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    max-height: calc(100% - #{$navbar-height});
   }
 }

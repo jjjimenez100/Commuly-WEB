@@ -6,6 +6,7 @@ $sidebar-color: #2E323E;
   height: 100%;
   background-color: $sidebar-color;
   padding: $spacing-small 0;
+  z-index: 2;
   
   &-open {
     width: $sidebar-width-open;

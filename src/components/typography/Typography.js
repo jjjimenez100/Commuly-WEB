@@ -10,25 +10,21 @@ TODO:
 */
 
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const Typography = ({ as, variant, inline, children, className }) => {
+const Typography = ({ as, variant, inline, children, className: cn }) => {
   let Text = as || variant || 'p';
-  let cn = `typography ${className} `;
-
-  if (variant) {
-    cn += `typography-${variant}`;
-
-    if (!variant.startsWith('h')) {
-      Text = as || 'div';
-    }
+  if (variant && !variant.startsWith('h')) {
+    Text = as || 'div';
   }
 
-  if (inline) {
-    cn += ' typography-inline';
-  }
+  const className = classnames('typography', cn, {
+    [`typography-${variant}`]: variant,
+    'typography-inline': inline,
+  });
 
-  return <Text className={cn.trim()}>{children}</Text>;
+  return <Text className={className.trim()}>{children}</Text>;
 };
 
 Typography.defaultProps = {

@@ -19,9 +19,9 @@ class App extends Component {
           isSidebarOpen={this.state.isSidebarOpen}
           handleSidebarOpen={this.handleSidebarOpen}
         />
-        <div className="app-container">
+        <div className="container">
           <Navbar handleSidebarOpen={this.handleSidebarOpen} />
-          <main className="app-main">
+          <main className="main">
             <Router>
               <Switch>
                 {routes.map(route => (
