@@ -1,0 +1,57 @@
+$navbar-height: 72px;
+
+.navigation {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: $navbar-height;
+  box-shadow: 0 1px 3px rgba($neutral-d-color, 0.2);
+  padding: $spacing-small;
+  width: 100%;
+  
+  &-button {
+    height: calc(#{$navbar-height} - (#{$spacing-small} * 2));
+    outline: none;
+    border: none;
+    padding: 0;
+    background-color: $white-color;
+    border-radius: 50%;
+  }
+  
+  &-right {
+    display: flex;
+
+
+    .notification {
+      padding: $spacing-tiny;
+      margin-right: $spacing-small;
+      width: calc(#{$navbar-height} - (#{$spacing-small} * 2));
+
+      &-icon {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .avatar {
+      display: flex;
+      align-items: center;
+
+      &-icon {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center right;
+        margin-right: $spacing-tiny;
+      }
+
+      &-arrow-down {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+  }
+}

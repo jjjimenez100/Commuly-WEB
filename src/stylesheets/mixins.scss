@@ -1,0 +1,27 @@
+// from coursely
+
+/* Conversion from font size to rem */
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: ($size / 16px) * 1rem;
+}
+
+$screens: (
+  mobile: $breakpoint-mobile,
+  tablet: $breakpoint-tablet,
+  desktop: $breakpoint-desktop-small,
+  desktop-large: $breakpoint-desktop-large,
+  desktop-xlarge: $breakpoint-desktop-xlarge
+);
+
+@mixin breakpoint($screen) {
+  @if map-has-key($map: $screens, $key: $screen) {
+    @media (min-width: #{map-get($screens, $screen)}) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $screen) {
+      @content;
+    }
+  }
+}

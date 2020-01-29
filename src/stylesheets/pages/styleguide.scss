@@ -1,0 +1,9 @@
+.styleguide {
+  display: flex;
+  flex-direction: column;
+  margin: $spacing-base;
+
+  & > * {
+    margin-top: $spacing-tiny;
+  }
+}

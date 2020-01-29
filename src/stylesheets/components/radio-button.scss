@@ -1,0 +1,37 @@
+.radio {
+  display: flex;
+  cursor: pointer;
+  justify-content: flex-start;
+  align-items: center;
+  
+  &-circle {
+    padding: auto;
+    border: 2px solid $border-color;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-right: $spacing-small;
+    background-color: $white-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input[type='radio'] {
+    display: none;
+
+    &:checked + .radio-circle {
+      background-color: $primary-color;
+      border: 2px solid $primary-color;
+    }
+    
+    &:checked + .radio-circle::before {
+      content: url('../../assets/icons/check.svg');
+    }
+  }
+
+
+  &-text {
+    flex: 1;
+  }
+}
