@@ -1,0 +1,10 @@
+<svg id="MChoice" xmlns="http://www.w3.org/2000/svg" width="75" height="75" viewBox="0 0 75 75">
+  <rect id="Rectangle_2103" data-name="Rectangle 2103" width="75" height="75" rx="10" transform="translate(0)" fill="none"/>
+  <g id="MultipleChoice-icon" transform="translate(17 17)">
+    <rect id="Rectangle_2052" data-name="Rectangle 2052" width="42" height="42" transform="translate(0)" fill="none"/>
+    <g id="Group_3970" data-name="Group 3970" transform="translate(6 6)">
+      <path id="Path_4023" data-name="Path 4023" d="M4637.969,1631.211a14.958,14.958,0,1,0,14.959,14.958A14.975,14.975,0,0,0,4637.969,1631.211Zm0,27.916a12.958,12.958,0,1,1,12.959-12.958A12.973,12.973,0,0,1,4637.969,1659.127Z" transform="translate(-4623.011 -1631.211)" fill="#58595b"/>
+      <path id="Path_4024" data-name="Path 4024" d="M4638.9,1640.541a1,1,0,0,0-1.871,0l-3.994,10.547a1,1,0,0,0,1.87.709l1.089-2.875h3.941l1.09,2.875a1,1,0,1,0,1.87-.709Zm-2.149,6.381,1.213-3.2,1.214,3.2Z" transform="translate(-4623.011 -1631.211)" fill="#58595b"/>
+    </g>
+  </g>
+</svg>

@@ -61,6 +61,7 @@
     outline: none;
     background-color: transparent;
     padding: 0;
+    border-radius: 0px;
 
     &:hover {
       background-color: transparent;
@@ -69,7 +70,31 @@
     }
   }
 
+  &-position {
+    &-left {
+      flex-direction: row;
+    }
+
+    &-right {
+      flex-direction: row-reverse;
+    }
+  }
+
   &-icon {
-    margin-right: $spacing-tiny;
+    width: 32px;
+    height: 32px;
+    
+    &-small {
+      width: 20px;
+      height: 20px;
+    }
+    
+    &-left {
+      margin-right: $spacing-small;
+    }
+
+    &-right {
+      margin-left: $spacing-small;
+    }
   }
 }

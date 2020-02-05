@@ -1,0 +1,23 @@
+export { default as UnderstoodReact } from './understood-react.svg';
+export { default as ExcitedReact } from './excited-react.svg';
+export { default as ConfusedReact } from './confused-react.svg';
+export { default as BoredReact } from './bored-react.svg';
+export { default as PinIcon } from './pin.svg';
+export { default as CircleArrowLeftIcon } from './circle-arrow-left.svg';
+export { default as CircleArrowRightIcon } from './circle-arrow-right.svg';
+export { default as TextIcon } from './text.svg';
+export { default as ChartIcon } from './chart.svg';
+export { default as ImageIcon } from './image.svg';
+export { default as PinOutlineIcon } from './pin-outline.svg';
+export { default as EventIcon } from './event.svg';
+export { default as ChoiceIcon } from './choice.svg';
+export { default as LikertIcon } from './likert.svg';
+export { default as OrderingIcon } from './ordering.svg';
+export { default as QuestionIcon } from './question.svg';
+export { default as AddPeopleIcon } from './add-people.svg';
+export { default as SendIcon } from './send.svg';
+export { default as CloudUploadIcon } from './cloud-upload.svg';
+export { default as ArrowDownIcon } from './arrow-down.svg';
+// export { default as } from '.svg'
+
+export { default as TempAvatar } from 'assets/images/avatar.jpg';

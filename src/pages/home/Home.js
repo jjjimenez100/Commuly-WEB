@@ -1,22 +1,97 @@
 import React, { Component } from 'react';
-import { Typography, HorizontalLine as Line, Card, Button, RadioButton } from 'components';
+import {
+  Typography,
+  HorizontalLine as Line,
+  Card,
+  Button,
+  RadioButton,
+  Modal,
+  CreateText,
+  CreateImage,
+  DropdownContainer,
+  DropdownMenu,
+  DropdownMenuItem,
+} from 'components';
+import {
+  UnderstoodReact,
+  ExcitedReact,
+  ConfusedReact,
+  BoredReact,
+  PinIcon,
+  CircleArrowLeftIcon,
+  CircleArrowRightIcon,
+  TempAvatar,
+  TextIcon,
+  ChartIcon,
+  ImageIcon,
+  PinOutlineIcon,
+  EventIcon,
+  ChoiceIcon,
+  LikertIcon,
+  OrderingIcon,
+  QuestionIcon,
+  ArrowDownIcon,
+} from 'assets/icons';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-import UnderstoodReact from 'assets/icons/understood-react.svg';
-import ExcitedReact from 'assets/icons/excited-react.svg';
-import ConfusedReact from 'assets/icons/confused-react.svg';
-import BoredReact from 'assets/icons/bored-react.svg';
-import PinIcon from 'assets/icons/pin.svg';
-import CircleArrowLeftIcon from 'assets/icons/circle-arrow-left.svg';
-import CircleArrowRightIcon from 'assets/icons/circle-arrow-right.svg';
-import TempAvatar from 'assets/images/avatar.jpg';
 import { boardData, announcementsData, eventData } from './data';
+
+const CreateContentButtons = [
+  {
+    name: 'Text',
+    icon: TextIcon,
+  },
+  {
+    name: 'Chart',
+    icon: ChartIcon,
+  },
+  {
+    name: 'Image',
+    icon: ImageIcon,
+  },
+  {
+    name: 'To Do',
+    icon: PinOutlineIcon,
+  },
+  {
+    name: 'Event',
+    icon: EventIcon,
+  },
+  {
+    name: 'Multiple Choice',
+    icon: ChoiceIcon,
+  },
+  {
+    name: 'Likert',
+    icon: LikertIcon,
+  },
+  {
+    name: 'Column Order',
+    icon: OrderingIcon,
+  },
+  {
+    name: 'Open Question',
+    icon: QuestionIcon,
+  },
+];
 
 class Home extends Component {
   state = {
     date: new Date(),
+    modalOpen: false,
+    currentActiveModalIndex: 2,
+    dropdownOpen: false,
   };
+
+  handleModalOpen = (index = 0) =>
+    this.setState(prevState => ({
+      modalOpen: !prevState.modalOpen,
+      currentActiveModalIndex: index,
+    }));
+
+  handleDropdownOpen = () =>
+    this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
   renderAnnouncements = data =>
     data.map(announcement => (
@@ -73,11 +148,53 @@ class Home extends Component {
       </Card>
     ));
 
+  renderCreateContentButtons = () => (
+    <div className="home-create-card-buttons">
+      {CreateContentButtons.map((btn, i) => (
+        <Button
+          key={btn.name.toLowerCase().replace(' ', '-')}
+          name={btn.name}
+          variant="inline"
+          className="home-create-card-button"
+          onClick={() => this.handleModalOpen(i)}
+        >
+          <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
+        </Button>
+      ))}
+    </div>
+  );
+
+  renderCreateContentModal = () => {
+    switch (this.state.currentActiveModalIndex) {
+      case 0:
+        return <CreateText onClose={this.handleModalOpen} />;
+      case 2:
+        return <CreateImage onClose={this.handleModalOpen} />;
+      default:
+        return null;
+    }
+  };
+
   render() {
     return (
       <div className="home">
         <div className="home-container">
-          <Typography variant="h1">My Ops Team</Typography>
+          <DropdownContainer className="home-dropdown">
+            <Button
+              variant="inline"
+              size="small"
+              icon={ArrowDownIcon}
+              iconPosition="right"
+              onClick={this.handleDropdownOpen}
+            >
+              <Typography variant="h1" className="home-title">
+                My Ops Team
+              </Typography>
+            </Button>
+            <DropdownMenu visible={this.state.dropdownOpen}>
+              <DropdownMenuItem text="Hello world!" />
+            </DropdownMenu>
+          </DropdownContainer>
           <div className="home-events">
             <div className="home-events-title">
               <Typography variant="h4">Scheduled Events</Typography>
@@ -98,6 +215,7 @@ class Home extends Component {
               <Typography variant="h4">Announcements</Typography>
             </div>
             <Line />
+            <Card className="home-create-card">{this.renderCreateContentButtons()}</Card>
             <div className="home-announcements-cards">
               {this.renderAnnouncements(announcementsData)}
             </div>
@@ -133,6 +251,17 @@ class Home extends Component {
             </div>
           </div>
         </div>
+        <Modal
+          isOpen={this.state.modalOpen}
+          handleClose={this.handleModalOpen}
+          title={`Create ${
+            CreateContentButtons[this.state.currentActiveModalIndex]
+              ? CreateContentButtons[this.state.currentActiveModalIndex].name
+              : ''
+          } Content`}
+        >
+          {this.renderCreateContentModal()}
+        </Modal>
       </div>
     );
   }

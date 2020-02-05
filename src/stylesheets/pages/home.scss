@@ -2,19 +2,68 @@
   display: flex;
   flex: 1 0 auto;
 
+  &-title {
+    color: $text-color;
+  }
+  
   &-container {
     padding: $spacing-medium;
   }
-
+  
   &-sidebar {
     flex: 0 0 310px;
     background-color: $white-color;
     border-left: 1px solid $border-color;
     padding: $spacing-base;
   }
+  
+  &-create-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &-buttons {
+      width: 50%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &-button {
+      border-radius: 4px;
+      width: 40px;
+      height: 40px;
+      
+      &:hover::after {
+        @include font-size(8px);
+        color: $neutral-m-color;
+        content: attr(name);
+        padding: 0 $spacing-tiny;
+      }
+
+      &:hover {
+        background-color: lighten($neutral-m-color, 35);
+        
+        img {
+          display: none;
+        }
+      }
+
+      .create-icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    
+  }
 
   &-announcements {
-    margin-top: $spacing-medium;
+    margin-bottom: $spacing-medium;
+
+    .line {
+      margin-bottom: $spacing-medium;
+    }
 
     &-title {
       flex: 1;
@@ -22,7 +71,7 @@
     }
 
     &-cards {
-      margin-top: $spacing-base;
+      margin-top: $spacing-small;
 
       .card {
         margin-bottom: $spacing-tiny;
@@ -56,11 +105,20 @@
 
         &-reacts {
           display: flex;
-          
         }
 
         &-react {
           margin-right: calc(#{$spacing-tiny} / 2);
+          
+          &:hover {
+            transform: scale(1.2);
+            transform-origin: bottom;
+            margin: 0 $spacing-tiny;
+          }
+
+          &:first-child:hover {
+            margin: 0 $spacing-tiny 0 0;
+          }
         }
       }
     }
@@ -188,6 +246,117 @@
     
     &-title {
       margin-bottom: $spacing-tiny;
+
+      &-buttons {
+        display: flex;
+      }
+    }
+
+    &-card {
+      margin-right: $spacing-small;
+      width: 250px;
+    }
+
+    &-cards {
+      margin-top: $spacing-base;
+      display: flex;
+      width: calc((250px * 4) + (#{$spacing-small} * 4));
+      overflow: auto;
+
+      .card {
+        &-date {
+          margin-bottom: $spacing-tiny;
+        }
+
+        &-line {
+          margin-bottom: $spacing-small;
+        }
+
+        &-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: calc(250px - #{$spacing-small * 2});
+        }
+      }
+    }
+  }
+
+  &-leaderboard {
+    &-title {
+      margin-bottom: $spacing-tiny;
+    }
+
+    &-board {
+      margin-top: $spacing-small;
+    }
+
+    &-person {
+      margin-top: $spacing-tiny;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .person-image-wrapper {
+        width: 32px;
+        height: 32px;
+        margin-right: $spacing-tiny;
+        
+        img {
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+
+      .person-text {
+        display: flex;
+        justify-content: space-between;
+        flex: 1;
+      }
+      
+      .person-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: calc(310px - ((#{$spacing-base} * 2) + 32px + #{$spacing-tiny} + 70px))
+      }
+    }
+  }
+
+  &-calendar {
+    margin-top: $spacing-base;
+    
+    &-title {
+      margin-bottom: $spacing-tiny;
+    }
+
+    .react-calendar {
+      border: none;
+      width: calc(310px - (#{$spacing-base} * 2));
+      font-family: $font-stack-heading;
+      margin-top: $spacing-small;
+
+      .react-calendar__tile {
+        padding: $spacing-tiny;
+        @include font-size(14px);
+
+        &:hover {
+          border-radius: 50%;
+        }
+      }
+
+      .react-calendar__tile--active {
+        border-radius: 50%;
+      }
+    }
+
+  }
+
+  &-todo {
+    margin-top: $spacing-base;
+    
+    &-title {
+      margin-bottom: $spacing-tiny;
     }
 
     &-list {
@@ -199,4 +368,5 @@
       margin-bottom: $spacing-base;
     }
   }
+
 }

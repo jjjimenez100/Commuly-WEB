@@ -1,0 +1,11 @@
+<svg id="ColOrdering" xmlns="http://www.w3.org/2000/svg" width="75" height="75" viewBox="0 0 75 75">
+  <rect id="Rectangle_2105" data-name="Rectangle 2105" width="75" height="75" rx="10" transform="translate(0)" fill="none"/>
+  <g id="Group_3974" data-name="Group 3974" transform="translate(24 22)">
+    <path id="Path_4036" data-name="Path 4036" d="M4722.342,1639.343V1631a1,1,0,0,0-1-1h-12.321a1,1,0,0,0-1,1v8.342a1,1,0,0,0,1,1h12.321A1,1,0,0,0,4722.342,1639.343Zm-2-1h-10.321V1632h10.321Z" transform="translate(-4708.021 -1630.001)" fill="#58595b"/>
+    <path id="Path_4037" data-name="Path 4037" d="M4720.236,1641.712a1,1,0,0,0-1-1h-8.109a1,1,0,0,0-1,1v8.341a1,1,0,0,0,1,1h8.109a1,1,0,0,0,1-1Zm-2,7.341h-6.109v-6.341h6.109Z" transform="translate(-4708.021 -1630.001)" fill="#58595b"/>
+    <path id="Path_4038" data-name="Path 4038" d="M4717.872,1651.539h-5.382a1,1,0,0,0-1,1v8.108a1,1,0,0,0,1,1h5.382a1,1,0,0,0,1-1v-8.108A1,1,0,0,0,4717.872,1651.539Zm-1,8.108h-3.382v-6.108h3.382Z" transform="translate(-4708.021 -1630.001)" fill="#58595b"/>
+    <path id="Path_4039" data-name="Path 4039" d="M4733.369,1651.306h-12.321a1,1,0,0,0-1,1v8.341a1,1,0,0,0,1,1h12.321a1,1,0,0,0,1-1v-8.341A1,1,0,0,0,4733.369,1651.306Zm-1,8.341h-10.321v-6.341h10.321Z" transform="translate(-4708.021 -1630.001)" fill="#58595b"/>
+    <path id="Path_4040" data-name="Path 4040" d="M4722.154,1649.937a1,1,0,0,0,1,1h8.108a1,1,0,0,0,1-1v-8.342a1,1,0,0,0-1-1h-8.108a1,1,0,0,0-1,1Zm2-7.342h6.108v6.342h-6.108Z" transform="translate(-4708.021 -1630.001)" fill="#58595b"/>
+    <path id="Path_4041" data-name="Path 4041" d="M4724.517,1640.11h5.382a1,1,0,0,0,1-1V1631a1,1,0,0,0-1-1h-5.382a1,1,0,0,0-1,1v8.109A1,1,0,0,0,4724.517,1640.11Zm1-8.109h3.382v6.109h-3.382Z" transform="translate(-4708.021 -1630.001)" fill="#58595b"/>
+  </g>
+</svg>

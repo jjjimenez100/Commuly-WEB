@@ -1,0 +1,18 @@
+.textarea {
+  width: 100%;
+
+  &-description {
+    margin-bottom: calc(#{$spacing-tiny} / 2);
+  }
+
+  &-area {
+    outline: none;
+    width: 100%;
+    border-radius: 10px;
+    overflow: auto;
+    border: 1px solid $border-color;
+    resize: none;
+    padding: $spacing-small;
+    font-family: $font-stack-body;
+  }
+}
