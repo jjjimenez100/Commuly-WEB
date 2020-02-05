@@ -1,0 +1,10 @@
+<svg id="Likert" xmlns="http://www.w3.org/2000/svg" width="75" height="75" viewBox="0 0 75 75">
+  <rect id="Rectangle_2104" data-name="Rectangle 2104" width="75" height="75" rx="10" transform="translate(0)" fill="none"/>
+  <g id="Likert-icon" transform="translate(17 17)">
+    <rect id="Rectangle_2052" data-name="Rectangle 2052" width="42" height="42" transform="translate(0)" fill="none"/>
+    <g id="Group_3971" data-name="Group 3971" transform="translate(6 6)">
+      <path id="Path_4025" data-name="Path 4025" d="M4678.114,1630.858a14.958,14.958,0,1,0,14.958,14.958A14.975,14.975,0,0,0,4678.114,1630.858Zm0,27.916a12.958,12.958,0,1,1,12.958-12.958A12.971,12.971,0,0,1,4678.114,1658.774Z" transform="translate(-4663.156 -1630.858)" fill="#58595b"/>
+      <path id="Path_4026" data-name="Path 4026" d="M4682.114,1644.816h-3v-3a1,1,0,1,0-2,0v3h-3a1,1,0,0,0,0,2h3v3a1,1,0,0,0,2,0v-3h3a1,1,0,0,0,0-2Z" transform="translate(-4663.156 -1630.858)" fill="#58595b"/>
+    </g>
+  </g>
+</svg>

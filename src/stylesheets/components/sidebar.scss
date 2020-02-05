@@ -3,10 +3,10 @@ $sidebar-width-closed: 100px;
 $sidebar-color: #2E323E;
 
 .sidebar {
-  height: 100%;
+  flex: 1 0 auto;
   background-color: $sidebar-color;
   padding: $spacing-small 0;
-  z-index: 2;
+  z-index: 1;
   
   &-open {
     width: $sidebar-width-open;
@@ -20,22 +20,23 @@ $sidebar-color: #2E323E;
     padding: 0;
     border: none;
     outline: none;
-    margin: 0 $spacing-base;
     padding: $spacing-tiny;
     background-color: $sidebar-color;
-
-    .avatar-icon {
-      width: 100%;
-      height: 100%;
-      
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     
     .avatar-open {
-      border-radius: 12px;        
+      border-radius: 12px;
+      width: calc(#{$sidebar-width-open} - (#{$spacing-small} * 2));
+      height: calc(#{$sidebar-width-open} - (#{$spacing-small} * 2));        
     }
-
+    
     .avatar-close {
       border-radius: 50%;
+      width: 32px;
+      height: 32px;
     }
   }
 
