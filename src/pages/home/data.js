@@ -59,3 +59,6 @@ export const eventData = [
     date: '10:00 AM - 11:00 AM',
   },
 ];
+
+export const teamId = '5e35bfdec83b1711f69653c5';
+export const userId = '5e244ae00c52b859c482a3c6';

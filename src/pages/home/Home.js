@@ -35,7 +35,8 @@ import {
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-import { boardData, announcementsData, eventData } from './data';
+import { boardData, eventData, teamId } from './data';
+import CardService from '../../services/cardService';
 
 const CreateContentButtons = [
   {
@@ -82,6 +83,12 @@ class Home extends Component {
     modalOpen: false,
     currentActiveModalIndex: 2,
     dropdownOpen: false,
+    announcements: [],
+  };
+
+  componentDidMount = async () => {
+    const { data } = await CardService.getCardsByTeam(teamId, 1, 5);
+    this.setState({ announcements: data });
   };
 
   handleModalOpen = (index = 0) =>
@@ -94,16 +101,16 @@ class Home extends Component {
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
   renderAnnouncements = data =>
-    data.map(announcement => (
-      <Card key={announcement.id} fullWidth>
+    data.map(({ _id: id, textContent: { title, content } }) => (
+      <Card key={id} fullWidth>
         <div className="card-title">
-          <Typography variant="h5">{announcement.title}</Typography>
+          <Typography variant="h5">{title}</Typography>
           <Button inline>
             <img src={PinIcon} alt="pin-icon" />
           </Button>
         </div>
         <Line small className="card-line" />
-        <Typography className="card-body">{announcement.text}</Typography>
+        <Typography className="card-body">{content}</Typography>
         <div className="card-reacts">
           <Button inline className="card-react">
             <img src={UnderstoodReact} alt="understood-icon" />
@@ -176,6 +183,7 @@ class Home extends Component {
   };
 
   render() {
+    const { announcements } = this.state;
     return (
       <div className="home">
         <div className="home-container">
@@ -217,7 +225,7 @@ class Home extends Component {
             <Line />
             <Card className="home-create-card">{this.renderCreateContentButtons()}</Card>
             <div className="home-announcements-cards">
-              {this.renderAnnouncements(announcementsData)}
+              {this.renderAnnouncements(announcements)}
             </div>
           </div>
         </div>
