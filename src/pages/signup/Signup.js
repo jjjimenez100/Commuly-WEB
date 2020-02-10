@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import SimpleReactValidator from 'simple-react-validator';
 import { Card, Typography, Button, Input } from 'components';
 import { SignupPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
+import UserService from '../../services/userService';
 
 class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
-      contactNumber: '',
+      phoneNumber: '',
       email: '',
       password: '',
     };
@@ -20,9 +21,12 @@ class Signup extends Component {
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  registerUser = () => {
+  registerUser = async () => {
     if (this.validator.allValid()) {
-      // POST request here
+      const { name, phoneNumber, email, password } = this.state;
+      const userInformation = { name, phoneNumber, email, password };
+      // show loader here
+      await UserService.registerNewUser(userInformation);
     } else {
       this.validator.showMessages();
     }
@@ -40,15 +44,15 @@ class Signup extends Component {
               name="name"
               labelText="Name"
             />
-            {this.validator.message('name', this.state.firstName, 'required|alpha')}
+            {this.validator.message('name', this.state.name, 'required|alpha')}
 
             <Input
-              value={this.state.contactNumber}
+              value={this.state.phoneNumber}
               onChange={this.handleInputChange}
-              name="contactNumber"
+              name="phoneNumber"
               labelText="Contact Number"
             />
-            {this.validator.message('contactNumber', this.state.contactNumber, 'required|alpha')}
+            {this.validator.message('phoneNumber', this.state.phoneNumber, 'required|alpha')}
 
             <Input
               value={this.state.email}
@@ -57,7 +61,7 @@ class Signup extends Component {
               name="email"
               labelText="Email"
             />
-            {this.validator.message('email', this.state.email, 'required|alpha')}
+            {this.validator.message('email', this.state.email, 'required')}
 
             <Input
               value={this.state.password}
