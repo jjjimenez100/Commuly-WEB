@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
 import { Card, Typography, Button, Input } from 'components';
+import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
 
 class Login extends Component {
   state = {
     email: '',
     password: '',
+  };
+
+  componentDidMount = () => {
+    const { state } = this.props.location;
+    if (state && state.isNewUser) {
+      toast.success('Successfully registered. You can now login.');
+      this.props.history.replace({
+        pathname: this.props.location.pathname,
+        state: {},
+      });
+    }
   };
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -28,6 +40,7 @@ class Login extends Component {
               onChange={this.handleInputChange}
               name="password"
               labelText="Password"
+              type="password"
             />
             <Button className="login-button" variant="inverted" type="submit">
               Login
