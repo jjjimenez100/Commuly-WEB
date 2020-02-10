@@ -14,10 +14,19 @@ class Signup extends Component {
     };
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
+      autoForceUpdate: this,
     });
   }
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  registerUser = () => {
+    if (this.validator.allValid()) {
+      // POST request here
+    } else {
+      this.validator.showMessages();
+    }
+  };
 
   render() {
     return (
@@ -62,10 +71,7 @@ class Signup extends Component {
               className="login-button"
               variant="inverted"
               type="button"
-              onClick={() => {
-                this.validator.showMessages();
-                this.forceUpdate();
-              }}
+              onClick={this.registerUser}
             >
               Sign Up
             </Button>
