@@ -52,6 +52,7 @@ class Signup extends Component {
               onChange={this.handleInputChange}
               name="name"
               labelText="Name"
+              placeholder="John Doe"
             />
             {this.validator.message('name', this.state.name, 'required|alpha_space')}
 
@@ -60,6 +61,7 @@ class Signup extends Component {
               onChange={this.handleInputChange}
               name="phoneNumber"
               labelText="Contact Number"
+              placeholder="+639123456789"
             />
             {this.validator.message('phoneNumber', this.state.phoneNumber, 'required|phone')}
 
@@ -69,6 +71,7 @@ class Signup extends Component {
               type="email"
               name="email"
               labelText="Email"
+              placeholder="john.doe@alorica.com"
             />
             {this.validator.message('email', this.state.email, 'required|email')}
 
