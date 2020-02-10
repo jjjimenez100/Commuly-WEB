@@ -10,7 +10,8 @@ class Login extends Component {
   };
 
   componentDidMount = () => {
-    if (this.props.location.state.isNewUser) {
+    const { state } = this.props.location;
+    if (state && state.isNewUser) {
       toast.success('Successfully registered! You can now login.');
       this.props.history.replace({
         pathname: this.props.location.pathname,
@@ -39,6 +40,7 @@ class Login extends Component {
               onChange={this.handleInputChange}
               name="password"
               labelText="Password"
+              type="password"
             />
             <Button className="login-button" variant="inverted" type="submit">
               Login
