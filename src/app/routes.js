@@ -29,8 +29,8 @@ export const routes = [
   },
   {
     type: 'route',
-    path: '/',
-    isPublic: false,
+    path: '/dashboard',
+    isPublic: true,
     component: LoggedInView,
   },
 ];
