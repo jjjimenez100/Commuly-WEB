@@ -1,0 +1,63 @@
+$login-card-width: 400px;
+
+.login {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  & form * {
+    margin-bottom: $spacing-tiny;
+  }
+
+  &-picture {
+    width: 300px;
+  }
+
+  &-logo {
+    margin-top: $spacing-large;
+  }
+
+  &-wrapper {
+    width: $login-card-width;
+    padding: $spacing-base;
+  }
+
+  &-button {
+    width: 100%;
+    margin-bottom: $spacing-large;
+  }
+
+  &-text {
+    text-align: center;
+  }
+
+  &-providers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > button {
+      margin: 0 $spacing-base;
+    }
+  }
+  
+  &-signup {
+    border-top: 1px solid $border-color;
+    margin-top: $spacing-base;
+    padding: $spacing-base;
+    text-align: center;
+    
+    & > p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+
+      & > button {
+        margin-left: $spacing-tiny;
+      }
+    }
+  }
+}
