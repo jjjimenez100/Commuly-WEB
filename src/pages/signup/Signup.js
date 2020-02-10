@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { Card, Typography, Button, Input } from 'components';
 import { SignupPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
 
 class Signup extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      contactNumber: '',
+      email: '',
+      password: '',
+    };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+    });
+  }
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
@@ -23,6 +31,16 @@ class Signup extends Component {
               name="name"
               labelText="Name"
             />
+            {this.validator.message('name', this.state.firstName, 'required|alpha')}
+
+            <Input
+              value={this.state.contactNumber}
+              onChange={this.handleInputChange}
+              name="contactNumber"
+              labelText="Contact Number"
+            />
+            {this.validator.message('contactNumber', this.state.contactNumber, 'required|alpha')}
+
             <Input
               value={this.state.email}
               onChange={this.handleInputChange}
@@ -30,13 +48,25 @@ class Signup extends Component {
               name="email"
               labelText="Email"
             />
+            {this.validator.message('email', this.state.email, 'required|alpha')}
+
             <Input
               value={this.state.password}
               onChange={this.handleInputChange}
               name="password"
               labelText="Password"
             />
-            <Button className="login-button" variant="inverted" type="submit">
+            {this.validator.message('password', this.state.password, 'required|alpha')}
+
+            <Button
+              className="login-button"
+              variant="inverted"
+              type="button"
+              onClick={() => {
+                this.validator.showMessages();
+                this.forceUpdate();
+              }}
+            >
               Sign Up
             </Button>
             <Typography variant="subtitle" className="login-text">
