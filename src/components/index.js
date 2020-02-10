@@ -5,6 +5,7 @@ export { default as Card } from './card/Card';
 export { default as HorizontalLine } from './horizontal-line/HorizontalLine';
 export { Modal, ModalBody, ModalFooter } from './modal/Modal';
 export { DropdownContainer, DropdownMenu, DropdownMenuItem } from './dropdown/Dropdown';
+export { default as Input } from './input/Input';
 
 // layout components
 export { default as Navbar } from './navbar/Navbar';

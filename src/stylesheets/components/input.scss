@@ -1,0 +1,15 @@
+.input {
+  display: flex;
+  flex-direction: column;
+
+  &-area {
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    width: 100%;
+    padding: $spacing-tiny $spacing-small;
+  }
+
+  &-description {
+    margin-bottom: calc(#{$spacing-tiny} / 2);
+  }
+}

@@ -68,7 +68,7 @@ Button.defaultProps = {
 Button.propTypes = {
   iconPosition: PropTypes.oneOf(['left', 'right']),
   size: PropTypes.oneOf(['small', 'medium', 'large']),
-  variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'inline']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'inline', 'inverted']),
   className: PropTypes.string,
   inline: PropTypes.bool,
   disabled: PropTypes.bool,

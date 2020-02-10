@@ -28,6 +28,17 @@
     }
   }
 
+  &-inverted {
+    background-color: $white-color;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+
+    &:hover {
+      background-color: $primary-color;
+      color: $white-color;
+    }
+  }
+
   &-small {
     @include font-size(14px);
     padding: $spacing-tiny $spacing-small;
