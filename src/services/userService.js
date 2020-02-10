@@ -5,7 +5,7 @@ const UserService = {
     return httpService.get(`user/${userId}/cards`, additionalConfig);
   },
   registerNewUser(userInformation, additionalConfig = {}) {
-    return httpService.post('/user', userInformation, additionalConfig);
+    return httpService.post('users', userInformation, additionalConfig);
   },
 };
 

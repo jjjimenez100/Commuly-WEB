@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import SimpleReactValidator from 'simple-react-validator';
+import { toast } from 'react-toastify';
+import { withRouter } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { SignupPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
 import UserService from '../../services/userService';
@@ -21,12 +23,19 @@ class Signup extends Component {
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  registerUser = async () => {
+  registerUser = () => {
     if (this.validator.allValid()) {
       const { name, phoneNumber, email, password } = this.state;
       const userInformation = { name, phoneNumber, email, password };
       // show loader here
-      await UserService.registerNewUser(userInformation);
+      UserService.registerNewUser(userInformation)
+        .then(() =>
+          this.props.history.push({
+            pathname: '/',
+            state: { isNewUser: true },
+          })
+        )
+        .catch(error => toast.error(error.response.data.error));
     } else {
       this.validator.showMessages();
     }
@@ -103,4 +112,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default withRouter(Signup);
