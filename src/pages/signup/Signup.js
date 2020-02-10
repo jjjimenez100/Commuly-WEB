@@ -35,7 +35,7 @@ class Signup extends Component {
             state: { isNewUser: true },
           })
         )
-        .catch(error => toast.error(error.response.data.error));
+        .catch(error => toast.error(error.response.data.message));
     } else {
       this.validator.showMessages();
     }
@@ -53,7 +53,7 @@ class Signup extends Component {
               name="name"
               labelText="Name"
             />
-            {this.validator.message('name', this.state.name, 'required|alpha')}
+            {this.validator.message('name', this.state.name, 'required|alpha_space')}
 
             <Input
               value={this.state.phoneNumber}
@@ -61,7 +61,7 @@ class Signup extends Component {
               name="phoneNumber"
               labelText="Contact Number"
             />
-            {this.validator.message('phoneNumber', this.state.phoneNumber, 'required|alpha')}
+            {this.validator.message('phoneNumber', this.state.phoneNumber, 'required|phone')}
 
             <Input
               value={this.state.email}
@@ -70,15 +70,16 @@ class Signup extends Component {
               name="email"
               labelText="Email"
             />
-            {this.validator.message('email', this.state.email, 'required')}
+            {this.validator.message('email', this.state.email, 'required|email')}
 
             <Input
               value={this.state.password}
               onChange={this.handleInputChange}
               name="password"
+              type="password"
               labelText="Password"
             />
-            {this.validator.message('password', this.state.password, 'required|alpha')}
+            {this.validator.message('password', this.state.password, 'required|string')}
 
             <Button
               className="login-button"
