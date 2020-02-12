@@ -11,7 +11,6 @@ class LoggedInView extends Component {
     this.setState(prevState => ({ isSidebarOpen: !prevState.isSidebarOpen }));
 
   render() {
-    console.log('josh was rendered');
     return (
       <div className="app">
         <Sidebar

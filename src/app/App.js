@@ -14,6 +14,7 @@ class App extends Component {
       }
 
       return (
+        // TODO: restrict routes based on user access
         <ProtectedRoute
           key={route.path}
           authenticated

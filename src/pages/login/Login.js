@@ -3,12 +3,14 @@ import { Redirect } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
+import UserService from '../../services/userService';
 
 class Login extends Component {
   state = {
     email: '',
     password: '',
     redirectToRegistration: false,
+    redirectToDashboard: false,
   };
 
   componentDidMount = () => {
@@ -26,9 +28,31 @@ class Login extends Component {
 
   routeToRegisterPage = () => this.setState({ redirectToRegistration: true });
 
+  loginUser = () => {
+    const { email, password } = this.state;
+    const userCredentials = { email, password };
+    // TODO: show loader
+    UserService.loginUser(userCredentials)
+      .then(data => {
+        // TODO: get token, set to local storage, then store user data to central mobx
+        if (data.status === 200) {
+          this.setState({
+            redirectToDashboard: true,
+          });
+        }
+      })
+      .catch(e => toast.error(e.response.data.message));
+  };
+
   render() {
-    if (this.state.redirectToRegistration) {
+    const { redirectToDashboard, redirectToRegistration } = this.state;
+
+    if (redirectToRegistration) {
       return <Redirect to="/signup" />;
+    }
+
+    if (redirectToDashboard) {
+      return <Redirect to="/dashboard" />;
     }
 
     return (
@@ -50,7 +74,12 @@ class Login extends Component {
               labelText="Password"
               type="password"
             />
-            <Button className="login-button" variant="inverted" type="submit">
+            <Button
+              className="login-button"
+              variant="inverted"
+              type="button"
+              onClick={this.loginUser}
+            >
               Login
             </Button>
             <Typography variant="subtitle" className="login-text">
