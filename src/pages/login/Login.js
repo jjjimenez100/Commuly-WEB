@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
@@ -7,6 +8,7 @@ class Login extends Component {
   state = {
     email: '',
     password: '',
+    redirectToRegistration: false,
   };
 
   componentDidMount = () => {
@@ -22,7 +24,13 @@ class Login extends Component {
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
+  routeToRegisterPage = () => this.setState({ redirectToRegistration: true });
+
   render() {
+    if (this.state.redirectToRegistration) {
+      return <Redirect to="/signup" />;
+    }
+
     return (
       <div className="login">
         <img src={LoginPicture} alt="login" />
@@ -59,7 +67,10 @@ class Login extends Component {
           </div>
           <div className="login-signup">
             <Typography>
-              Don&apos;t have an account? <Button variant="inline">Sign up.</Button>
+              Don&apos;t have an account?{' '}
+              <Button variant="inline" onClick={this.routeToRegisterPage}>
+                Sign up.
+              </Button>
             </Typography>
           </div>
         </Card>
