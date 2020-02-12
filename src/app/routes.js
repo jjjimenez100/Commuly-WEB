@@ -1,18 +1,4 @@
-import { Home, StyleGuide, Login, Signup } from 'pages/';
-import LoggedInView from './LoggedInView';
-
-export const loggedInRoutes = [
-  {
-    type: 'route',
-    path: '/styles',
-    component: StyleGuide,
-  },
-  {
-    type: 'route',
-    path: '/',
-    component: Home,
-  },
-];
+import { Login, Signup, Home } from 'pages/';
 
 export const routes = [
   {
@@ -23,14 +9,14 @@ export const routes = [
   },
   {
     type: 'route',
-    path: '/',
-    isPublic: true,
-    component: Login,
+    path: '/dashboard',
+    isPublic: false,
+    component: Home,
   },
   {
     type: 'route',
-    path: '/dashboard',
+    path: '/',
     isPublic: true,
-    component: LoggedInView,
+    component: Login,
   },
 ];
