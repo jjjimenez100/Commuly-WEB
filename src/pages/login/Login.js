@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
+import UserService from '../../services/userService';
 
 class Login extends Component {
   state = {
     email: '',
     password: '',
+    redirectToRegistration: false,
+    redirectToDashboard: false,
   };
 
   componentDidMount = () => {
@@ -22,7 +26,35 @@ class Login extends Component {
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
+  routeToRegisterPage = () => this.setState({ redirectToRegistration: true });
+
+  loginUser = () => {
+    const { email, password } = this.state;
+    const userCredentials = { email, password };
+    // TODO: show loader
+    UserService.loginUser(userCredentials)
+      .then(data => {
+        // TODO: get token, set to local storage, then store user data to central mobx
+        if (data.status === 200) {
+          this.setState({
+            redirectToDashboard: true,
+          });
+        }
+      })
+      .catch(e => toast.error(e.response.data.message));
+  };
+
   render() {
+    const { redirectToDashboard, redirectToRegistration } = this.state;
+
+    if (redirectToRegistration) {
+      return <Redirect to="/signup" />;
+    }
+
+    if (redirectToDashboard) {
+      return <Redirect to="/dashboard" />;
+    }
+
     return (
       <div className="login">
         <img src={LoginPicture} alt="login" />
@@ -42,7 +74,12 @@ class Login extends Component {
               labelText="Password"
               type="password"
             />
-            <Button className="login-button" variant="inverted" type="submit">
+            <Button
+              className="login-button"
+              variant="inverted"
+              type="button"
+              onClick={this.loginUser}
+            >
               Login
             </Button>
             <Typography variant="subtitle" className="login-text">
@@ -59,7 +96,10 @@ class Login extends Component {
           </div>
           <div className="login-signup">
             <Typography>
-              Don&apos;t have an account? <Button variant="inline">Sign up.</Button>
+              Don&apos;t have an account?{' '}
+              <Button variant="inline" onClick={this.routeToRegisterPage}>
+                Sign up.
+              </Button>
             </Typography>
           </div>
         </Card>

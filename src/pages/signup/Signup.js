@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SimpleReactValidator from 'simple-react-validator';
 import { toast } from 'react-toastify';
-import { withRouter } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { SignupPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
 import UserService from '../../services/userService';
@@ -14,6 +14,7 @@ class Signup extends Component {
       phoneNumber: '',
       email: '',
       password: '',
+      redirectToLogin: false,
     };
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
@@ -41,7 +42,13 @@ class Signup extends Component {
     }
   };
 
+  routeToLoginPage = () => this.setState({ redirectToLogin: true });
+
   render() {
+    if (this.state.redirectToLogin) {
+      return <Redirect to="/" />;
+    }
+
     return (
       <div className="login">
         <img src={SignupPicture} alt="signup" className="login-picture" />
@@ -106,7 +113,10 @@ class Signup extends Component {
           </div>
           <div className="login-signup">
             <Typography>
-              Already have an account? <Button variant="inline">Login.</Button>
+              Already have an account?{' '}
+              <Button variant="inline" onClick={this.routeToLoginPage}>
+                Login.
+              </Button>
             </Typography>
           </div>
         </Card>

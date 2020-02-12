@@ -1,7 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { loggedInRoutes } from './routes';
 import { Navbar, Sidebar } from '../components';
 
 class LoggedInView extends Component {
@@ -21,13 +19,7 @@ class LoggedInView extends Component {
         />
         <div className="container">
           <Navbar handleSidebarOpen={this.handleSidebarOpen} />
-          <main className="main">
-            <Switch>
-              {loggedInRoutes.map(route => (
-                <Route key={route.path} {...route} />
-              ))}
-            </Switch>
-          </main>
+          <main className="main">{this.props.childComponent}</main>
         </div>
       </div>
     );

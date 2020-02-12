@@ -7,6 +7,9 @@ const UserService = {
   registerNewUser(userInformation, additionalConfig = {}) {
     return httpService.post('users', userInformation, additionalConfig);
   },
+  loginUser(userCredentials, additionalConfig = {}) {
+    return httpService.post('login', userCredentials, additionalConfig);
+  },
 };
 
 export default UserService;
