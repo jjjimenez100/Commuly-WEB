@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
 import { Redirect } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
-import UserService from '../../services/userService';
-import store from '../../stores/user';
+import { store as userStore } from '../../stores/user';
 
 class Login extends Component {
   state = {
@@ -33,15 +33,16 @@ class Login extends Component {
     const { email, password } = this.state;
     const userCredentials = { email, password };
     // TODO: show loader
-    UserService.loginUser(userCredentials)
+    userStore
+      .loginUser(userCredentials)
       .then(response => {
         // TODO: get token, set to local storage, then store user data to central mobx
         if (response.status === 200) {
+          const userInformation = { ...response.data };
+          userStore.setUserInformation(userInformation);
           this.setState({
             redirectToDashboard: true,
           });
-          const userInformation = { ...response.data };
-          store.setUserInformation(userInformation);
         }
       })
       .catch(e => toast.error(e.response.data.message));
@@ -112,4 +113,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default inject('store')(observer(Login));

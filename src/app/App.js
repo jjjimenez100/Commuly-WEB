@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,12 +13,14 @@ class App extends Component {
       if (route.isPublic) {
         return <Route key={route.path} {...route} />;
       }
-
       return (
         // TODO: restrict routes based on user access
         <ProtectedRoute
           key={route.path}
-          authenticated
+          authenticated={
+            this.props.store.user.authenticated &&
+            this.props.store.user.isUserAllowedForProtectedRoute(route.allowedRoles)
+          }
           path={route.path}
           component={route.component}
         />
@@ -37,4 +40,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default inject('store')(observer(App));

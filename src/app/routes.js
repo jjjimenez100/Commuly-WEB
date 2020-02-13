@@ -1,4 +1,5 @@
 import { Login, Signup, Home } from 'pages/';
+import { USER_ROLES } from '../constants/user';
 
 export const routes = [
   {
@@ -11,6 +12,7 @@ export const routes = [
     type: 'route',
     path: '/dashboard',
     isPublic: false,
+    allowedRoles: USER_ROLES,
     component: Home,
   },
   {
