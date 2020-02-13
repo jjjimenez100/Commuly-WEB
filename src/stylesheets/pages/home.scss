@@ -8,6 +8,7 @@
   
   &-container {
     padding: $spacing-medium;
+    flex: 1;
   }
   
   &-sidebar {
@@ -59,10 +60,10 @@
   }
 
   &-announcements {
-    margin-bottom: $spacing-medium;
+    margin-top: $spacing-medium;
 
     .line {
-      margin-bottom: $spacing-medium;
+      margin-bottom: $spacing-small;
     }
 
     &-title {
@@ -75,6 +76,7 @@
 
       .card {
         margin-bottom: $spacing-tiny;
+        width: 100%;
 
         &:hover {
           background-color: $bg-color;

@@ -2,16 +2,22 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import classnames from 'classnames';
-import { ModalBody, ModalFooter, Button, Textarea, Typography } from 'components';
+import { ModalBody, ModalFooter, Button, Textarea, Typography, Input } from 'components';
 import { AddPeopleIcon, SendIcon, CloudUploadIcon } from 'assets/icons';
 
 class CreateImage extends Component {
   state = {
     file: [],
+    title: '',
+    description: '',
   };
 
   handleFileUpload = file => {
     this.setState({ file: [...file] });
+  };
+
+  handleInputChanged = e => {
+    this.setState({ [`${e.target.name}`]: e.target.value });
   };
 
   render() {
@@ -20,25 +26,43 @@ class CreateImage extends Component {
     return (
       <>
         <ModalBody className="create create-image">
-          <Textarea description="Add description" placeholder="Add description..." />
-          <Dropzone accept="image/*" onDrop={this.handleFileUpload}>
-            {({ getRootProps, getInputProps, isDragAccept }) => (
-              <div
-                {...getRootProps({
-                  className: classnames('create-image-dropzone', {
-                    'file-accept': isDragAccept,
-                  }),
-                })}
-              >
-                <div className="create-image-overlay" />
-                <input {...getInputProps()} />
-                <Typography className="create-image-dropzone-text">
-                  <img src={CloudUploadIcon} alt="cloud-upload-icon" />
-                  {file.length > 0 ? `${file[0].name}` : 'Drag file here or click to select file.'}
-                </Typography>
-              </div>
-            )}
-          </Dropzone>
+          <form>
+            <Input
+              labelText="Title"
+              name="title"
+              className="create-text-input"
+              placeholder="Add title..."
+              onChange={this.handleInputChanged}
+              value={this.state.title}
+            />
+            <Textarea
+              name="description"
+              labelText="Description"
+              placeholder="Add description..."
+              onChange={this.handleInputChanged}
+              value={this.state.description}
+            />
+            <Dropzone accept="image/*" onDrop={this.handleFileUpload}>
+              {({ getRootProps, getInputProps, isDragAccept }) => (
+                <div
+                  {...getRootProps({
+                    className: classnames('create-image-dropzone', {
+                      'file-accept': isDragAccept,
+                    }),
+                  })}
+                >
+                  <div className="create-image-overlay" />
+                  <input {...getInputProps()} />
+                  <Typography className="create-image-dropzone-text">
+                    <img src={CloudUploadIcon} alt="cloud-upload-icon" />
+                    {file.length > 0
+                      ? `${file[0].name}`
+                      : 'Drag file here or click to select file.'}
+                  </Typography>
+                </div>
+              )}
+            </Dropzone>
+          </form>
         </ModalBody>
         <ModalFooter>
           <Button size="small" variant="ghost" onClick={onClose}>

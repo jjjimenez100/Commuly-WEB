@@ -4,6 +4,15 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Typography } from 'components';
 
+/* 
+separate dropdown into three:
+1. Container: for the view
+2. Menu: container for the items
+3. Item: container for the dropdown item
+
+Item is clickable
+*/
+
 export const DropdownContainer = ({ className, children }) => (
   <div className={classnames('dropdown', { [`${className}`]: className })}>{children}</div>
 );

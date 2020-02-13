@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-console
 const loggerFunction = process.env.NODE_V === 'development' ? console.log : () => {};
 
 const log = (...args) => {

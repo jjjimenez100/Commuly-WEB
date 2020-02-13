@@ -5,7 +5,10 @@ $create-text-sidebar-width: 120px;
     &-bg {
       margin-top: $spacing-small;
       display: flex;
+    }
 
+    &-input {
+      margin-bottom: $spacing-small;
     }
 
     &-sidebar {
