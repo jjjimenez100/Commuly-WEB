@@ -6,18 +6,13 @@ import {
   Button,
   RadioButton,
   Modal,
-  CreateText,
-  CreateImage,
   DropdownContainer,
   DropdownMenu,
   DropdownMenuItem,
+  CreateContent,
+  ContentCard,
 } from 'components';
 import {
-  UnderstoodReact,
-  ExcitedReact,
-  ConfusedReact,
-  BoredReact,
-  PinIcon,
   CircleArrowLeftIcon,
   CircleArrowRightIcon,
   TempAvatar,
@@ -35,53 +30,82 @@ import {
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
+import CardService from 'services/cardService';
+import {
+  TEXT_CONTENT,
+  CHART_CONTENT,
+  IMAGE_CONTENT,
+  TODO_CONTENT,
+  SCHEDULED_CONTENT,
+  MULTIPLE_CHOICE_QUESTION,
+  LIKERT_QUESTION,
+  COLUMN_ORDERING_QUESTION,
+  OPEN_TEXT_QUESTION,
+} from 'constants/card';
 import { boardData, eventData, teamId } from './data';
-import CardService from '../../services/cardService';
 
-const CreateContentButtons = [
-  {
+const CreateContentButtons = {
+  [TEXT_CONTENT]: {
     name: 'Text',
     icon: TextIcon,
+    type: TEXT_CONTENT,
+    order: 1,
   },
-  {
+  [CHART_CONTENT]: {
     name: 'Chart',
     icon: ChartIcon,
+    type: CHART_CONTENT,
+    order: 2,
   },
-  {
+  [IMAGE_CONTENT]: {
     name: 'Image',
     icon: ImageIcon,
+    type: IMAGE_CONTENT,
+    order: 3,
   },
-  {
+  [TODO_CONTENT]: {
     name: 'To Do',
     icon: PinOutlineIcon,
+    type: TODO_CONTENT,
+    order: 4,
   },
-  {
+  [SCHEDULED_CONTENT]: {
     name: 'Event',
     icon: EventIcon,
+    type: SCHEDULED_CONTENT,
+    order: 5,
   },
-  {
+  [MULTIPLE_CHOICE_QUESTION]: {
     name: 'Multiple Choice',
     icon: ChoiceIcon,
+    type: MULTIPLE_CHOICE_QUESTION,
+    order: 6,
   },
-  {
+  [LIKERT_QUESTION]: {
     name: 'Likert',
     icon: LikertIcon,
+    type: LIKERT_QUESTION,
+    order: 7,
   },
-  {
+  [COLUMN_ORDERING_QUESTION]: {
     name: 'Column Order',
     icon: OrderingIcon,
+    type: COLUMN_ORDERING_QUESTION,
+    order: 8,
   },
-  {
+  [OPEN_TEXT_QUESTION]: {
     name: 'Open Question',
     icon: QuestionIcon,
+    type: OPEN_TEXT_QUESTION,
+    order: 9,
   },
-];
+};
 
 class Home extends Component {
   state = {
     date: new Date(),
     modalOpen: false,
-    currentActiveModalIndex: 2,
+    currentActiveModal: '',
     dropdownOpen: false,
     announcements: [],
   };
@@ -91,42 +115,22 @@ class Home extends Component {
     this.setState({ announcements: data });
   };
 
-  handleModalOpen = (index = 0) =>
+  handleModalOpen = (activeContentType = '') => {
     this.setState(prevState => ({
       modalOpen: !prevState.modalOpen,
-      currentActiveModalIndex: index,
+      currentActiveModal: activeContentType,
     }));
+  };
 
   handleDropdownOpen = () =>
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
   renderAnnouncements = data =>
-    data.map(({ _id: id, textContent: { title, content } }) => (
-      <Card key={id} fullWidth>
-        <div className="card-title">
-          <Typography variant="h5">{title}</Typography>
-          <Button inline>
-            <img src={PinIcon} alt="pin-icon" />
-          </Button>
-        </div>
-        <Line small className="card-line" />
-        <Typography className="card-body">{content}</Typography>
-        <div className="card-reacts">
-          <Button inline className="card-react">
-            <img src={UnderstoodReact} alt="understood-icon" />
-          </Button>
-          <Button inline className="card-react">
-            <img src={ExcitedReact} alt="excited-icon" />
-          </Button>
-          <Button inline className="card-react">
-            <img src={BoredReact} alt="bored-icon" />
-          </Button>
-          <Button inline className="card-react">
-            <img src={ConfusedReact} alt="confused-icon" />
-          </Button>
-        </div>
-      </Card>
-    ));
+    data.length > 0 ? (
+      data.map(announcement => <ContentCard key={announcement.id} {...announcement} />)
+    ) : (
+      <Card>No announcements yet!</Card>
+    );
 
   renderLeaderboard = data =>
     data.map(person => (
@@ -157,30 +161,21 @@ class Home extends Component {
 
   renderCreateContentButtons = () => (
     <div className="home-create-card-buttons">
-      {CreateContentButtons.map((btn, i) => (
-        <Button
-          key={btn.name.toLowerCase().replace(' ', '-')}
-          name={btn.name}
-          variant="inline"
-          className="home-create-card-button"
-          onClick={() => this.handleModalOpen(i)}
-        >
-          <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
-        </Button>
-      ))}
+      {Object.values(CreateContentButtons)
+        .sort((a, b) => (a.order > b.order ? 1 : -1))
+        .map(btn => (
+          <Button
+            key={btn.type}
+            name={btn.name}
+            variant="inline"
+            className="home-create-card-button"
+            onClick={() => this.handleModalOpen(btn.type)}
+          >
+            <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
+          </Button>
+        ))}
     </div>
   );
-
-  renderCreateContentModal = () => {
-    switch (this.state.currentActiveModalIndex) {
-      case 0:
-        return <CreateText onClose={this.handleModalOpen} />;
-      case 2:
-        return <CreateImage onClose={this.handleModalOpen} />;
-      default:
-        return null;
-    }
-  };
 
   render() {
     const { announcements } = this.state;
@@ -263,12 +258,15 @@ class Home extends Component {
           isOpen={this.state.modalOpen}
           handleClose={this.handleModalOpen}
           title={`Create ${
-            CreateContentButtons[this.state.currentActiveModalIndex]
-              ? CreateContentButtons[this.state.currentActiveModalIndex].name
+            CreateContentButtons[this.state.currentActiveModal]
+              ? CreateContentButtons[this.state.currentActiveModal].name
               : ''
           } Content`}
         >
-          {this.renderCreateContentModal()}
+          <CreateContent
+            contentType={this.state.currentActiveModal}
+            onClose={this.handleModalOpen}
+          />
         </Modal>
       </div>
     );

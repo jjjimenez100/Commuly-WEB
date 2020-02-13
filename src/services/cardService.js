@@ -1,5 +1,5 @@
+import { CONTENT_CARD, TEXT_CONTENT } from 'constants/card';
 import httpService from './httpService';
-import { CONTENT_CARD, TEXT_CONTENT } from '../constants/card';
 
 const CardService = {
   createNewContentCard(requestBody, additionalConfig = {}) {

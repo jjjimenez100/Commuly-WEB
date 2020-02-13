@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, Card, HorizontalLine as Line, RadioButton } from 'components';
+import { Button, Typography, Card, HorizontalLine as Line, RadioButton, Spinner } from 'components';
 import PlusIcon from 'assets/icons/plus.svg';
 // For reference, here's some examples of what reusable components look like
 
@@ -16,6 +16,7 @@ const StyleGuide = () => (
     <Button size="small" icon={PlusIcon}>
       This is a small button
     </Button>
+    <Button loading />
     <Button variant="ghost">This is a normal button</Button>
     <Button variant="ghost" inline>
       This is a normal button
@@ -29,6 +30,7 @@ const StyleGuide = () => (
     <Card>Hello world</Card>
     <Line />
     <RadioButton id="radio-button" labelText="This is a test" />
+    <Spinner />
   </div>
 );
 

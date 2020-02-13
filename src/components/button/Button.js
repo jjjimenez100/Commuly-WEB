@@ -1,20 +1,22 @@
 /* eslint-disable react/button-has-type */
 /*
 Button variants:
-1. Small 
-2. Medium
-3. Large
-4. Inline (No style)
-5. TODO: Ghost
-6. TODO: Primary and Secondary Variants
-7. TODO: Disabled
+1. Small (done)
+2. Medium (done)
+3. Large (done)
+4. Inline (No style) (done)
+5. Ghost (done)
+6. Primary (done) and Secondary Variants
+7. Disabled (done)
 8. Add box-shadow to these variants
-9. Add icon
+9. Add icon + left and right positions (done)
+10. Loading (done) (if loading, button is automatically disabled)
 */
 
 import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { Spinner } from 'components';
 
 const Button = ({
   onClick,
@@ -26,21 +28,24 @@ const Button = ({
   icon,
   iconPosition,
   name,
+  loading,
   className: styleClass,
   type,
 }) => {
+  // classname for button container
   const className = classnames(
     'button',
     {
       [`button-${size}`]: size,
       'button-inline': inline,
-      'button-disabled': disabled,
+      'button-disabled': disabled || loading,
       [`button-${variant}`]: variant,
       [`button-position-${iconPosition}`]: icon && iconPosition,
     },
     styleClass
   );
 
+  // classname for icon inside button
   const buttonClassname = classnames('button-icon', {
     'button-icon-small': size === 'small',
     [`button-icon-${iconPosition}`]: icon && iconPosition,
@@ -48,8 +53,14 @@ const Button = ({
 
   return (
     <button name={name} type={type} onClick={onClick} className={className.trim()}>
-      {icon && <img src={icon} alt="icon-for-button" className={buttonClassname} />}
-      {children}
+      {loading ? (
+        <Spinner size="small" inverted />
+      ) : (
+        <>
+          {icon && <img src={icon} alt="icon-for-button" className={buttonClassname} />}
+          {children}
+        </>
+      )}
     </button>
   );
 };
@@ -57,9 +68,10 @@ const Button = ({
 Button.defaultProps = {
   className: '',
   name: '',
-  type: 'submit',
+  type: 'button',
   size: 'medium',
   inline: false,
+  loading: false,
   disabled: false,
   variant: 'primary',
   iconPosition: 'left',
@@ -71,6 +83,7 @@ Button.propTypes = {
   variant: PropTypes.oneOf(['primary', 'secondary', 'ghost', 'inline', 'inverted']),
   className: PropTypes.string,
   inline: PropTypes.bool,
+  loading: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
   name: PropTypes.string,
