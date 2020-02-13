@@ -4,6 +4,7 @@ import { Card, Typography, Button, Input } from 'components';
 import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
 import UserService from '../../services/userService';
+import store from '../../stores/user';
 
 class Login extends Component {
   state = {
@@ -33,12 +34,14 @@ class Login extends Component {
     const userCredentials = { email, password };
     // TODO: show loader
     UserService.loginUser(userCredentials)
-      .then(data => {
+      .then(response => {
         // TODO: get token, set to local storage, then store user data to central mobx
-        if (data.status === 200) {
+        if (response.status === 200) {
           this.setState({
             redirectToDashboard: true,
           });
+          const userInformation = { ...response.data };
+          store.setUserInformation(userInformation);
         }
       })
       .catch(e => toast.error(e.response.data.message));
