@@ -1,61 +1,44 @@
 import { types } from 'mobx-state-tree';
 import moment from 'moment-timezone';
+import jwt from 'jsonwebtoken';
 import UserService from '../services/userService';
 
 const User = types
   .model('User', {
-    userId: types.string,
-    email: types.string,
-    token: types.string,
-    role: types.string,
-    expirationDate: types.string,
-    authenticated: types.boolean,
+    authChange: types.boolean,
   })
   .actions(self => ({
-    setUserInformation({ userId, email, token, role, expirationDate }) {
-      self.userId = userId;
-      self.email = email;
-      self.token = token;
-      self.role = role;
-      self.expirationDate = expirationDate;
-
+    storeTokenToLocalStorage(token) {
+      localStorage.setItem('token', token);
       self.authenticated = true;
     },
-    setToken(token) {
-      self.token = token;
+    removeTokenOnLocalStorage() {
+      localStorage.removeItem('token');
     },
     loginUser(userCredentials) {
       return UserService.loginUser(userCredentials);
     },
-    userHasSufficientRole(allowedUserRoles = []) {
-      // All user roles are allowed
-      if (allowedUserRoles.length === 0) {
-        return true;
-      }
-      return allowedUserRoles.includes(self.role);
+    markAuthChange() {
+      self.authChange = true;
     },
-    isUserAuthenticated() {
-      if (!self.token) {
+    unmarkAuthChange() {
+      self.authChange = false;
+    },
+    verifyJWTToken() {
+      const token = localStorage.getItem('token');
+      if (!token) {
         return false;
       }
-      const currentTime = moment.tz();
-      const expirationTime = moment.tz(new Date(self.expirationDate), 'Asia/Manila');
-      const tokenIsExpired = currentTime.isBefore(expirationTime);
 
-      return tokenIsExpired;
-    },
-    isUserAllowedForProtectedRoute(allowedUserRoles) {
-      return self.isUserAuthenticated() && self.userHasSufficientRole(allowedUserRoles);
+      const { expirationDate } = jwt.decode(token);
+      const currentDate = moment.tz('Asia/Manila');
+
+      return currentDate.isBefore(new Date(expirationDate));
     },
   }));
 
 export const store = User.create({
-  userId: '',
-  email: '',
-  token: '',
-  role: '',
-  expirationDate: '',
-  authenticated: false,
+  authChange: false,
 });
 
 export default User;

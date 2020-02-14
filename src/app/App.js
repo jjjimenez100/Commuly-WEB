@@ -13,14 +13,13 @@ class App extends Component {
       if (route.isPublic) {
         return <Route key={route.path} {...route} />;
       }
+
+      const isJWTTokenValid =
+        this.props.store.user.verifyJWTToken() || this.props.store.user.authChange;
       return (
-        // TODO: restrict routes based on user access
         <ProtectedRoute
           key={route.path}
-          authenticated={
-            this.props.store.user.authenticated &&
-            this.props.store.user.isUserAllowedForProtectedRoute(route.allowedRoles)
-          }
+          authenticated={isJWTTokenValid}
           path={route.path}
           component={route.component}
         />

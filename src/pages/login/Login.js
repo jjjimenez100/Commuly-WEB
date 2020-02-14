@@ -4,7 +4,6 @@ import { Redirect } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
 import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
-import { store as userStore } from '../../stores/user';
 
 class Login extends Component {
   state = {
@@ -29,20 +28,18 @@ class Login extends Component {
 
   routeToRegisterPage = () => this.setState({ redirectToRegistration: true });
 
-  loginUser = () => {
+  loginUser = async () => {
     const { email, password } = this.state;
     const userCredentials = { email, password };
     // TODO: show loader
-    userStore
+    this.props.store.user
       .loginUser(userCredentials)
       .then(response => {
-        // TODO: get token, set to local storage, then store user data to central mobx
         if (response.status === 200) {
-          const userInformation = { ...response.data };
-          userStore.setUserInformation(userInformation);
-          this.setState({
-            redirectToDashboard: true,
-          });
+          const { token } = response.data;
+          this.props.store.user.storeTokenToLocalStorage(token);
+          this.props.store.user.markAuthChange();
+          this.setState({ redirectToDashboard: true });
         }
       })
       .catch(e => toast.error(e.response.data.message));
