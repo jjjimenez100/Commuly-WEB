@@ -3,8 +3,8 @@ import { Redirect } from 'react-router';
 import { Route } from 'react-router-dom';
 import LoggedInView from './LoggedInView';
 
-const renderComponentWithDefaultLayout = (Component, authenticated, props) => {
-  if (authenticated) {
+const renderComponentWithDefaultLayout = (Component, authenticated, authorized, props) => {
+  if (authenticated && authorized) {
     // eslint-disable-next-line react/jsx-props-no-spreading
     const childComponent = <Component {...props} />;
     return <LoggedInView childComponent={childComponent} />;
@@ -12,12 +12,14 @@ const renderComponentWithDefaultLayout = (Component, authenticated, props) => {
   return <Redirect to="/" />;
 };
 
-const ProtectedRoute = ({ component: Component, authenticated, ...rest }) => {
+const ProtectedRoute = ({ component: Component, authenticated, authorized, ...rest }) => {
   return (
     <Route
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
-      render={props => renderComponentWithDefaultLayout(Component, authenticated, props)}
+      render={props =>
+        renderComponentWithDefaultLayout(Component, authenticated, authorized, props)
+      }
     />
   );
 };

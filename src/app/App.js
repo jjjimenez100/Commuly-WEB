@@ -16,10 +16,13 @@ class App extends Component {
 
       const isJWTTokenValid =
         this.props.store.user.verifyJWTToken() || this.props.store.user.authChange;
+      const isUserAuthorized = this.props.store.user.isUserAuthorized(route.allowedRoles);
+
       return (
         <ProtectedRoute
           key={route.path}
           authenticated={isJWTTokenValid}
+          authorized={isUserAuthorized}
           path={route.path}
           component={route.component}
         />

@@ -35,6 +35,19 @@ const User = types
 
       return currentDate.isBefore(new Date(expirationDate));
     },
+    isUserAuthorized(allowedUserRoles = []) {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return false;
+      }
+
+      const { role } = jwt.decode(token);
+      // All user roles are authorized
+      if (allowedUserRoles.length === 0) {
+        return true;
+      }
+      return allowedUserRoles.includes(role);
+    },
   }));
 
 export const store = User.create({
