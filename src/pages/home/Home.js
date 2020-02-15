@@ -30,7 +30,8 @@ import {
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-import CardService from 'services/cardService';
+import UserService from 'services/userService';
+
 import {
   TEXT_CONTENT,
   CHART_CONTENT,
@@ -42,7 +43,8 @@ import {
   COLUMN_ORDERING_QUESTION,
   OPEN_TEXT_QUESTION,
 } from 'constants/card';
-import { boardData, eventData, teamId } from './data';
+import { getUserDetails } from 'utils/jwt';
+import { boardData, eventData } from './data';
 
 const CreateContentButtons = {
   [TEXT_CONTENT]: {
@@ -108,11 +110,26 @@ class Home extends Component {
     currentActiveModal: '',
     dropdownOpen: false,
     announcements: [],
+    // eslint-disable-next-line react/no-unused-state
+    scheduledEvents: [],
+    // eslint-disable-next-line react/no-unused-state
+    todos: [],
   };
 
   componentDidMount = async () => {
-    const { data } = await CardService.getCardsByTeam(teamId, 1, 5);
-    this.setState({ announcements: data });
+    const { userId } = getUserDetails();
+    const { data } = await UserService.getCardsByUser(userId);
+
+    // user here will be used to check which cards has been pinned, reacted, etc.
+    // eslint-disable-next-line no-unused-vars
+    const { scheduledCards, teamCards, todoCards, user } = data;
+    this.setState({
+      announcements: teamCards,
+      // eslint-disable-next-line react/no-unused-state
+      scheduledEvents: scheduledCards,
+      // eslint-disable-next-line react/no-unused-state
+      todos: todoCards,
+    });
   };
 
   handleModalOpen = (activeContentType = '') => {
@@ -127,7 +144,8 @@ class Home extends Component {
 
   renderAnnouncements = data =>
     data.length > 0 ? (
-      data.map(announcement => <ContentCard key={announcement.id} {...announcement} />)
+      // eslint-disable-next-line no-underscore-dangle
+      data.map(announcement => <ContentCard key={announcement._id} {...announcement} />)
     ) : (
       <Card>No announcements yet!</Card>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Button, Typography, HorizontalLine as Line } from 'components';
 import { PinIcon, UnderstoodReact, ExcitedReact, ConfusedReact, BoredReact } from 'assets/icons';
 
-const ContentText = ({ title, text }) => {
+const ContentText = ({ textContent: { content, title } }) => {
   return (
     <Card>
       <div className="card-title">
@@ -12,7 +12,7 @@ const ContentText = ({ title, text }) => {
         </Button>
       </div>
       <Line small className="card-line" />
-      <Typography className="card-body">{text}</Typography>
+      <Typography className="card-body">{content}</Typography>
       <div className="card-reacts">
         <Button inline className="card-react">
           <img src={UnderstoodReact} alt="understood-icon" />

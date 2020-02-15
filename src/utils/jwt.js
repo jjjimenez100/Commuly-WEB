@@ -6,8 +6,8 @@ const getUserDetails = () => {
     return {};
   }
 
-  const { userId, email, role } = jwt.decode(token);
-  return { userId, email, role };
+  const { userId, email, role, team } = jwt.decode(token);
+  return { userId, email, role, team };
 };
 
 export { getUserDetails };
