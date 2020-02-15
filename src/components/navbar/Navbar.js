@@ -4,6 +4,8 @@ TODO:
 */
 
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
+import { Redirect } from 'react-router';
 import { Button, DropdownContainer, DropdownMenu, DropdownMenuItem } from 'components';
 
 import MenuIcon from 'assets/icons/menu.svg';
@@ -14,14 +16,21 @@ import TempAvatar from 'assets/images/avatar.jpg';
 class Navbar extends Component {
   state = {
     dropdownOpen: false,
+    redirectToLoginPage: false,
   };
 
   handleDropdownOpen = () =>
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
-  handleLogout = () => null;
+  handleLogout = () => {
+    this.props.store.user.removeTokenOnLocalStorage();
+    this.setState({ redirectToLoginPage: true });
+  };
 
   render() {
+    if (this.state.redirectToLoginPage) {
+      return <Redirect to="/" />;
+    }
     const { handleSidebarOpen } = this.props;
     return (
       <nav className="navigation">
@@ -56,4 +65,4 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+export default inject('store')(observer(Navbar));
