@@ -1,0 +1,54 @@
+// base file for all content-cards
+
+.content-card {
+  margin-bottom: $spacing-tiny;
+  width: 100%;
+
+  &:hover {
+    background-color: $bg-color;
+  }
+
+  &-line {
+    padding: 0 $spacing-small;
+  }
+
+  &-title {
+    padding: $spacing-small $spacing-small 0 $spacing-small;
+    margin-bottom: $spacing-tiny;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > h5 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+  }
+
+  &-content-text {
+    width: 100%;
+    padding: $spacing-small;
+    line-height: 20px;
+  }
+
+  &-reacts {
+    display: flex;
+    padding: 0 $spacing-small $spacing-small $spacing-small;
+  }
+
+  &-react {
+    margin-right: calc(#{$spacing-tiny} / 2);
+    
+    &:hover {
+      transform: scale(1.2);
+      transform-origin: bottom;
+      margin: 0 $spacing-tiny;
+    }
+
+    &:first-child:hover {
+      margin: 0 $spacing-tiny 0 0;
+    }
+  }
+}

@@ -24,6 +24,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: $spacing-small;
+    padding: $spacing-small;
 
     &-buttons {
       width: 50%;
@@ -62,10 +64,6 @@
   &-announcements {
     margin-top: $spacing-medium;
 
-    .line {
-      margin-bottom: $spacing-small;
-    }
-
     &-title {
       flex: 1;
       margin-bottom: $spacing-tiny;
@@ -73,56 +71,6 @@
 
     &-cards {
       margin-top: $spacing-small;
-
-      .card {
-        margin-bottom: $spacing-tiny;
-        width: 100%;
-
-        &:hover {
-          background-color: $bg-color;
-        }
-
-        &-line {
-          margin-bottom: $spacing-small;
-        }
-
-        &-title {
-          margin-bottom: $spacing-tiny;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          & > h5 {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 250px;
-          }
-        }
-
-        &-body {
-          margin: $spacing-small 0;
-          width: 100%;
-        }
-
-        &-reacts {
-          display: flex;
-        }
-
-        &-react {
-          margin-right: calc(#{$spacing-tiny} / 2);
-          
-          &:hover {
-            transform: scale(1.2);
-            transform-origin: bottom;
-            margin: 0 $spacing-tiny;
-          }
-
-          &:first-child:hover {
-            margin: 0 $spacing-tiny 0 0;
-          }
-        }
-      }
     }
   }
 
@@ -146,6 +94,7 @@
     &-card {
       margin-right: $spacing-small;
       width: 250px;
+      padding: $spacing-small;
     }
 
     &-cards {

@@ -18,6 +18,11 @@ $navbar-height: 72px;
     background-color: $white-color;
     border-radius: 50%;
   }
+
+  &-menu {
+    right: $spacing-small;
+    width: 150px;
+  }
   
   &-right {
     display: flex;

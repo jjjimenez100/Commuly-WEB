@@ -4,7 +4,7 @@ import {
   HorizontalLine as Line,
   Card,
   Button,
-  RadioButton,
+  Checkbox,
   Modal,
   DropdownContainer,
   DropdownMenu,
@@ -72,7 +72,7 @@ const CreateContentButtons = {
     order: 4,
   },
   [SCHEDULED_CONTENT]: {
-    name: 'Event',
+    name: 'Scheduled Event',
     icon: EventIcon,
     type: SCHEDULED_CONTENT,
     order: 5,
@@ -127,7 +127,6 @@ class Home extends Component {
       announcements: teamCards,
       // eslint-disable-next-line react/no-unused-state
       scheduledEvents: scheduledCards,
-      // eslint-disable-next-line react/no-unused-state
       todos: todoCards,
     });
   };
@@ -142,13 +141,30 @@ class Home extends Component {
   handleDropdownOpen = () =>
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
-  renderAnnouncements = data =>
-    data.length > 0 ? (
-      // eslint-disable-next-line no-underscore-dangle
-      data.map(announcement => <ContentCard key={announcement._id} {...announcement} />)
-    ) : (
-      <Card>No announcements yet!</Card>
-    );
+  renderAnnouncements = data => {
+    console.log(data);
+    if (data.length > 0) {
+      return data.map(announcement => <ContentCard key={announcement._id} {...announcement} />);
+    }
+    return <Card>No announcements yet!</Card>;
+  };
+
+  renderTodos = data => {
+    if (data.length > 0) {
+      data.map(todo => (
+        <Checkbox
+          key={todo._id}
+          id="a"
+          labelText="First todo"
+          className="home-todo-radio"
+          checked={false}
+          onChange={() => this.setState(prevState => ({ todo: !prevState.todo }))}
+        />
+      ));
+    }
+
+    return <div>No todos!</div>;
+  };
 
   renderLeaderboard = data =>
     data.map(person => (
@@ -213,7 +229,7 @@ class Home extends Component {
               </Typography>
             </Button>
             <DropdownMenu visible={this.state.dropdownOpen}>
-              <DropdownMenuItem text="Hello world!" />
+              <DropdownMenuItem text="Hello world!" onClick={() => null} />
             </DropdownMenu>
           </DropdownContainer>
           <div className="home-events">
@@ -263,12 +279,7 @@ class Home extends Component {
             </Typography>
             <Line />
             <div className="home-todo-list">
-              <form>
-                <RadioButton id="a" labelText="First todo" className="home-todo-radio" />
-                <RadioButton id="b" labelText="First todo" className="home-todo-radio" />
-                <RadioButton id="c" labelText="First todo" className="home-todo-radio" />
-                <RadioButton id="d" labelText="First todo" className="home-todo-radio" />
-              </form>
+              <form>{this.renderTodos(this.state.todos)}</form>
             </div>
           </div>
         </div>
