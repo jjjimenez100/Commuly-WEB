@@ -1,4 +1,4 @@
-import { TEXT_CONTENT } from 'constants/card';
+import { IMAGE_CONTENT } from 'constants/card';
 
 export const boardData = [
   {
@@ -20,25 +20,9 @@ export const boardData = [
 
 export const announcementsData = [
   {
-    id: 1,
-    contentType: TEXT_CONTENT,
-    title: 'This is a sample title',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus est feugiat ligula blandit, fringilla rhoncus diam tincidunt. Pellentesque pretium velit odio, ac ornare justo congue eget. Nullam id ornare libero. Fusce id dui et neque fringilla suscipit in ut turpis. Cras et interdum est. Suspendisse non justo eget sem faucibus aliquam et ut nisl. Suspendisse accumsan cursus semper.',
-  },
-  {
-    id: 2,
-    contentType: TEXT_CONTENT,
-    title: 'This is a sample title',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus est feugiat ligula blandit, fringilla rhoncus diam tincidunt. Pellentesque pretium velit odio, ac ornare justo congue eget. Nullam id ornare libero. Fusce id dui et neque fringilla suscipit in ut turpis. Cras et interdum est. Suspendisse non justo eget sem faucibus aliquam et ut nisl. Suspendisse accumsan cursus semper.',
-  },
-  {
-    id: 3,
-    contentType: TEXT_CONTENT,
-    title: 'This is a sample title',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus est feugiat ligula blandit, fringilla rhoncus diam tincidunt. Pellentesque pretium velit odio, ac ornare justo congue eget. Nullam id ornare libero. Fusce id dui et neque fringilla suscipit in ut turpis. Cras et interdum est. Suspendisse non justo eget sem faucibus aliquam et ut nisl. Suspendisse accumsan cursus semper.',
+    _id: 1,
+    contentCardType: IMAGE_CONTENT,
+    imageUrl: 'https://i.pinimg.com/originals/63/0f/0e/630f0ef3f6f3126ca11f19f4a9b85243.jpg',
   },
 ];
 

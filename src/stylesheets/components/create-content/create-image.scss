@@ -1,0 +1,33 @@
+.create-image {
+  &-overlay {
+    position: absolute;
+    background-color: rgba($neutral-m-color, 0.4);
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    z-index: 1;
+  }
+
+  &-dropzone {
+    border: 1px solid $border-color;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-image: url('../../../assets/images/test-image.png');
+    color: $white-color;
+    margin-top: $spacing-small;
+    position: relative;
+    z-index: 0;
+
+    &-text {
+      display: flex;
+      z-index: 2;
+
+      & > img {
+        margin-right: $spacing-small;
+      }
+    }
+  }
+}

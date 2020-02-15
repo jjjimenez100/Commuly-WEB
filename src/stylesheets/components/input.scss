@@ -6,7 +6,23 @@
     border: 1px solid $border-color;
     border-radius: 6px;
     width: 100%;
-    padding: $spacing-tiny $spacing-small;
+    padding: $spacing-tiny $spacing-small $spacing-tiny 0px;
+    display: flex;
+    
+    &-icon {
+      margin: 0 $spacing-tiny;
+      
+      &-hidden {
+        padding: $spacing-tiny $spacing-small;
+      }
+    }
+
+    input {
+      border: none;
+      outline:none;
+      padding: 0;
+      flex: 1;
+    }
   }
 
   &-description {

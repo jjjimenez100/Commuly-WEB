@@ -33,17 +33,13 @@ const Button = ({
   type,
 }) => {
   // classname for button container
-  const className = classnames(
-    'button',
-    {
-      [`button-${size}`]: size,
-      'button-inline': inline,
-      'button-disabled': disabled || loading,
-      [`button-${variant}`]: variant,
-      [`button-position-${iconPosition}`]: icon && iconPosition,
-    },
-    styleClass
-  );
+  const className = classnames('button', styleClass, {
+    [`button-${size}`]: size,
+    'button-inline': inline,
+    'button-disabled': disabled || loading,
+    [`button-${variant}`]: variant,
+    [`button-position-${iconPosition}`]: icon && iconPosition,
+  });
 
   // classname for icon inside button
   const buttonClassname = classnames('button-icon', {

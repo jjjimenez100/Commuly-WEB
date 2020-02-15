@@ -1,0 +1,25 @@
+.content-todo {
+  padding: $spacing-base $spacing-small $spacing-base $spacing-large;
+  display: flex;
+
+  .circle {
+    width: 32px;
+    height: 32px;
+    background-color: $primary-color;
+    border-radius: 50%;
+    margin-right: $spacing-small;
+  }
+
+  &-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .todo-title {
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+}

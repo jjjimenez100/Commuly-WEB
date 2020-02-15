@@ -1,0 +1,83 @@
+$create-text-sidebar-width: 120px;
+
+.create-text {
+  &-bg {
+    margin-top: $spacing-small;
+    display: flex;
+  }
+
+  &-input {
+    margin-bottom: $spacing-small;
+  }
+
+  &-sidebar {
+    margin-right: $spacing-tiny;
+    width: $create-text-sidebar-width;
+    
+    &-subtitle {
+      margin-bottom: calc(#{$spacing-tiny} / 2);
+      
+      &:not(:first-child) {
+        margin-top: $spacing-tiny;
+      }
+    }
+
+    &-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: $primary-color;
+    }
+    
+    & > .dropdown > button {
+      border: 1px solid $border-color;
+      padding: $spacing-tiny;
+      border-radius: 4px;
+      font-weight: $font-normal;
+      justify-content: space-between;
+      width: 100%;
+
+      &:hover {
+        border: 1px solid $border-color;
+      }
+
+      & > p {
+        @include font-size(14px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $text-color;
+      }
+    }
+
+    &-dropitem {
+      width: max-content;
+    }
+  }
+
+  &-textarea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    height: 300px;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: $spacing-small;
+    overflow-wrap: break-word;
+    overflow: auto;
+    text-align: center;
+    background-image: url('../../../assets/images/test-image.png');
+    color: $white-color;
+    font-weight: $font-bold;
+
+
+    & > div {
+      text-align: center;
+      overflow-wrap: break-word;
+      color: $white-color;
+      font-weight: $font-bold;
+    }
+  }
+}

@@ -4,7 +4,7 @@ TODO:
 */
 
 import React, { Component } from 'react';
-import { Button } from 'components';
+import { Button, DropdownContainer, DropdownMenu, DropdownMenuItem } from 'components';
 
 import MenuIcon from 'assets/icons/menu.svg';
 import NotifIcon from 'assets/icons/notification.svg';
@@ -12,6 +12,15 @@ import ArrowDownIcon from 'assets/icons/arrow-down.svg';
 import TempAvatar from 'assets/images/avatar.jpg';
 
 class Navbar extends Component {
+  state = {
+    dropdownOpen: false,
+  };
+
+  handleDropdownOpen = () =>
+    this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
+
+  handleLogout = () => null;
+
   render() {
     const { handleSidebarOpen } = this.props;
     return (
@@ -23,10 +32,24 @@ class Navbar extends Component {
           <Button inline type="button" className="navigation-button notification">
             <img src={NotifIcon} alt="notif" className="notification-icon" />
           </Button>
-          <Button inline type="button" className="navigation-button avatar">
-            <img src={TempAvatar} alt="avatar" className="avatar-icon" />
-            <img src={ArrowDownIcon} alt="arrow-down" className="avatar-arrow-down" />
-          </Button>
+          <DropdownContainer>
+            <Button
+              inline
+              type="button"
+              className="navigation-button avatar"
+              onClick={this.handleDropdownOpen}
+            >
+              <img src={TempAvatar} alt="avatar" className="avatar-icon" />
+              <img src={ArrowDownIcon} alt="arrow-down" className="avatar-arrow-down" />
+            </Button>
+            <DropdownMenu visible={this.state.dropdownOpen} className="navigation-menu">
+              <DropdownMenuItem
+                text="Logout"
+                onClick={this.handleLogout}
+                buttonClassname="navigation-menu-button"
+              />
+            </DropdownMenu>
+          </DropdownContainer>
         </div>
       </nav>
     );

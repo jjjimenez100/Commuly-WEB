@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Typography } from 'components';
 import CloseIcon from 'assets/icons/box-close.svg';
@@ -12,6 +12,19 @@ export const ModalFooter = ({ className = '', children }) => (
 );
 
 export const Modal = ({ isOpen, title, handleClose, className, children }) => {
+  useEffect(() => {
+    const handleKeydown = ({ keyCode }) => {
+      if (isOpen && keyCode === 27) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeydown);
+    return () => {
+      document.removeEventListener('keydown', handleKeydown);
+    };
+  }, [isOpen, handleClose]);
+
   if (isOpen)
     return (
       <div className="modal">

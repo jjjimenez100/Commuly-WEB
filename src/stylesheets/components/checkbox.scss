@@ -1,4 +1,4 @@
-.radio {
+.checkbox {
   display: flex;
   cursor: pointer;
   justify-content: flex-start;
@@ -17,15 +17,15 @@
     align-items: center;
   }
 
-  input[type='radio'] {
+  input[type='radio'], input[type='checkbox'] {
     display: none;
 
-    &:checked + .radio-circle {
+    &:checked + .checkbox-circle {
       background-color: $primary-color;
       border: 2px solid $primary-color;
     }
     
-    &:checked + .radio-circle::before {
+    &:checked + .checkbox-circle::before {
       content: url('../../assets/icons/check.svg');
     }
   }

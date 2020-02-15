@@ -14,23 +14,21 @@
 @import './components/modal.scss';
 @import './components/dropdown.scss';
 @import './components/spinner.scss';
-@import './components/create-content.scss';
+
+// create content styles
+@import './components/create-content/create-text.scss';
+@import './components/create-content/create-image.scss';
+@import './components/create-content/create-event.scss';
+
+// content card styles
+@import './components/content-card/content-card.scss';
+@import './components/content-card/content-image.scss';
+@import './components/content-card/content-todo.scss';
+@import './components/content-card/content-event.scss';
 
 // form styles
-@import './components/radio-button.scss';
+@import './components/checkbox.scss';
 @import './components/textarea.scss';
-@import './components/input.scss';
-
-// layout styles
-@import './components/navbar.scss';
-@import './components/sidebar.scss';
-
-// reusable component styles
-@import './components/button.scss';
-@import './components/typography.scss';
-@import './components/card.scss';
-@import './components/line.scss';
-@import './components/radio-button.scss';
 @import './components/input.scss';
 
 // layout styles

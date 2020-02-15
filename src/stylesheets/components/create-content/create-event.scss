@@ -1,0 +1,31 @@
+.create-event {
+  & label {
+    margin-bottom: $spacing-tiny;
+  }
+
+  & div {
+    margin-top: $spacing-tiny;
+  }
+
+  &-date, &-time {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    & > p {
+      margin: 0 $spacing-small;
+    }
+  }
+
+  &-date {
+    .input-date {
+      width: 200px;
+    }
+  }
+
+  &-time {
+    .input-time {
+      width: 200px;
+    }
+  }
+}

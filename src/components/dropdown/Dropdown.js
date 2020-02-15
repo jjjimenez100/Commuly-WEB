@@ -62,3 +62,8 @@ export const DropdownMenuItem = ({ text, onClick, className, ...buttonProps }) =
     </li>
   );
 };
+
+DropdownMenuItem.propTypes = {
+  text: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
