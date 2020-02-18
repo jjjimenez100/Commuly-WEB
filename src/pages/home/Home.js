@@ -215,10 +215,6 @@ class Home extends Component {
     const { announcements } = this.state;
     return (
       <div className="home">
-        <img
-          src="https://cloudfront.commuly.com/5e35bfdec83b1711f6965192/IMAGE/e5263f60-a2c8-488d-9ede-f6baa3551047.png"
-          alt="test-deployment"
-        />
         <div className="home-container">
           <DropdownContainer className="home-dropdown">
             <Button
