@@ -116,8 +116,8 @@ class Home extends Component {
   handleModalOpen = (activeContentType = '') => {
     this.setState(prevState => ({
       modalOpen: !prevState.modalOpen,
-      currentActiveModal: activeContentType,
     }));
+    this.props.store.home.setCurrentCreateModalType(activeContentType);
   };
 
   handleDropdownOpen = () =>
@@ -193,7 +193,7 @@ class Home extends Component {
   );
 
   render() {
-    const { scheduledCards, addScheduledCard } = this.props.store.home;
+    const { teamCards, addCard, currentCreateModalType } = this.props.store.home;
     return (
       <div className="home">
         <div className="home-container">
@@ -234,9 +234,7 @@ class Home extends Component {
             </div>
             <Line />
             <Card className="home-create-card">{this.renderCreateContentButtons()}</Card>
-            <div className="home-announcements-cards">
-              {this.renderAnnouncements(scheduledCards)}
-            </div>
+            <div className="home-announcements-cards">{this.renderAnnouncements(teamCards)}</div>
           </div>
         </div>
         <div className="home-sidebar">
@@ -265,15 +263,15 @@ class Home extends Component {
           </div>
         </div>
         <CreateContent
-          contentType={this.state.currentActiveModal}
+          contentType={currentCreateModalType}
           isOpen={this.state.modalOpen}
           handleClose={this.handleModalOpen}
           title={`Create ${
-            CreateContentButtons[this.state.currentActiveModal]
-              ? CreateContentButtons[this.state.currentActiveModal].name
+            CreateContentButtons[currentCreateModalType]
+              ? CreateContentButtons[currentCreateModalType].name
               : ''
           } Content`}
-          addCard={addScheduledCard}
+          addCard={addCard}
         />
       </div>
     );

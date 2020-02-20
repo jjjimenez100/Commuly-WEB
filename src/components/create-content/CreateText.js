@@ -32,6 +32,7 @@ class CreateText extends Component {
     textSize: 20,
     textColor: '#000000',
     backgroundColor: '#FFFFFF',
+    mainText: 'Sample Text',
   };
 
   componentDidMount() {
@@ -92,8 +93,8 @@ class CreateText extends Component {
     try {
       const { data } = await CardService.createNewContentCard(body);
 
-      console.log(data);
       await this.props.addCard(data.savedCard);
+      this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -122,6 +123,10 @@ class CreateText extends Component {
       document.getElementById('create-textarea').style.backgroundColor = color.hex;
     }
     document.getElementById(`create-${name}`).style.backgroundColor = color.hex;
+  };
+
+  setMainText = text => {
+    this.setState({ mainText: text });
   };
 
   render() {
@@ -214,9 +219,13 @@ class CreateText extends Component {
                   color: this.state.textColor,
                 }}
                 id="create-textarea"
+                role="button"
+                tabIndex="0"
+                onClick={() => this.setMainText('')}
+                onKeyDown={() => this.setMainText('')}
               >
                 <div className="create-text-textarea-overlay" />
-                Sample text
+                {this.state.mainText}
               </div>
             </div>
           </form>

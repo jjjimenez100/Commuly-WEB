@@ -2,6 +2,7 @@
 import { types, flow } from 'mobx-state-tree';
 import UserService from 'services/userService';
 import { getUserDetails } from 'utils/jwt';
+import { TODO_CONTENT, SCHEDULED_CONTENT } from '../constants/card';
 
 const Home = types
   .model('Home', {
@@ -9,6 +10,7 @@ const Home = types
     teamCards: types.array(types.frozen()),
     todoCards: types.array(types.frozen()),
     user: types.frozen(),
+    currentCreateModalType: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
@@ -27,10 +29,22 @@ const Home = types
         // handle error here
       }
     }),
-    addScheduledCard(contentCardData) {
-      const { scheduledCards } = self;
-      const data = [contentCardData, ...scheduledCards];
-      self.scheduledCards = data;
+    addCard(contentCardData) {
+      const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
+
+      if (cardType === SCHEDULED_CONTENT) {
+        const data = [contentCardData, ...scheduledCards];
+        self.scheduledCards = data;
+      } else if (cardType === TODO_CONTENT) {
+        const data = [contentCardData, ...todoCards];
+        self.todoCards = data;
+      } else {
+        const data = [contentCardData, ...teamCards];
+        self.teamCards = data;
+      }
+    },
+    setCurrentCreateModalType(modalType) {
+      self.currentCreateModalType = modalType;
     },
   }));
 
@@ -39,6 +53,7 @@ export const store = Home.create({
   teamCards: [],
   todoCards: [],
   user: null,
+  currentCreateModalType: '',
 });
 
 export default Home;
