@@ -31,15 +31,7 @@ class CreateScheduledContent extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     const { team, userId: owner } = getUserDetails();
-    const {
-      title,
-      description: content,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      file,
-    } = this.state;
+    const { title, description, startDate, endDate, startTime, endTime, file } = this.state;
     const body = {
       cardType: CONTENT_CARD,
       contentCardType: SCHEDULED_CONTENT,
@@ -49,7 +41,7 @@ class CreateScheduledContent extends Component {
     };
     const scheduledEventContent = {
       title,
-      content,
+      description,
       startDate,
       endDate,
       startTime,
@@ -63,6 +55,7 @@ class CreateScheduledContent extends Component {
     try {
       const { data } = await CardService.createNewContentCard(formData);
       await this.props.addCard(data.savedCard);
+      this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

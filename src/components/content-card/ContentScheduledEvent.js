@@ -1,32 +1,42 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import moment from 'moment';
 import { Typography } from 'components';
+import CLOUDFRONT_URL from '../../config/aws';
 
 const ContentScheduledEvent = ({
-  scheduledEventContent: { imagePosterURL, scheduledDate, name },
+  scheduledEventContent: {
+    imagePosterURL,
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    title,
+    description,
+  },
 }) => {
   return (
     <div className="content-event">
       <div className="content-image content-event-image">
         <div className="content-image-overlay" />
-        <img src={imagePosterURL} alt="url-post" />
+        <img src={`${CLOUDFRONT_URL}${imagePosterURL}`} alt="url-post" />
       </div>
       <div className="content-event-header">
         <div className="content-event-date">
           <Typography>
-            {moment(scheduledDate)
+            {moment(startDate)
               .format('MMM')
               .toUpperCase()}
           </Typography>
           <Typography variant="h5">
-            {moment(scheduledDate)
+            {moment(startDate)
               .format('DD')
               .toUpperCase()}
           </Typography>
         </div>
-        <Typography variant="h3">{name}</Typography>
+        <Typography variant="h4">{title}</Typography>
         <Typography variant="subtitle" className="content-event-subtitle">
-          (date here){' '}
+          {}
         </Typography>
       </div>
     </div>
