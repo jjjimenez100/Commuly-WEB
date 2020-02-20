@@ -18,7 +18,6 @@ const Home = types
         const { userId } = getUserDetails();
         const { data } = yield UserService.getCardsByUser(userId);
         const { scheduledCards, teamCards, todoCards, user } = data;
-        console.log(scheduledCards);
         self.scheduledCards = scheduledCards;
         self.teamCards = teamCards;
         self.todoCards = todoCards;
@@ -38,10 +37,10 @@ const Home = types
       } else if (cardType === TODO_CONTENT) {
         const data = [contentCardData, ...todoCards];
         self.todoCards = data;
-      } else {
-        const data = [contentCardData, ...teamCards];
-        self.teamCards = data;
       }
+
+      const announcements = [contentCardData, ...teamCards];
+      self.teamCards = announcements;
     },
     setCurrentCreateModalType(modalType) {
       self.currentCreateModalType = modalType;

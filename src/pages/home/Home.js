@@ -104,7 +104,6 @@ class Home extends Component {
   state = {
     date: new Date(),
     modalOpen: false,
-    currentActiveModal: '',
     dropdownOpen: false,
   };
 
@@ -132,18 +131,18 @@ class Home extends Component {
 
   renderTodos = data => {
     if (data.length > 0) {
-      data.map(todo => (
-        <Checkbox
-          key={todo._id}
-          id="a"
-          labelText="First todo"
-          className="home-todo-radio"
-          checked={false}
-          onChange={() => this.setState(prevState => ({ todo: !prevState.todo }))}
-        />
-      ));
+      return data.map(({ _id: id, todoContent: { title } }) => {
+        return (
+          <Checkbox
+            key={id}
+            labelText={`${title}`}
+            className="home-todo-radio"
+            checked={false}
+            onChange={() => this.setState(prevState => ({ todo: !prevState.todo }))}
+          />
+        );
+      });
     }
-
     return <div>No todos!</div>;
   };
 
@@ -193,7 +192,7 @@ class Home extends Component {
   );
 
   render() {
-    const { teamCards, addCard, currentCreateModalType } = this.props.store.home;
+    const { todoCards, teamCards, addCard, currentCreateModalType } = this.props.store.home;
     return (
       <div className="home">
         <div className="home-container">
@@ -258,7 +257,7 @@ class Home extends Component {
             </Typography>
             <Line />
             <div className="home-todo-list">
-              <form>{this.renderTodos(this.props.store.home.todoCards)}</form>
+              <form>{this.renderTodos(todoCards)}</form>
             </div>
           </div>
         </div>

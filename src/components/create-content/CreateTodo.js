@@ -22,7 +22,7 @@ class CreateTodo extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     // add validation for date and time here
-    const { title, description: name, startDate, startTime, endTime } = this.state;
+    const { title, description, startDate, startTime, endTime } = this.state;
     const { team, userId: owner } = getUserDetails();
     // temporary while we don't have any mockups on adding todos
     // to selected individuals only
@@ -35,7 +35,7 @@ class CreateTodo extends Component {
       todoContent: {
         todoType,
         title,
-        name,
+        description,
         startDate,
         startTime,
         endTime,
@@ -45,6 +45,7 @@ class CreateTodo extends Component {
     try {
       const { data } = await CardService.createNewContentCard(body);
       await this.props.addCard(data.savedCard);
+      this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

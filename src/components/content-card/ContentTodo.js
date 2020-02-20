@@ -2,18 +2,20 @@ import React from 'react';
 import moment from 'moment';
 import { Typography } from 'components';
 
-const ContentTodo = ({ todoContent: { name, startDate, endDate, startTime, endTime } }) => {
+const ContentTodo = ({
+  // eslint-disable-next-line no-unused-vars
+  todoContent: { description, title, startDate, endDate, startTime, endTime },
+}) => {
   return (
     <div className="content-todo">
       <div className="circle" />
       <div className="content-todo-body">
         <Typography variant="h4" className="todo-title">
-          To Do
+          {title}
         </Typography>
-        <Typography variant="h5">{name}</Typography>
+        <Typography variant="h5">{description}</Typography>
         <Typography>
-          {moment(startDate).format('LL')} ({moment(startTime).format('LT')}) -{' '}
-          {moment(endDate).format('LL')} ({moment(endTime).format('LT')})
+          {moment(startDate).format('LL')} ({`${startTime} AM`}) - ({`${endTime} AM`})
         </Typography>
       </div>
     </div>
