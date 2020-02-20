@@ -39,6 +39,7 @@ class CreateImage extends Component {
     try {
       const { data } = await CardService.createNewContentCard(formData);
       await this.props.addCard(data.savedCard);
+      this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
