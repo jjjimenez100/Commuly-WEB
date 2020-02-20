@@ -1,6 +1,6 @@
 .content-event {
   &-image {
-    margin: 0;
+    margin: $spacing-small 0 0 0;
   }
 
   &-header {
@@ -20,6 +20,7 @@
     border-radius: 50%;
     flex-direction: column;
     margin-right: $spacing-small;
+    font-weight: 900;
   }
 
   &-subtitle {

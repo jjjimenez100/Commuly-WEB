@@ -72,6 +72,11 @@
     &-cards {
       margin-top: $spacing-small;
     }
+
+    &-empty {
+      width: 100%;
+      padding: $spacing-base;
+    }
   }
 
   &-events {

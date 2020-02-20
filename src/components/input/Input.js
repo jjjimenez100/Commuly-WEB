@@ -10,7 +10,18 @@ TODO: Custom message for form validation
 TODO: Active style
 */
 
-const Input = ({ id, className, name, type, placeholder, labelText, onChange, value, icon }) => {
+const Input = ({
+  id,
+  className,
+  name,
+  type,
+  placeholder,
+  labelText,
+  onChange,
+  value,
+  icon,
+  ...props
+}) => {
   const inputClassname = classnames('input', {
     [`input-${type}`]: type,
     [`${className}`]: className,
@@ -22,9 +33,11 @@ const Input = ({ id, className, name, type, placeholder, labelText, onChange, va
 
   return (
     <label htmlFor={id} className={inputClassname}>
-      <Typography variant="subtitle" className="input-description">
-        {labelText}
-      </Typography>
+      {labelText && (
+        <Typography variant="subtitle" className="input-description">
+          {labelText}
+        </Typography>
+      )}
       <div className={areaClassname}>
         {icon && <img src={icon} alt="input-icon" className="input-area-icon" />}
         <input
@@ -33,6 +46,7 @@ const Input = ({ id, className, name, type, placeholder, labelText, onChange, va
           onChange={onChange}
           value={value}
           placeholder={placeholder}
+          {...props}
         />
       </div>
     </label>
@@ -43,14 +57,15 @@ Input.defaultProps = {
   id: '',
   type: 'text',
   placeholder: '',
+  labelText: '',
 };
 
 Input.propTypes = {
   id: PropTypes.string,
   type: PropTypes.oneOf(['text', 'number', 'password', 'email', 'date', 'time']),
-  labelText: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  labelText: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
 };

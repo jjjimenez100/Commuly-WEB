@@ -20,6 +20,7 @@ export { default as CloudUploadIcon } from './cloud-upload.svg';
 export { default as ArrowDownIcon } from './arrow-down.svg';
 export { default as CalendarBlackIcon } from './calendar-black.svg';
 export { default as TimerIcon } from './timer.svg';
+export { default as DeleteIcon } from './delete.svg';
 // export { default as } from '.svg'
 
 export { default as TempAvatar } from 'assets/images/avatar.jpg';

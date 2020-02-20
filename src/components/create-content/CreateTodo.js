@@ -1,67 +1,49 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import classnames from 'classnames';
-import Dropzone from 'react-dropzone';
-
 import { Typography, Input, Textarea, Button, ModalBody, ModalFooter } from 'components';
 import { AddPeopleIcon, SendIcon, CalendarBlackIcon, TimerIcon } from 'assets/icons';
-import { CONTENT_CARD, SCHEDULED_CONTENT } from 'constants/card';
+import { CONTENT_CARD, TODO_CONTENT } from 'constants/card';
 import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
 
-class CreateScheduledContent extends Component {
+class CreateTodo extends Component {
   state = {
     title: '',
     description: '',
     startDate: moment().format('YYYY-MM-DD'),
-    endDate: moment().format('YYYY-MM-DD'),
     startTime: moment().format('HH:mm'),
     endTime: moment().format('HH:mm'),
-    file: null,
   };
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
   };
 
-  handleFileUpload = file => {
-    this.setState({ file: file[0] });
-  };
-
   handleSubmit = async e => {
     e.preventDefault();
+    // add validation for date and time here
+    const { title, description: name, startDate, startTime, endTime } = this.state;
     const { team, userId: owner } = getUserDetails();
-    const {
-      title,
-      description: content,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      file,
-    } = this.state;
+    // temporary while we don't have any mockups on adding todos
+    // to selected individuals only
+    const todoType = 'TEAM';
     const body = {
       cardType: CONTENT_CARD,
-      contentCardType: SCHEDULED_CONTENT,
+      contentCardType: TODO_CONTENT,
       team,
       owner,
-      file,
+      todoContent: {
+        todoType,
+        title,
+        name,
+        startDate,
+        startTime,
+        endTime,
+      },
     };
-    const scheduledEventContent = {
-      title,
-      content,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-    };
-
-    const formData = new FormData();
-    Object.keys(body).forEach(key => formData.append(key, body[key]));
-    formData.append('scheduledEventContent', JSON.stringify(scheduledEventContent));
 
     try {
-      const { data } = await CardService.createNewContentCard(formData);
+      const { data } = await CardService.createNewContentCard(body);
       await this.props.addCard(data.savedCard);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -89,7 +71,7 @@ class CreateScheduledContent extends Component {
             onChange={this.handleInputChanged}
             value={this.state.description}
           />
-          <div className="create-event-date">
+          <div className="create-event-time">
             <Input
               icon={CalendarBlackIcon}
               type="date"
@@ -97,17 +79,8 @@ class CreateScheduledContent extends Component {
               name="startDate"
               onChange={this.handleInputChanged}
               value={this.state.startDate}
+              className="create-todo-date"
             />
-            <Typography>-</Typography>
-            <Input
-              type="date"
-              labelText="End Date"
-              name="endDate"
-              onChange={this.handleInputChanged}
-              value={this.state.endDate}
-            />
-          </div>
-          <div className="create-event-time">
             <Input
               icon={TimerIcon}
               type="time"
@@ -125,25 +98,6 @@ class CreateScheduledContent extends Component {
               value={this.state.endTime}
             />
           </div>
-          <Typography variant="subtitle">Image</Typography>
-          <Dropzone accept="image/*" onDrop={this.handleFileUpload}>
-            {({ getRootProps, getInputProps, isDragAccept }) => (
-              <div
-                {...getRootProps({
-                  className: classnames('create-todo-dropzone', {
-                    'file-accept': isDragAccept,
-                  }),
-                })}
-              >
-                <input {...getInputProps()} />
-                <Typography className="create-todo-dropzone-text">
-                  {this.state.file
-                    ? `${this.state.file.name}`
-                    : 'Drag file here or click to select file.'}
-                </Typography>
-              </div>
-            )}
-          </Dropzone>
         </ModalBody>
         <ModalFooter>
           <Button size="small" type="button" variant="ghost" onClick={onClose}>
@@ -161,4 +115,4 @@ class CreateScheduledContent extends Component {
   }
 }
 
-export default CreateScheduledContent;
+export default CreateTodo;

@@ -17,6 +17,13 @@ export { default as CreateContent } from './create-content/CreateContent';
 export { default as CreateText } from './create-content/CreateText';
 export { default as CreateImage } from './create-content/CreateImage';
 export { default as CreateScheduledContent } from './create-content/CreateScheduledContent';
+export { default as CreateTodo } from './create-content/CreateTodo';
+
+// create question card components
+export { default as CreateMultipleChoice } from './create-content/CreateMultipleChoice';
+export { default as CreateOpenTextQuestion } from './create-content/CreateOpenTextQuestion';
+export { default as CreateColumnOrder } from './create-content/CreateColumnOrder';
+export { default as CreateLikert } from './create-content/CreateLikert';
 
 // card content components
 export { default as ContentCard } from './content-card/ContentCard';
@@ -24,6 +31,9 @@ export { default as ContentText } from './content-card/ContentText';
 export { default as ContentImage } from './content-card/ContentImage';
 export { default as ContentTodo } from './content-card/ContentTodo';
 export { default as ContentScheduledEvent } from './content-card/ContentScheduledEvent';
+
+// question cards
+export { default as QuestionMultipleChoice } from './content-card/QuestionMultipleChoice';
 
 // form components
 export { default as Checkbox } from './checkbox/Checkbox';

@@ -1,13 +1,16 @@
 $create-text-sidebar-width: 120px;
 
 .create-text {
+  z-index: 1;
+  
+  &-body {
+    overflow: auto;
+    height: max-content
+  }
+
   &-bg {
     margin-top: $spacing-small;
     display: flex;
-  }
-
-  &-input {
-    margin-bottom: $spacing-small;
   }
 
   &-sidebar {
@@ -26,7 +29,8 @@ $create-text-sidebar-width: 120px;
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background-color: $primary-color;
+      background-color: $white-color;
+      border: 1px solid $border-color;
     }
     
     & > .dropdown > button {
@@ -68,9 +72,8 @@ $create-text-sidebar-width: 120px;
     overflow-wrap: break-word;
     overflow: auto;
     text-align: center;
-    background-image: url('../../../assets/images/test-image.png');
-    color: $white-color;
     font-weight: $font-bold;
+    font-size: 20px;
 
 
     & > div {
@@ -81,3 +84,4 @@ $create-text-sidebar-width: 120px;
     }
   }
 }
+

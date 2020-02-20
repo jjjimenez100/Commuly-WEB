@@ -1,7 +1,7 @@
 // base file for all content-cards
 
 .content-card {
-  margin-bottom: $spacing-tiny;
+  margin-bottom: $spacing-base;
   width: 100%;
 
   &:hover {
@@ -27,11 +27,7 @@
     }
   }
 
-  &-content-text {
-    width: 100%;
-    padding: $spacing-small;
-    line-height: 20px;
-  }
+  
 
   &-reacts {
     display: flex;
@@ -49,6 +45,25 @@
 
     &:first-child:hover {
       margin: 0 $spacing-tiny 0 0;
+    }
+  }
+
+  .content-text {
+    &-description {
+      width: 100%;
+      padding: $spacing-small;
+      line-height: 20px;
+    }
+
+    &-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 900;
+      font-size: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
