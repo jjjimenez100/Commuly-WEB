@@ -1,5 +1,6 @@
 .textarea {
   width: 100%;
+  display: block;
 
   &-description {
     margin-bottom: calc(#{$spacing-tiny} / 2);

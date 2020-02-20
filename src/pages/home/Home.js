@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
 import {
   Typography,
   HorizontalLine as Line,
   Card,
   Button,
   Checkbox,
-  Modal,
   DropdownContainer,
   DropdownMenu,
   DropdownMenuItem,
@@ -30,8 +30,6 @@ import {
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-import UserService from 'services/userService';
-
 import {
   TEXT_CONTENT,
   CHART_CONTENT,
@@ -43,7 +41,6 @@ import {
   COLUMN_ORDERING_QUESTION,
   OPEN_TEXT_QUESTION,
 } from 'constants/card';
-import { getUserDetails } from 'utils/jwt';
 import { boardData, eventData } from './data';
 
 const CreateContentButtons = {
@@ -109,26 +106,11 @@ class Home extends Component {
     modalOpen: false,
     currentActiveModal: '',
     dropdownOpen: false,
-    announcements: [],
-    // eslint-disable-next-line react/no-unused-state
-    scheduledEvents: [],
-    // eslint-disable-next-line react/no-unused-state
-    todos: [],
   };
 
   componentDidMount = async () => {
-    const { userId } = getUserDetails();
-    const { data } = await UserService.getCardsByUser(userId);
-
     // user here will be used to check which cards has been pinned, reacted, etc.
-    // eslint-disable-next-line no-unused-vars
-    const { scheduledCards, teamCards, todoCards, user } = data;
-    this.setState({
-      announcements: teamCards,
-      // eslint-disable-next-line react/no-unused-state
-      scheduledEvents: scheduledCards,
-      todos: todoCards,
-    });
+    await this.props.store.home.getCards();
   };
 
   handleModalOpen = (activeContentType = '') => {
@@ -142,11 +124,10 @@ class Home extends Component {
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
   renderAnnouncements = data => {
-    console.log(data);
     if (data.length > 0) {
       return data.map(announcement => <ContentCard key={announcement._id} {...announcement} />);
     }
-    return <Card>No announcements yet!</Card>;
+    return <Card className="home-announcements-empty">No announcements yet!</Card>;
   };
 
   renderTodos = data => {
@@ -212,7 +193,7 @@ class Home extends Component {
   );
 
   render() {
-    const { announcements } = this.state;
+    const { scheduledCards, addScheduledCard } = this.props.store.home;
     return (
       <div className="home">
         <div className="home-container">
@@ -254,7 +235,7 @@ class Home extends Component {
             <Line />
             <Card className="home-create-card">{this.renderCreateContentButtons()}</Card>
             <div className="home-announcements-cards">
-              {this.renderAnnouncements(announcements)}
+              {this.renderAnnouncements(scheduledCards)}
             </div>
           </div>
         </div>
@@ -279,11 +260,12 @@ class Home extends Component {
             </Typography>
             <Line />
             <div className="home-todo-list">
-              <form>{this.renderTodos(this.state.todos)}</form>
+              <form>{this.renderTodos(this.props.store.home.todoCards)}</form>
             </div>
           </div>
         </div>
-        <Modal
+        <CreateContent
+          contentType={this.state.currentActiveModal}
           isOpen={this.state.modalOpen}
           handleClose={this.handleModalOpen}
           title={`Create ${
@@ -291,15 +273,11 @@ class Home extends Component {
               ? CreateContentButtons[this.state.currentActiveModal].name
               : ''
           } Content`}
-        >
-          <CreateContent
-            contentType={this.state.currentActiveModal}
-            onClose={this.handleModalOpen}
-          />
-        </Modal>
+          addCard={addScheduledCard}
+        />
       </div>
     );
   }
 }
 
-export default Home;
+export default inject('store')(observer(Home));

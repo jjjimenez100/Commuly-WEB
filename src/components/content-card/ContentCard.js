@@ -31,9 +31,7 @@ const ContentCard = ({ contentCardType, ...props }) => {
   return (
     <Card className="content-card content-text">
       <div className="content-card-title">
-        <Typography variant="h5">
-          {props.textContent ? props.textContent.title : 'New Supervisor Post'}
-        </Typography>
+        <Typography variant="h5">New Supervisor Post</Typography>
         <Button inline>
           <img src={PinIcon} alt="pin-icon" />
         </Button>

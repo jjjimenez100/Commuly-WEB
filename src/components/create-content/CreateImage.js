@@ -2,22 +2,48 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import classnames from 'classnames';
-import { ModalBody, ModalFooter, Button, Textarea, Typography, Input } from 'components';
+import { ModalBody, ModalFooter, Button, Textarea, Typography } from 'components';
 import { AddPeopleIcon, SendIcon, CloudUploadIcon } from 'assets/icons';
+import { CONTENT_CARD, IMAGE_CONTENT } from 'constants/card';
+import { getUserDetails } from 'utils/jwt';
+import CardService from 'services/cardService';
 
 class CreateImage extends Component {
   state = {
-    file: [],
-    title: '',
+    file: null,
     description: '',
   };
 
   handleFileUpload = file => {
-    this.setState({ file: [...file] });
+    this.setState({ file: file[0] });
   };
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
+  };
+
+  handleSubmit = async e => {
+    e.preventDefault();
+    const { file } = this.state;
+    const { team, userId: owner } = getUserDetails();
+    const body = {
+      cardType: CONTENT_CARD,
+      contentCardType: IMAGE_CONTENT,
+      team,
+      owner,
+      file,
+    };
+    const formData = new FormData();
+    Object.keys(body).forEach(key => formData.append(key, body[key]));
+
+    try {
+      const { data } = await CardService.createNewContentCard(formData);
+      await this.props.addCard(data.savedCard);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      // handle if error, or transfer this whole trycatch to mobx instead
+    }
   };
 
   render() {
@@ -27,14 +53,6 @@ class CreateImage extends Component {
       <>
         <ModalBody className="create create-image">
           <form>
-            <Input
-              labelText="Title"
-              name="title"
-              className="create-text-input"
-              placeholder="Add title..."
-              onChange={this.handleInputChanged}
-              value={this.state.title}
-            />
             <Textarea
               name="description"
               labelText="Description"
@@ -55,9 +73,7 @@ class CreateImage extends Component {
                   <input {...getInputProps()} />
                   <Typography className="create-image-dropzone-text">
                     <img src={CloudUploadIcon} alt="cloud-upload-icon" />
-                    {file.length > 0
-                      ? `${file[0].name}`
-                      : 'Drag file here or click to select file.'}
+                    {file ? `${file.name}` : 'Drag file here or click to select file.'}
                   </Typography>
                 </div>
               )}
@@ -71,7 +87,7 @@ class CreateImage extends Component {
           <Button size="small" icon={AddPeopleIcon}>
             Tag Teammates
           </Button>
-          <Button size="small" icon={SendIcon}>
+          <Button size="small" icon={SendIcon} onClick={this.handleSubmit}>
             Post
           </Button>
         </ModalFooter>

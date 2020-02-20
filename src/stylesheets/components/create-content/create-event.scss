@@ -1,9 +1,9 @@
 .create-event {
-  & label {
+  & > label {
     margin-bottom: $spacing-tiny;
   }
 
-  & div {
+  & > div {
     margin-top: $spacing-tiny;
   }
 
@@ -26,6 +26,28 @@
   &-time {
     .input-time {
       width: 200px;
+    }
+  }
+}
+
+
+.create-todo {
+  &-date {
+    margin-right: $spacing-base;
+  }
+
+  &-dropzone {
+    border: 3px dashed $border-color;
+    padding: $spacing-small;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
     }
   }
 }

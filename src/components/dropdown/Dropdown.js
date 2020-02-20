@@ -45,7 +45,7 @@ DropdownMenu.propTypes = {
 };
 
 export const DropdownMenuItem = ({ text, onClick, className, ...buttonProps }) => {
-  const { buttonClassname } = buttonProps;
+  const { buttonClassname, name = '' } = buttonProps;
 
   return (
     <li className={classnames('dropdown-menu-item', { [`${className}`]: className })}>
@@ -56,6 +56,7 @@ export const DropdownMenuItem = ({ text, onClick, className, ...buttonProps }) =
         variant="inline"
         onClick={onClick}
         {...buttonProps}
+        name={name}
       >
         <Typography>{text}</Typography>
       </Button>

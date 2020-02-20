@@ -9,6 +9,7 @@
   }
 
   &-dropzone {
+    cursor: pointer;
     border: 1px solid $border-color;
     height: 300px;
     display: flex;

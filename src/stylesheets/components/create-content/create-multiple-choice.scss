@@ -1,0 +1,28 @@
+.create-multiple-choice {
+  & > label {
+    margin-bottom: $spacing-tiny;
+  }
+
+  &-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-tiny;
+
+    &-button {
+      width: 32px;
+      height: 32px;
+      margin-left: $spacing-tiny;
+      border-radius: 50%;
+
+      & > img {
+        width: 20px;
+        height: 20px;
+        margin-right: 0;
+      }
+
+      &:hover {
+        background-color: rgba($neutral-m-color, 0.2);
+      }
+    }
+  }
+}
