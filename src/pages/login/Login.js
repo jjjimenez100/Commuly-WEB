@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { observer, inject } from 'mobx-react';
 import { Redirect } from 'react-router';
 import { Card, Typography, Button, Input } from 'components';
@@ -6,11 +7,18 @@ import { toast } from 'react-toastify';
 import { LoginPicture, FacebookPicture, LinkedinPicture, AloricaPicture } from 'assets/images';
 
 class Login extends Component {
-  state = {
-    email: '',
-    password: '',
-    redirectToRegistration: false,
-    redirectToDashboard: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      redirectToRegistration: false,
+      redirectToDashboard: false,
+    };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
   };
 
   componentDidMount = () => {
@@ -29,6 +37,11 @@ class Login extends Component {
   routeToRegisterPage = () => this.setState({ redirectToRegistration: true });
 
   loginUser = async () => {
+    if(!this.validator.allValid()) {
+      this.validator.showMessages();
+      return;
+    }
+
     const { email, password } = this.state;
     const userCredentials = { email, password };
     // TODO: show loader
@@ -68,6 +81,7 @@ class Login extends Component {
               name="email"
               labelText="Email"
             />
+            {this.validator.message('email', this.state.email, 'required|email')}
             <Input
               value={this.state.password}
               onChange={this.handleInputChange}
@@ -75,6 +89,7 @@ class Login extends Component {
               labelText="Password"
               type="password"
             />
+            {this.validator.message('password', this.state.password, 'required')}
             <Button
               className="login-button"
               variant="inverted"
