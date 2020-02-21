@@ -40,6 +40,7 @@ class CreateTodo extends Component {
         startTime,
         endTime,
       },
+      todoType,
     };
 
     try {
