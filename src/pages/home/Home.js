@@ -41,7 +41,8 @@ import {
   COLUMN_ORDERING_QUESTION,
   OPEN_TEXT_QUESTION,
 } from 'constants/card';
-import { boardData, eventData } from './data';
+import { DONE_STATUS } from 'constants/user';
+import { boardData } from './data';
 
 const CreateContentButtons = {
   [TEXT_CONTENT]: {
@@ -130,15 +131,17 @@ class Home extends Component {
   };
 
   renderTodos = data => {
+    const { markTodo } = this.props.store.home;
+
     if (data.length > 0) {
-      return data.map(({ _id: id, todoContent: { title } }) => {
+      return data.map(({ _id: id, todoContent: { title }, status }) => {
         return (
           <Checkbox
             key={id}
             labelText={`${title}`}
             className="home-todo-radio"
-            checked={false}
-            onChange={() => this.setState(prevState => ({ todo: !prevState.todo }))}
+            checked={status === DONE_STATUS}
+            onChange={({ target: { checked } }) => markTodo(id, checked)}
           />
         );
       });
