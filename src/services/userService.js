@@ -10,6 +10,9 @@ const UserService = {
   loginUser(userCredentials, additionalConfig = {}) {
     return httpService.post('login', userCredentials, additionalConfig);
   },
+  markTodo(userId, todoInformation, additionalConfig = {}) {
+    return httpService.patch(`user/${userId}/cards`, todoInformation, additionalConfig);
+  },
 };
 
 export default UserService;
