@@ -9,7 +9,7 @@ const Checkbox = ({ id, labelText, checked, onChange, className }) => (
       name="checkbox-button"
       type="checkbox"
       className="checkbox-button"
-      checked={checked}
+      defaultChecked={checked}
       onChange={onChange}
     />
     <span className="checkbox-circle" />
