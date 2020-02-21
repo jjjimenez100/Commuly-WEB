@@ -162,16 +162,25 @@ class Home extends Component {
     ));
 
   renderScheduledEvents = data =>
-    data.map(event => (
-      <Card key={event.id} className="home-events-card">
-        <Typography className="card-date">Sample text</Typography>
-        <Line small className="card-line" />
-        <Typography variant="h5" className="card-title">
-          {event.title}
-        </Typography>
-        <Typography variant="subtitle">{event.date}</Typography>
-      </Card>
-    ));
+    data.map(
+      ({
+        _id: id,
+        // TODO: include other date and time fields on card
+        // eslint-disable-next-line no-unused-vars
+        scheduledEventContent: { description, title, startDate, startTime, endDate, endTime },
+      }) => {
+        return (
+          <Card key={id} className="home-events-card">
+            <Typography className="card-date">{title}</Typography>
+            <Line small className="card-line" />
+            <Typography variant="h5" className="card-title">
+              {description}
+            </Typography>
+            <Typography variant="subtitle">{startDate}</Typography>
+          </Card>
+        );
+      }
+    );
 
   renderCreateContentButtons = () => (
     <div className="home-create-card-buttons">
@@ -192,7 +201,13 @@ class Home extends Component {
   );
 
   render() {
-    const { todoCards, teamCards, addCard, currentCreateModalType } = this.props.store.home;
+    const {
+      todoCards,
+      teamCards,
+      scheduledCards,
+      addCard,
+      currentCreateModalType,
+    } = this.props.store.home;
     return (
       <div className="home">
         <div className="home-container">
@@ -225,7 +240,7 @@ class Home extends Component {
               </div>
             </div>
             <Line />
-            <div className="home-events-cards">{this.renderScheduledEvents(eventData)}</div>
+            <div className="home-events-cards">{this.renderScheduledEvents(scheduledCards)}</div>
           </div>
           <div className="home-announcements">
             <div className="home-announcements-title">
