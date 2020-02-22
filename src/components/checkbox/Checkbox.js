@@ -1,34 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from 'components';
 
-const Checkbox = ({ id, labelText, checked, onChange, className }) => (
+const Checkbox = ({ id, checked, onChange, className, type, children }) => (
   <label htmlFor={id} className={`checkbox ${className}`}>
     <input
       id={id}
       name="checkbox-button"
-      type="checkbox"
+      type={type}
       className="checkbox-button"
       defaultChecked={checked}
       onChange={onChange}
     />
     <span className="checkbox-circle" />
-    <Typography className="checkbox-text">{labelText}</Typography>
+    {children && <div className="checkbox-text">{children}</div>}
   </label>
 );
 
 Checkbox.defaultProps = {
-  id: 'checkbox',
-  labelText: '',
   className: '',
+  type: 'checkbox',
 };
 
 Checkbox.propTypes = {
-  id: PropTypes.string,
-  labelText: PropTypes.string,
+  id: PropTypes.string.isRequired,
   className: PropTypes.string,
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
+  type: PropTypes.string,
 };
 
 export default Checkbox;

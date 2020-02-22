@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { ModalBody, ModalFooter, Button, Input, Textarea, Typography } from 'components';
 import { SendIcon, DeleteIcon } from 'assets/icons';
+import { getUserDetails } from 'utils/jwt';
+import { MULTIPLE_CHOICE_QUESTION, QUESTION_CARD } from 'constants/card';
+import CardService from 'services/cardService';
 
 class CreateMultipleChoice extends Component {
   state = {
@@ -10,7 +13,7 @@ class CreateMultipleChoice extends Component {
   };
 
   handleInputChanged = e => {
-    this.state({ [`${e.target.name}`]: e.target.value });
+    this.setState({ [`${e.target.name}`]: e.target.value });
   };
 
   handleChoiceInputChanged = e => {
@@ -19,9 +22,32 @@ class CreateMultipleChoice extends Component {
     this.setState({ choices });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
-    console.log(this.state);
+    const { team, userId: owner } = getUserDetails();
+    const { question, choices } = this.state;
+    const body = {
+      owner,
+      team,
+      cardType: QUESTION_CARD,
+      questionCardType: MULTIPLE_CHOICE_QUESTION,
+      multipleChoiceContent: {
+        question,
+        choices,
+      },
+    };
+
+    try {
+      const { data } = await CardService.createNewContentCard(body);
+
+      console.log(data);
+      await this.props.addCard(data.savedCard);
+      this.props.onClose();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      // handle if error, or transfer this whole trycatch to mobx instead
+    }
   };
 
   handleChoiceAdded = () => {

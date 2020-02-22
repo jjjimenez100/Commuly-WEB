@@ -36,7 +36,7 @@ const ContentScheduledEvent = ({
         </div>
         <Typography variant="h4">{title}</Typography>
         <Typography variant="subtitle" className="content-event-subtitle">
-          {}
+          ({startTime} - {endTime})
         </Typography>
       </div>
     </div>

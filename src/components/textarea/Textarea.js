@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 
 const Textarea = ({ id, labelText, placeholder, className, onChange, value, name }) => (
   <label htmlFor={id} className={`textarea ${className}`.trim()}>
-    <Typography variant="subtitle" className="textarea-description">
-      {labelText}
-    </Typography>
+    {labelText && (
+      <Typography variant="subtitle" className="textarea-description">
+        {labelText}
+      </Typography>
+    )}
     <textarea
       name={name}
       id={id}

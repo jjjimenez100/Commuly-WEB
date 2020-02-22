@@ -1,21 +1,44 @@
 import React, { Component } from 'react';
 import { ModalBody, ModalFooter, Button, Textarea, Input } from 'components';
 import { SendIcon } from 'assets/icons';
+import { getUserDetails } from 'utils/jwt';
+import { OPEN_TEXT_QUESTION, QUESTION_CARD } from 'constants/card';
+import CardService from 'services/cardService';
 
 class CreateOpenTextQuestion extends Component {
   state = {
     title: '',
     question: '',
-    answer: '',
   };
 
   handleInputChanged = e => {
-    this.state({ [`${e.target.name}`]: e.target.value });
+    this.setState({ [`${e.target.name}`]: e.target.value });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
-    console.log(this.state);
+    const { team, userId: owner } = getUserDetails();
+    const { question } = this.state;
+    const body = {
+      owner,
+      team,
+      cardType: QUESTION_CARD,
+      questionCardType: OPEN_TEXT_QUESTION,
+      openTextContent: {
+        question,
+      },
+    };
+
+    try {
+      const { data } = await CardService.createNewContentCard(body);
+
+      await this.props.addCard(data.savedCard);
+      this.props.onClose();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      // handle if error, or transfer this whole trycatch to mobx instead
+    }
   };
 
   render() {
@@ -36,13 +59,6 @@ class CreateOpenTextQuestion extends Component {
             placeholder="Add question..."
             onChange={this.handleInputChanged}
             value={this.state.question}
-          />
-          <Input
-            name="answer"
-            labelText="Answer"
-            placeholder="Add answer..."
-            onChange={this.handleInputChanged}
-            value={this.state.answer}
           />
         </ModalBody>
         <ModalFooter>

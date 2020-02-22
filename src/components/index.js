@@ -24,6 +24,7 @@ export { default as CreateMultipleChoice } from './create-content/CreateMultiple
 export { default as CreateOpenTextQuestion } from './create-content/CreateOpenTextQuestion';
 export { default as CreateColumnOrder } from './create-content/CreateColumnOrder';
 export { default as CreateLikert } from './create-content/CreateLikert';
+export { default as DeleteContent } from './create-content/DeleteContent';
 
 // card content components
 export { default as ContentCard } from './content-card/ContentCard';
@@ -34,6 +35,9 @@ export { default as ContentScheduledEvent } from './content-card/ContentSchedule
 
 // question cards
 export { default as QuestionMultipleChoice } from './content-card/QuestionMultipleChoice';
+export { default as QuestionOpenText } from './content-card/QuestionOpenText';
+export { default as QuestionLikert } from './content-card/QuestionLikert';
+export { default as QuestionColumnOrdering } from './content-card/QuestionColumnOrdering';
 
 // form components
 export { default as Checkbox } from './checkbox/Checkbox';

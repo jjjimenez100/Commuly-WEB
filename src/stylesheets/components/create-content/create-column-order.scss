@@ -15,7 +15,7 @@
 
   }
 
-  &-options, &-answers {
+  &-options {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,9 +26,6 @@
     margin-right: $spacing-small;
   }
 
-  &-answers {
-    margin-left: $spacing-small;
-  }
 
   &-button {
     display: flex;
@@ -66,24 +63,8 @@
             color: $primary-color;
           }
         }
-
-        &-answer {
-          background-color: $border-color;
-          border: 2px solid $border-color;
-        }
       }
-      
-      &-answer {
-        border: 2px dashed $border-color;
-
-        & > input {
-          color: $text-color;
-
-          &:focus {
-            border-bottom: 1px solid $border-color;
-          }
-        }
-      }
+    
       
       input {
         border: none;
@@ -93,6 +74,84 @@
         padding-bottom: calc(#{$spacing-tiny}/2);
         background-color: transparent;
       }
+    }
+  }
+}
+
+.create-likert {
+  & > label {
+    margin-bottom: $spacing-small;
+  }
+
+  &-chart {
+    display: flex;
+    padding: $spacing-small 0;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    &-input {
+      width: 150px;
+    }
+
+    &-number {
+      align-self: center;
+    }
+  }
+
+  .default-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+
+  &-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    & > .typography-subtitle {
+      margin-bottom: $spacing-tiny;
+    } 
+
+    &-1 {
+      background-color: rgba($neutral-m-color, 0.1)
+    }
+
+    &-2 {
+      background-color: rgba($neutral-m-color, 0.2)
+    }
+
+    &-3 {
+      background-color: rgba($neutral-m-color, 0.3)
+    }
+
+    &-4 {
+      background-color: rgba($neutral-m-color, 0.4)
+    }
+
+    &-5 {
+      background-color: rgba($neutral-m-color, 0.5)
+    }
+
+    &-6 {
+      background-color: rgba($neutral-m-color, 0.6)
+    }
+
+    &-7 {
+      background-color: rgba($neutral-m-color, 0.7)
+    }
+
+    &-8 {
+      background-color: rgba($neutral-m-color, 0.8)
+    }
+
+    &-9 {
+      background-color: rgba($neutral-m-color, 0.9)
+    }
+
+    &-10 {
+      background-color: rgba($neutral-m-color, 1)
     }
   }
 }

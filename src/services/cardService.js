@@ -25,6 +25,9 @@ const CardService = {
 
     return httpService.post('/card', body, additionalConfig);
   },
+  addQuestionResponse(cardId, requestBody, additionalConfig = {}) {
+    return httpService.patch(`/card/${cardId}`, requestBody, additionalConfig);
+  },
 };
 
 export default CardService;
