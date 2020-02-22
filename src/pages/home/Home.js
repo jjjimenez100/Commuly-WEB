@@ -125,7 +125,13 @@ class Home extends Component {
 
   renderAnnouncements = data => {
     if (data.length > 0) {
-      return data.map(announcement => <ContentCard key={announcement._id} {...announcement} />);
+      return data.map(announcement => (
+        <ContentCard
+          key={announcement._id}
+          handleModalOpen={this.handleModalOpen}
+          {...announcement}
+        />
+      ));
     }
     return <Card className="home-announcements-empty">No announcements yet!</Card>;
   };
@@ -138,11 +144,12 @@ class Home extends Component {
         return (
           <Checkbox
             key={id}
-            labelText={`${title}`}
             className="home-todo-radio"
             checked={status === DONE_STATUS}
             onChange={({ target: { checked } }) => markTodo(id, checked)}
-          />
+          >
+            <Typography>{title}</Typography>
+          </Checkbox>
         );
       });
     }

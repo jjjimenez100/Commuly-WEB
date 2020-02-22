@@ -10,6 +10,7 @@ import {
   CreateMultipleChoice,
   CreateColumnOrder,
   CreateLikert,
+  DeleteContent,
   Modal,
 } from 'components';
 import {
@@ -43,12 +44,12 @@ const CreateContent = ({ contentType, handleClose, isOpen, title, addCard }) => 
       case OPEN_TEXT_QUESTION:
         return <CreateOpenTextQuestion addCard={addCard} onClose={handleClose} />;
       default:
-        return null;
+        return <DeleteContent />;
     }
   };
 
   return (
-    <Modal isOpen={isOpen} title={title} handleClose={handleClose}>
+    <Modal isOpen={isOpen} title={contentType ? title : 'Delete Content'} handleClose={handleClose}>
       {renderModalType()}
     </Modal>
   );

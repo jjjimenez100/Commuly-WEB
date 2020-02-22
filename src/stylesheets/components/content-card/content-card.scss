@@ -3,10 +3,11 @@
 .content-card {
   margin-bottom: $spacing-base;
   width: 100%;
+  flex-grow: 0;
 
-  &:hover {
-    background-color: $bg-color;
-  }
+  // &:hover {
+  //   background-color: $bg-color;
+  // }
 
   &-line {
     padding: 0 $spacing-small;
@@ -48,6 +49,18 @@
     }
   }
 
+  &-buttons {
+    display: flex;
+
+    & > button:first-child {
+      margin-right: $spacing-small;
+    }
+  }
+
+  &-dropdown {
+    position: relative;
+  }
+
   .content-text {
     &-description {
       width: 100%;
@@ -64,6 +77,20 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+  }
+
+  .content-generic {
+    padding: $spacing-base $spacing-large $spacing-base $spacing-large;
+    margin: $spacing-small 0;
+    box-shadow: inset 0px 8px 8px -10px rgba($neutral-m-color, 0.3), inset 0px -8px 8px -10px rgba($neutral-m-color, 0.3);
+
+    &-title {
+      margin-bottom: $spacing-tiny;
+    }
+
+    &-textarea {
+      margin: $spacing-small 0;
     }
   }
 }

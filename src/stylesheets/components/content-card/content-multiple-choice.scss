@@ -1,0 +1,89 @@
+.content-multiple-choice {
+   &-choices {
+     margin: $spacing-base 0;
+   }
+
+   &-single {
+     margin: $spacing-small 0;
+     width: 100%;
+   }
+}
+
+.content-likert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: $spacing-small 0;
+
+  &-text {
+    height: 100%;
+    width: 300px;
+  }
+
+  .left-align {
+    text-align: end;
+  }
+
+  &-choices {
+    display: flex;
+    margin: 0 $spacing-large;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  &-choice {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & > .typography-subtitle {
+      margin-bottom: $spacing-tiny;
+    }
+
+    & > .checkbox > .checkbox-circle {
+      width: 40px;
+      height: 40px;
+      margin: 0;
+    }
+  }
+}
+
+.content-column-order {
+  &-options {
+    width: 500px;
+    margin: $spacing-small 0;
+  }
+
+  &-text {
+    font-weight: $font-bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-drag {
+    margin-bottom: $spacing-tiny;
+
+    .draggable {
+      border-radius: 20px;
+      padding: $spacing-tiny $spacing-large;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      &-option {
+        background-color: $primary-color;
+        border: 2px solid $primary-color;
+        color: $white-color;
+      }
+
+      &-dragged {
+        &-option {
+          background-color: $white-color;
+          color: $primary-color;  
+        }
+      }
+    }
+  }
+}
