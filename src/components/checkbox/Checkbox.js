@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Checkbox = ({ id, checked, onChange, className, type, children }) => (
+const Checkbox = ({ id, checked, onChange, className, type, children, disabled = false }) => (
   <label htmlFor={id} className={`checkbox ${className}`}>
     <input
       id={id}
@@ -10,6 +10,7 @@ const Checkbox = ({ id, checked, onChange, className, type, children }) => (
       className="checkbox-button"
       defaultChecked={checked}
       onChange={onChange}
+      disabled={disabled}
     />
     <span className="checkbox-circle" />
     {children && <div className="checkbox-text">{children}</div>}
