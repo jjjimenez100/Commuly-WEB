@@ -32,8 +32,8 @@ class CreateMultipleChoice extends Component {
       cardType: QUESTION_CARD,
       questionCardType: MULTIPLE_CHOICE_QUESTION,
       multipleChoiceContent: {
+        choices: choices.filter(choice => choice.trim() !== ''),
         question,
-        choices,
       },
     };
 
