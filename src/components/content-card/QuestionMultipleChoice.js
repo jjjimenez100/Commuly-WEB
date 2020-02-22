@@ -7,6 +7,7 @@ import CardService from 'services/cardService';
 
 const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question, choices }, hasUserSubmittedAnswer, userResponse = {} }) => {
   const [answer, setAnswer] = useState('');
+  const [isSubmitButtonClicked, setIsSubmitButtonClicked] = useState(false);
   const handleSubmit = async e => {
     e.preventDefault();
     const { userId } = getUserDetails();
@@ -21,6 +22,7 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
     };
 
     try {
+      setIsSubmitButtonClicked(true);
       await CardService.addQuestionResponse(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
@@ -53,14 +55,14 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
             checked={choice === answer || isUserAnswer(choice)}
             className="content-multiple-choice-single"
             onChange={() => setAnswer(choice)}
-            disabled={hasUserSubmittedAnswer}
+            disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}
           >
             <Typography>{choice}</Typography>
           </Checkbox>
         ))}
       </form>
-      <Button size="small" onClick={handleSubmit} disabled={hasUserSubmittedAnswer}>
-        {hasUserSubmittedAnswer ? 'You already answered this question' : 'Submit'}
+      <Button size="small" onClick={handleSubmit} disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}>
+        {isSubmitButtonClicked || hasUserSubmittedAnswer ? 'You already answered this question' : 'Submit'}
       </Button>
     </div>
   );
