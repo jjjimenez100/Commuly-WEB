@@ -96,8 +96,7 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
               <img src={VerticalMenuIcon} alt="vertical-menu" />
             </Button>
             <DropdownMenu visible={dropdownOpen}>
-              <DropdownMenuItem text="Edit Post" onClick={handleEditClicked} />
-              <DropdownMenuItem text="Delete Post" onClick={handleDeleteClicked} />
+              <DropdownMenuItem text="Edit" onClick={handleEditClicked} />
             </DropdownMenu>
           </DropdownContainer>
         </div>
