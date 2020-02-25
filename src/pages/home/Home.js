@@ -104,18 +104,25 @@ const CreateContentButtons = {
   },
 };
 
-const EventTile = ({ todoContent: { title, startDate, endDate, startTime, endTime } }) => (
-  <div className="home-calendar-tile-event">
-    <Typography variant="subtitle">
-      {startDate}
-      {endDate && `- ${endDate}`}
-    </Typography>
-    <Typography variant="h5">{title}</Typography>
-    <Typography variant="subtitle">
-      {startTime}-{endTime}
-    </Typography>
-  </div>
-);
+const EventTile = ({
+  props: {
+    todoContent: { title, startDate, endDate, startTime, endTime },
+  },
+}) => {
+  console.log('event tile here ::: ', title);
+  return (
+    <div className="home-calendar-tile-event">
+      <Typography variant="subtitle">
+        {startDate}
+        {endDate && `- ${endDate}`}
+      </Typography>
+      <Typography variant="h5">{title}</Typography>
+      <Typography variant="subtitle">
+        {startTime}-{endTime}
+      </Typography>
+    </div>
+  );
+};
 
 class Home extends Component {
   constructor(props) {
@@ -262,21 +269,39 @@ class Home extends Component {
     </div>
   );
 
-  renderCalendarTile = ({ date }) => {
-    const { eventCards } = this.props.store.home;
+  renderCalendar = eventCards => {
+    console.log('inside render calendar event cards ::: ', eventCards);
 
-    const newDate = moment(date).format('YYYY-MM-DD');
-    if (eventCards[newDate]) {
-      return (
-        <div className="home-calendar-tile">
-          {eventCards[newDate].map(event => (
-            <EventTile key={event._id} />
-          ))}
-        </div>
-      );
-    }
+    const renderCalendarTile = ({ date }) => {
+      const newDate = moment(date).format('YYYY-MM-DD');
+      if (eventCards[newDate]) {
+        return (
+          <div className="home-calendar-tile">
+            {eventCards[newDate].map(event => {
+              console.log('event event ::: ', event);
+              return <EventTile key={event._id} props={event} />;
+            })}
+          </div>
+        );
+      }
 
-    return null;
+      return null;
+    };
+
+    return (
+      <div className="home-calendar">
+        <Typography variant="h4" className="home-calendar-title">
+          Calendar
+        </Typography>
+        <Line />
+        <Calendar
+          calendarType="US"
+          onChange={this.onChange}
+          value={this.state.date}
+          tileContent={renderCalendarTile}
+        />
+      </div>
+    );
   };
 
   render() {
@@ -289,6 +314,7 @@ class Home extends Component {
       updateCard,
       currentCreateModalType,
       currentCardData,
+      eventCards,
     } = this.props.store.home;
     return (
       <div className="home">
@@ -352,18 +378,7 @@ class Home extends Component {
             <Line />
             <div className="home-leaderboard-board">{this.renderLeaderboard(boardData)}</div>
           </div>
-          <div className="home-calendar">
-            <Typography variant="h4" className="home-calendar-title">
-              Calendar
-            </Typography>
-            <Line />
-            <Calendar
-              calendarType="US"
-              onChange={this.onChange}
-              value={this.state.date}
-              tileContent={this.renderCalendarTile}
-            />
-          </div>
+          {this.renderCalendar(eventCards)}
           <div className="home-todo">
             <Typography variant="h4" className="home-todo-title">
               To do
