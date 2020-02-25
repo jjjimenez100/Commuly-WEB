@@ -10,15 +10,31 @@ import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
 
 class CreateScheduledContent extends Component {
-  state = {
-    title: '',
-    description: '',
-    startDate: moment().format('YYYY-MM-DD'),
-    endDate: moment().format('YYYY-MM-DD'),
-    startTime: moment().format('HH:mm'),
-    endTime: moment().format('HH:mm'),
-    file: null,
-  };
+  constructor(props) {
+    super(props);
+    const { scheduledEventContent = {} } = this.props.cardData;
+    const {
+      startDate = '',
+      endDate = '',
+      startTime = '',
+      endTime = '',
+      title = '',
+      description = '',
+    } = scheduledEventContent;
+    this.state = {
+      title: title || '',
+      description: description || '',
+      startDate: startDate
+        ? moment(new Date(startDate)).format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD'),
+      endDate: endDate
+        ? moment(new Date(endDate)).format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD'),
+      startTime: startTime ? moment(startTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
+      endTime: endTime ? moment(endTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
+      file: null,
+    };
+  }
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
@@ -53,9 +69,20 @@ class CreateScheduledContent extends Component {
     formData.append('scheduledEventContent', JSON.stringify(scheduledEventContent));
 
     try {
-      const { data } = await CardService.createNewContentCard(formData);
-      await this.props.addCard(data.savedCard);
-      this.props.onClose();
+      const { addCard, updateCard, cardData, onClose } = this.props;
+      if (Object.keys(cardData).length === 0) {
+        const { data } = await CardService.createNewContentCard(formData);
+        await addCard(data.savedCard);
+      } else {
+        const shouldDeleteCloudFile = file !== null;
+        formData.append('shouldDeleteCloudFile', shouldDeleteCloudFile);
+        const { _id: cardId } = cardData;
+        const {
+          data: { updatedCard },
+        } = await CardService.updateContentCardWithFiles(cardId, formData);
+        await updateCard(updatedCard);
+      }
+      onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -64,7 +91,7 @@ class CreateScheduledContent extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, cardData } = this.props;
     return (
       <>
         <ModalBody className="create-event">
@@ -146,7 +173,7 @@ class CreateScheduledContent extends Component {
             Tag Teammates
           </Button>
           <Button size="small" type="submit" icon={SendIcon} onClick={this.handleSubmit}>
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>

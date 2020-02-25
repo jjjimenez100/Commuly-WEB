@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Typography } from 'components';
 import CLOUDFRONT_URL from '../../config/aws';
 
+// FIXME @Ced
 const ContentScheduledEvent = ({
   scheduledEventContent: {
     imagePosterURL,
