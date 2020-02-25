@@ -45,7 +45,14 @@ const CreateContent = ({
           />
         );
       case IMAGE_CONTENT:
-        return <CreateImage addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateImage
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case SCHEDULED_CONTENT:
         return <CreateScheduledContent addCard={addCard} onClose={handleClose} />;
       case TODO_CONTENT:

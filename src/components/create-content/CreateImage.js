@@ -9,10 +9,14 @@ import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
 
 class CreateImage extends Component {
-  state = {
-    file: null,
-    description: '',
-  };
+  constructor(props) {
+    super(props);
+    const { imageDescription = '' } = this.props.cardData;
+    this.state = {
+      file: null,
+      imageDescription: imageDescription || '',
+    };
+  }
 
   handleFileUpload = file => {
     this.setState({ file: file[0] });
@@ -24,21 +28,32 @@ class CreateImage extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { file } = this.state;
+    const { file, imageDescription } = this.state;
     const { team, userId: owner } = getUserDetails();
     const body = {
       cardType: CONTENT_CARD,
       contentCardType: IMAGE_CONTENT,
+      imageDescription,
       team,
       owner,
       file,
     };
     const formData = new FormData();
     Object.keys(body).forEach(key => formData.append(key, body[key]));
-
     try {
-      const { data } = await CardService.createNewContentCard(formData);
-      await this.props.addCard(data.savedCard);
+      const { addCard, updateCard, cardData } = this.props;
+      if (Object.keys(cardData).length === 0) {
+        const { data } = await CardService.createNewContentCard(formData);
+        await addCard(data.savedCard);
+      } else {
+        const shouldDeleteCloudFile = file !== null;
+        formData.append('shouldDeleteCloudFile', shouldDeleteCloudFile);
+        const { _id: cardId } = cardData;
+        const {
+          data: { updatedCard },
+        } = await CardService.updateContentCardWithFiles(cardId, formData);
+        await updateCard(updatedCard);
+      }
       this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -48,18 +63,18 @@ class CreateImage extends Component {
   };
 
   render() {
-    const { file } = this.state;
-    const { onClose } = this.props;
+    const { file, imageDescription } = this.state;
+    const { onClose, cardData } = this.props;
     return (
       <>
         <ModalBody className="create create-image">
           <form>
             <Textarea
-              name="description"
+              name="imageDescription"
               labelText="Description"
               placeholder="Add description..."
               onChange={this.handleInputChanged}
-              value={this.state.description}
+              value={imageDescription}
             />
             <Dropzone accept="image/*" onDrop={this.handleFileUpload}>
               {({ getRootProps, getInputProps, isDragAccept }) => (
@@ -89,7 +104,7 @@ class CreateImage extends Component {
             Tag Teammates
           </Button>
           <Button size="small" icon={SendIcon} onClick={this.handleSubmit}>
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>

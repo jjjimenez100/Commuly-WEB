@@ -12,6 +12,7 @@ const Home = types
     todoCards: types.array(types.frozen()),
     user: types.frozen(),
     currentCreateModalType: types.frozen(),
+    currentCardData: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
@@ -30,22 +31,43 @@ const Home = types
         // handle error here
       }
     }),
-    addCard(contentCardData) {
+    addCard(cardData) {
       const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
 
       if (cardType === SCHEDULED_CONTENT) {
-        const data = [contentCardData, ...scheduledCards];
+        const data = [cardData, ...scheduledCards];
         self.scheduledCards = data;
       } else if (cardType === TODO_CONTENT) {
-        const data = [contentCardData, ...todoCards];
+        const data = [cardData, ...todoCards];
         self.todoCards = data;
       }
 
-      const announcements = [contentCardData, ...teamCards];
+      const announcements = [cardData, ...teamCards];
       self.teamCards = announcements;
+    },
+    updateCard(cardData) {
+      const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
+      const { _id: updatedCardId } = cardData;
+
+      if (cardType === SCHEDULED_CONTENT) {
+        self.scheduledCards = self.insertCardAtIndex(scheduledCards, updatedCardId, cardData);
+      } else if (cardType === TODO_CONTENT) {
+        self.todoCards = self.insertCardAtIndex(todoCards, updatedCardId, cardData);
+      }
+      self.teamCards = self.insertCardAtIndex(teamCards, updatedCardId, cardData);
+    },
+    insertCardAtIndex(cardArray, cardId, cardData) {
+      const newCardArray = [...cardArray];
+      const updatedCardIndex = newCardArray.findIndex(({ _id }) => cardId === _id);
+      newCardArray.splice(updatedCardIndex, 1, cardData);
+
+      return newCardArray;
     },
     setCurrentCreateModalType(modalType) {
       self.currentCreateModalType = modalType;
+    },
+    setCurrentCardData(cardData) {
+      self.currentCardData = cardData;
     },
     markTodo: flow(function* markTodo(cardId, isChecked) {
       try {
@@ -75,6 +97,7 @@ export const store = Home.create({
   todoCards: [],
   user: null,
   currentCreateModalType: '',
+  currentCardData: {},
 });
 
 export default Home;
