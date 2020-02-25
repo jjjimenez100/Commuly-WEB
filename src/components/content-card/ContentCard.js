@@ -130,13 +130,16 @@ const ContentCard = ({
   useEffect(() => {
     if (reactions) {
       const { userId } = getUserDetails();
-      const returnedIndex = Object.entries(reactions).find(entry =>
-        entry[1].find(id => id === userId)
+      const returnedIndex = Object.entries(reactions).find(
+        entry =>
+          entry[1].length > 0 && Array.isArray(entry[1]) && entry[1].find(id => id === userId)
       );
-      const [userReact] = returnedIndex;
-      setReaction(userReact.toUpperCase());
+
+      if (returnedIndex) {
+        setReaction(returnedIndex[0].toUpperCase());
+      }
     }
-  }, [props, reactions]);
+  }, [reactions]);
 
   return (
     <Card className="content-card">
