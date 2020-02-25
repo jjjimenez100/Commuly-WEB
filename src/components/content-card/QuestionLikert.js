@@ -39,7 +39,7 @@ const QuestionLikert = ({
     };
 
     try {
-      await CardService.addQuestionResponse(cardId, body);
+      await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer(0);
       removeQuestionCard(cardId);

@@ -178,6 +178,7 @@ class Home extends Component {
         return (
           <Checkbox
             key={id}
+            id={id}
             className="home-todo-radio"
             checked={status === DONE_STATUS}
             onChange={({ target: { checked } }) => markTodo(id, checked)}
