@@ -18,6 +18,10 @@ const CardService = {
   updateContentCard(cardId, requestBody, additionalConfig = {}) {
     return httpService.put(`/card/${cardId}`, requestBody, additionalConfig);
   },
+  // workaround
+  updateContentCardWithFiles(cardId, requestBody, additionalConfig = {}) {
+    return httpService.post(`/card/${cardId}`, requestBody, additionalConfig);
+  },
   addQuestionResponse(cardId, requestBody, additionalConfig = {}) {
     return httpService.patch(`/card/${cardId}`, requestBody, additionalConfig);
   },
