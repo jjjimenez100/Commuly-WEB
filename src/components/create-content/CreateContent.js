@@ -54,9 +54,23 @@ const CreateContent = ({
           />
         );
       case SCHEDULED_CONTENT:
-        return <CreateScheduledContent addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateScheduledContent
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case TODO_CONTENT:
-        return <CreateTodo addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateTodo
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case MULTIPLE_CHOICE_QUESTION:
         return <CreateMultipleChoice addCard={addCard} onClose={handleClose} />;
       case COLUMN_ORDERING_QUESTION:

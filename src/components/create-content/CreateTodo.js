@@ -7,13 +7,26 @@ import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
 
 class CreateTodo extends Component {
-  state = {
-    title: '',
-    description: '',
-    startDate: moment().format('YYYY-MM-DD'),
-    startTime: moment().format('HH:mm'),
-    endTime: moment().format('HH:mm'),
-  };
+  constructor(props) {
+    super(props);
+    const { todoContent = {} } = this.props.cardData;
+    const {
+      description = '',
+      title = '',
+      startDate = '',
+      startTime = '',
+      endTime = '',
+    } = todoContent;
+    this.state = {
+      title: title || '',
+      description: description || '',
+      startDate: startDate
+        ? moment(new Date(startDate)).format('YYYY-MM-DD')
+        : moment().format('YYYY-MM-DD'),
+      startTime: startTime ? moment(startTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
+      endTime: endTime ? moment(endTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
+    };
+  }
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
@@ -43,10 +56,19 @@ class CreateTodo extends Component {
       todoType,
     };
 
+    const { addCard, updateCard, cardData, onClose } = this.props;
     try {
-      const { data } = await CardService.createNewContentCard(body);
-      await this.props.addCard(data.savedCard);
-      this.props.onClose();
+      if (Object.keys(cardData).length === 0) {
+        const { data } = await CardService.createNewContentCard(body);
+        await addCard(data.savedCard);
+      } else {
+        const { _id: cardId } = cardData;
+        const {
+          data: { updatedCard },
+        } = await CardService.updateContentCard(cardId, body);
+        updateCard(updatedCard);
+      }
+      onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -55,7 +77,7 @@ class CreateTodo extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, cardData } = this.props;
     return (
       <>
         <ModalBody className="create-event">
@@ -109,7 +131,7 @@ class CreateTodo extends Component {
             Tag Teammates
           </Button>
           <Button size="small" type="submit" icon={SendIcon} onClick={this.handleSubmit}>
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>
