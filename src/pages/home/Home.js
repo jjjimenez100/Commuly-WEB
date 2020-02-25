@@ -171,26 +171,30 @@ class Home extends Component {
       </div>
     ));
 
-  renderScheduledEvents = data =>
-    data.map(
-      ({
-        _id: id,
-        // TODO: include other date and time fields on card
-        // eslint-disable-next-line no-unused-vars
-        scheduledEventContent: { description, title, startDate, startTime, endDate, endTime },
-      }) => {
-        return (
-          <Card key={id} className="home-events-card">
-            <Typography className="card-date">{title}</Typography>
-            <Line small className="card-line" />
-            <Typography variant="h5" className="card-title">
-              {description}
-            </Typography>
-            <Typography variant="subtitle">{startDate}</Typography>
-          </Card>
-        );
-      }
-    );
+  renderScheduledEvents = data => {
+    if (data.length > 0) {
+      return data.map(
+        ({
+          _id: id,
+          // TODO: include other date and time fields on card
+          // eslint-disable-next-line no-unused-vars
+          scheduledEventContent: { description, title, startDate, startTime, endDate, endTime },
+        }) => {
+          return (
+            <Card key={id} className="home-events-card">
+              <Typography className="card-date">{title}</Typography>
+              <Line small className="card-line" />
+              <Typography variant="h5" className="card-title">
+                {description}
+              </Typography>
+              <Typography variant="subtitle">{startDate}</Typography>
+            </Card>
+          );
+        }
+      );
+    }
+    return <div>No scheduled events!</div>;
+  };
 
   renderCreateContentButtons = () => (
     <div className="home-create-card-buttons">
