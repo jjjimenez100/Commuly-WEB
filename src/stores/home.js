@@ -22,6 +22,7 @@ const Home = types
     currentCreateModalType: types.frozen(),
     currentCardData: types.frozen(),
     searchQuery: types.frozen(),
+    eventCards: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
@@ -39,6 +40,25 @@ const Home = types
         self.filteredTodoCards = todoCards;
 
         self.user = user;
+
+        const eventCards = [...todoCards, ...scheduledCards].reduce((accumulator, currentValue) => {
+          let startDate = '';
+          if (currentValue.contentCardType === TODO_CONTENT) {
+            startDate = currentValue.todoContent.startDate;
+          } else if (currentValue.contentCardType === SCHEDULED_CONTENT) {
+            startDate = currentValue.scheduledEventContent.startDate;
+          }
+
+          if (!accumulator[startDate]) {
+            accumulator[startDate] = [currentValue];
+          } else {
+            accumulator[startDate] = [...accumulator[startDate], currentValue];
+          }
+
+          return accumulator;
+        }, {});
+
+        self.eventCards = eventCards;
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
@@ -142,8 +162,12 @@ export const store = Home.create({
   todoCards: [],
   user: null,
   currentCreateModalType: '',
+<<<<<<< HEAD
   currentCardData: {},
   searchQuery: '',
+=======
+  eventCards: {},
+>>>>>>> 6388c72... #89 - Initial on hover for events in sidebar calendar
 });
 
 export default Home;
