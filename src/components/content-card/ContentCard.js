@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   Button,
@@ -25,6 +25,12 @@ import {
   OPEN_TEXT_QUESTION,
   LIKERT_QUESTION,
   COLUMN_ORDERING_QUESTION,
+  REACT,
+  UNREACT,
+  UNDERSTOOD,
+  BORED,
+  EXCITED,
+  CONFUSED,
 } from 'constants/card';
 import {
   PinIcon,
@@ -33,10 +39,24 @@ import {
   ExcitedReact,
   ConfusedReact,
   BoredReact,
+  UnderstoodReactBW,
+  ExcitedReactBW,
+  ConfusedReactBW,
+  BoredReactBW,
 } from 'assets/icons';
+import { getUserDetails } from 'utils/jwt';
 
-const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...props }) => {
+import CardService from 'services/cardService';
+
+const ContentCard = ({
+  handleModalOpen,
+  contentCardType,
+  questionCardType,
+  reactions,
+  ...props
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [reaction, setReaction] = useState('');
 
   const renderContentCard = () => {
     if (contentCardType) {
@@ -82,6 +102,42 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
     setDropdownOpen(false);
   };
 
+  const handleReactionClicked = async e => {
+    const { userId } = getUserDetails();
+    const body = {
+      userId,
+      reactionType: e.target.name,
+    };
+
+    // for unreact
+    if (reaction === e.target.name) {
+      setReaction('');
+      body.patchType = UNREACT;
+    } else {
+      // new reaction / change reaction
+      setReaction(e.target.name);
+      body.patchType = REACT;
+    }
+
+    try {
+      await CardService.patchCard(props._id, body);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (reactions) {
+      const { userId } = getUserDetails();
+      const returnedIndex = Object.entries(reactions).find(entry =>
+        entry[1].find(id => id === userId)
+      );
+      const [userReact] = returnedIndex;
+      setReaction(userReact.toUpperCase());
+    }
+  }, [props, reactions]);
+
   return (
     <Card className="content-card">
       <div className="content-card-title">
@@ -104,17 +160,46 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
       <Line small className="content-card-line" />
       {renderContentCard()}
       <div className="content-card-reacts">
-        <Button inline className="content-card-react">
-          <img src={UnderstoodReact} alt="understood-icon" />
+        <Button
+          onClick={handleReactionClicked}
+          name={UNDERSTOOD}
+          inline
+          className="content-card-react"
+        >
+          <img
+            src={
+              reaction.length > 0 && reaction !== UNDERSTOOD ? UnderstoodReactBW : UnderstoodReact
+            }
+            alt="understood-icon"
+          />
         </Button>
-        <Button inline className="content-card-react">
-          <img src={ExcitedReact} alt="excited-icon" />
+        <Button
+          onClick={handleReactionClicked}
+          name={EXCITED}
+          inline
+          className="content-card-react"
+        >
+          <img
+            src={reaction.length > 0 && reaction !== EXCITED ? ExcitedReactBW : ExcitedReact}
+            alt="excited-icon"
+          />
         </Button>
-        <Button inline className="content-card-react">
-          <img src={BoredReact} alt="bored-icon" />
+        <Button onClick={handleReactionClicked} name={BORED} inline className="content-card-react">
+          <img
+            src={reaction.length > 0 && reaction !== BORED ? BoredReactBW : BoredReact}
+            alt="bored-icon"
+          />
         </Button>
-        <Button inline className="content-card-react">
-          <img src={ConfusedReact} alt="confused-icon" />
+        <Button
+          onClick={handleReactionClicked}
+          name={CONFUSED}
+          inline
+          className="content-card-react"
+        >
+          <img
+            src={reaction.length > 0 && reaction !== CONFUSED ? ConfusedReactBW : ConfusedReact}
+            alt="confused-icon"
+          />
         </Button>
       </div>
     </Card>

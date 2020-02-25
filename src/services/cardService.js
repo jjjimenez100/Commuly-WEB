@@ -25,7 +25,7 @@ const CardService = {
 
     return httpService.post('/card', body, additionalConfig);
   },
-  addQuestionResponse(cardId, requestBody, additionalConfig = {}) {
+  patchCard(cardId, requestBody, additionalConfig = {}) {
     return httpService.patch(`/card/${cardId}`, requestBody, additionalConfig);
   },
 };

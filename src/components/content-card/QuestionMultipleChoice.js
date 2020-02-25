@@ -5,7 +5,12 @@ import { getUserDetails } from 'utils/jwt';
 import { ADD_RESPONSE, MULTIPLE_CHOICE_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
-const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question, choices }, hasUserSubmittedAnswer, userResponse = {} }) => {
+const QuestionMulitpleChoice = ({
+  _id: cardId,
+  multipleChoiceContent: { question, choices },
+  hasUserSubmittedAnswer,
+  userResponse = {},
+}) => {
   const [answer, setAnswer] = useState('');
   const [isSubmitButtonClicked, setIsSubmitButtonClicked] = useState(false);
   const handleSubmit = async e => {
@@ -23,7 +28,7 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
 
     try {
       setIsSubmitButtonClicked(true);
-      await CardService.addQuestionResponse(cardId, body);
+      await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
     } catch (error) {
@@ -32,12 +37,12 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
     }
   };
 
-  const isUserAnswer = (choice) => {
+  const isUserAnswer = choice => {
     if (!hasUserSubmittedAnswer) {
       return false;
     }
     const { answer } = userResponse;
-    return answer === choice; 
+    return answer === choice;
   };
 
   return (
@@ -61,8 +66,14 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
           </Checkbox>
         ))}
       </form>
-      <Button size="small" onClick={handleSubmit} disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}>
-        {isSubmitButtonClicked || hasUserSubmittedAnswer ? 'You already answered this question' : 'Submit'}
+      <Button
+        size="small"
+        onClick={handleSubmit}
+        disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}
+      >
+        {isSubmitButtonClicked || hasUserSubmittedAnswer
+          ? 'You already answered this question'
+          : 'Submit'}
       </Button>
     </div>
   );

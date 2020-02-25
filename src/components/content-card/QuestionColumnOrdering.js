@@ -59,7 +59,7 @@ class QuestionColumnOrdering extends Component {
     };
 
     try {
-      await CardService.addQuestionResponse(cardId, body);
+      await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       this.setState({ options: choices });
     } catch (error) {

@@ -48,7 +48,13 @@ const Button = ({
   });
 
   return (
-    <button name={name} type={type} onClick={onClick} className={className.trim()}>
+    <button
+      name={name}
+      type={type}
+      onClick={onClick}
+      className={className.trim()}
+      disabled={disabled}
+    >
       {loading ? (
         <Spinner size="small" inverted />
       ) : (

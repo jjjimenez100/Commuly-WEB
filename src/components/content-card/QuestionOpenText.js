@@ -22,7 +22,7 @@ const QuestionOpenText = ({ _id: cardId, openTextContent: { question } }) => {
     };
 
     try {
-      await CardService.addQuestionResponse(cardId, body);
+      await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
     } catch (error) {
