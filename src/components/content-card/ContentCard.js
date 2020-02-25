@@ -73,12 +73,8 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
   };
 
   const handleEditClicked = () => {
-    handleModalOpen(contentCardType || questionCardType);
-    setDropdownOpen(false);
-  };
-
-  const handleDeleteClicked = () => {
-    handleModalOpen();
+    const cardData = props;
+    handleModalOpen(contentCardType || questionCardType, cardData);
     setDropdownOpen(false);
   };
 

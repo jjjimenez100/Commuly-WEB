@@ -1,4 +1,3 @@
-import { CONTENT_CARD, TEXT_CONTENT } from 'constants/card';
 import httpService from './httpService';
 
 const CardService = {
@@ -16,14 +15,8 @@ const CardService = {
     };
     return httpService.get('/cards', config);
   },
-  createNewTextContentCard(textCardBody, additionalConfig = {}) {
-    const body = {
-      contentCardType: TEXT_CONTENT,
-      cardType: CONTENT_CARD,
-      ...textCardBody,
-    };
-
-    return httpService.post('/card', body, additionalConfig);
+  updateContentCard(cardId, requestBody, additionalConfig = {}) {
+    return httpService.put(`/card/${cardId}`, requestBody, additionalConfig);
   },
   addQuestionResponse(cardId, requestBody, additionalConfig = {}) {
     return httpService.patch(`/card/${cardId}`, requestBody, additionalConfig);

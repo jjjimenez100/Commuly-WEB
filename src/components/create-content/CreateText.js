@@ -25,17 +25,29 @@ Overflow will only be at modal-body
 */
 
 class CreateText extends Component {
-  state = {
-    dropdownOpen: false,
-    currentActiveDropdown: '',
-    description: '',
-    textSize: 20,
-    textColor: '#000000',
-    backgroundColor: '#FFFFFF',
-    mainText: 'Sample Text',
-  };
+  constructor(props) {
+    super(props);
+    const { textContent = {} } = this.props.cardData;
+
+    const { content = '', title = '' } = textContent;
+    this.state = {
+      dropdownOpen: false,
+      currentActiveDropdown: '',
+      description: content || '',
+      textSize: 20,
+      textColor: '#000000',
+      backgroundColor: '#FFFFFF',
+      mainText: title || 'Sample Text',
+    };
+  }
 
   componentDidMount() {
+    const { textContent = {} } = this.props.cardData;
+    const { textColor = '', textSize = '', backgroundColor = '' } = textContent;
+    this.changeTextSize(textSize || 20);
+    this.changeColor(textColor || '#000000', 'textColor');
+    this.changeColor(backgroundColor || '#FFFFFF', 'backgroundColor');
+
     // disable enter key on textarea
     document.getElementById('create-textarea').onkeydown = e => {
       if (!e) {
@@ -90,10 +102,21 @@ class CreateText extends Component {
       textContent,
     };
 
+    const { addCard, updateCard, cardData } = this.props;
     try {
-      const { data } = await CardService.createNewContentCard(body);
+      if (Object.keys(cardData).length === 0) {
+        const {
+          data: { savedCard },
+        } = await CardService.createNewContentCard(body);
+        addCard(savedCard);
+      } else {
+        const { _id: cardId } = cardData;
+        const {
+          data: { updatedCard },
+        } = await CardService.updateContentCard(cardId, body);
+        updateCard(updatedCard);
+      }
 
-      await this.props.addCard(data.savedCard);
       this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -106,7 +129,10 @@ class CreateText extends Component {
     // add validation here
     // eslint-disable-next-line radix
     const textSize = parseInt(e.target.value);
+    this.changeTextSize(textSize);
+  };
 
+  changeTextSize = textSize => {
     if (textSize >= 10 && textSize <= 40) {
       this.setState({ textSize });
       document.getElementById('create-textarea').style.fontSize = `${textSize}px`;
@@ -116,13 +142,17 @@ class CreateText extends Component {
   };
 
   handleColorChange = (color, name) => {
-    this.setState({ [`${name}`]: color.hex });
+    this.changeColor(color.hex, name);
+  };
+
+  changeColor = (hexColor, name) => {
+    this.setState({ [`${name}`]: hexColor });
     if (name === 'textColor') {
-      document.getElementById('create-textarea').style.color = color.hex;
+      document.getElementById('create-textarea').style.color = hexColor;
     } else {
-      document.getElementById('create-textarea').style.backgroundColor = color.hex;
+      document.getElementById('create-textarea').style.backgroundColor = hexColor;
     }
-    document.getElementById(`create-${name}`).style.backgroundColor = color.hex;
+    document.getElementById(`create-${name}`).style.backgroundColor = hexColor;
   };
 
   setMainText = text => {
@@ -130,7 +160,7 @@ class CreateText extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, cardData } = this.props;
     return (
       <>
         <ModalBody className="create-text-body">
@@ -238,7 +268,7 @@ class CreateText extends Component {
             Tag Teammates
           </Button>
           <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>

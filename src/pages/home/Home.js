@@ -113,11 +113,13 @@ class Home extends Component {
     await this.props.store.home.getCards();
   };
 
-  handleModalOpen = (activeContentType = '') => {
+  handleModalOpen = (activeContentType = '', cardData = {}) => {
+    const { setCurrentCreateModalType, setCurrentCardData } = this.props.store.home;
+    setCurrentCreateModalType(activeContentType);
+    setCurrentCardData(cardData);
     this.setState(prevState => ({
       modalOpen: !prevState.modalOpen,
     }));
-    this.props.store.home.setCurrentCreateModalType(activeContentType);
   };
 
   handleDropdownOpen = () =>
@@ -220,7 +222,9 @@ class Home extends Component {
       teamCards,
       scheduledCards,
       addCard,
+      updateCard,
       currentCreateModalType,
+      currentCardData,
     } = this.props.store.home;
     return (
       <div className="home">
@@ -294,12 +298,14 @@ class Home extends Component {
           contentType={currentCreateModalType}
           isOpen={this.state.modalOpen}
           handleClose={this.handleModalOpen}
-          title={`Create ${
+          title={`${
             CreateContentButtons[currentCreateModalType]
               ? CreateContentButtons[currentCreateModalType].name
               : ''
           } Content`}
           addCard={addCard}
+          updateCard={updateCard}
+          cardData={currentCardData}
         />
       </div>
     );

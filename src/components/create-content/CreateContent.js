@@ -24,11 +24,26 @@ import {
   COLUMN_ORDERING_QUESTION,
 } from 'constants/card';
 
-const CreateContent = ({ contentType, handleClose, isOpen, title, addCard }) => {
+const CreateContent = ({
+  contentType,
+  handleClose,
+  isOpen,
+  title,
+  addCard,
+  updateCard,
+  cardData,
+}) => {
   const renderModalType = () => {
     switch (contentType) {
       case TEXT_CONTENT:
-        return <CreateText addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateText
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case IMAGE_CONTENT:
         return <CreateImage addCard={addCard} onClose={handleClose} />;
       case SCHEDULED_CONTENT:
