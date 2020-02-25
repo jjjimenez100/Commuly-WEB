@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import { observer, inject } from 'mobx-react';
+import moment from 'moment';
 import {
   Typography,
   HorizontalLine as Line,
@@ -30,8 +31,6 @@ import {
   QuestionIcon,
   ArrowDownIcon,
 } from 'assets/icons';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 
 import {
   TEXT_CONTENT,
@@ -45,6 +44,7 @@ import {
   OPEN_TEXT_QUESTION,
 } from 'constants/card';
 import { DONE_STATUS } from 'constants/user';
+import Calendar from 'react-calendar';
 import { boardData } from './data';
 
 const CreateContentButtons = {
@@ -103,6 +103,19 @@ const CreateContentButtons = {
     order: 9,
   },
 };
+
+const EventTile = ({ todoContent: { title, startDate, endDate, startTime, endTime } }) => (
+  <div className="home-calendar-tile-event">
+    <Typography variant="subtitle">
+      {startDate}
+      {endDate && `- ${endDate}`}
+    </Typography>
+    <Typography variant="h5">{title}</Typography>
+    <Typography variant="subtitle">
+      {startTime}-{endTime}
+    </Typography>
+  </div>
+);
 
 class Home extends Component {
   constructor(props) {
@@ -248,6 +261,23 @@ class Home extends Component {
     </div>
   );
 
+  renderCalendarTile = ({ date }) => {
+    const { eventCards } = this.props.store.home;
+
+    const newDate = moment(date).format('YYYY-MM-DD');
+    if (eventCards[newDate]) {
+      return (
+        <div className="home-calendar-tile">
+          {eventCards[newDate].map(event => (
+            <EventTile key={event._id} />
+          ))}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   render() {
     const {
       filteredTodoCards: todoCards,
@@ -326,7 +356,12 @@ class Home extends Component {
               Calendar
             </Typography>
             <Line />
-            <Calendar calendarType="US" onChange={this.onChange} value={this.state.date} />
+            <Calendar
+              calendarType="US"
+              onChange={this.onChange}
+              value={this.state.date}
+              tileContent={this.renderCalendarTile}
+            />
           </div>
           <div className="home-todo">
             <Typography variant="h4" className="home-todo-title">

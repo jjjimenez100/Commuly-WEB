@@ -175,115 +175,40 @@
       margin-bottom: $spacing-tiny;
     }
 
-    .react-calendar {
-      border: none;
-      width: calc(310px - (#{$spacing-base} * 2));
-      font-family: $font-stack-heading;
-      margin-top: $spacing-small;
-
-      .react-calendar__tile {
-        padding: $spacing-tiny;
-        @include font-size(14px);
-
-        &:hover {
-          border-radius: 50%;
-        }
-      }
-
-      .react-calendar__tile--active {
-        border-radius: 50%;
-      }
-    }
-
-  }
-
-  &-todo {
-    margin-top: $spacing-base;
-    
-    &-title {
-      margin-bottom: $spacing-tiny;
-
-      &-buttons {
-        display: flex;
-      }
-    }
-
-    &-card {
-      margin-right: $spacing-small;
-      width: 250px;
-    }
-
-    &-cards {
-      margin-top: $spacing-base;
+    &-tile {
+      position: absolute;
+      visibility: hidden;
+      background-color: $white-color;
+      min-height: 40px;
+      max-height: 200px;
+      width: 300px;
+      z-index: 2;
       display: flex;
-      width: calc((250px * 4) + (#{$spacing-small} * 4));
-      overflow: auto;
-
-      .card {
-        &-date {
-          margin-bottom: $spacing-tiny;
-        }
-
-        &-line {
-          margin-bottom: $spacing-small;
-        }
-
-        &-title {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          width: calc(250px - #{$spacing-small * 2});
-        }
-      }
-    }
-  }
-
-  &-leaderboard {
-    &-title {
-      margin-bottom: $spacing-tiny;
-    }
-
-    &-board {
-      margin-top: $spacing-small;
-    }
-
-    &-person {
+      right: 0;
       margin-top: $spacing-tiny;
-      display: flex;
-      justify-content: flex-start;
+      border-radius: 8px;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      box-shadow: 0 2px 6px rgba($neutral-d-color, 0.1);
 
-      .person-image-wrapper {
-        width: 32px;
-        height: 32px;
-        margin-right: $spacing-tiny;
-        
-        img {
-          object-fit: cover;
-          border-radius: 50%;
-        }
+      &-event {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: $spacing-small;
+        flex-direction: column;
       }
 
-      .person-text {
-        display: flex;
-        justify-content: space-between;
-        flex: 1;
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
       }
       
-      .person-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: calc(310px - ((#{$spacing-base} * 2) + 32px + #{$spacing-tiny} + 70px))
+      &:last-child {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
       }
-    }
-  }
-
-  &-calendar {
-    margin-top: $spacing-base;
-    
-    &-title {
-      margin-bottom: $spacing-tiny;
     }
 
     .react-calendar {
@@ -291,6 +216,8 @@
       width: calc(310px - (#{$spacing-base} * 2));
       font-family: $font-stack-heading;
       margin-top: $spacing-small;
+      position: relative;
+      z-index: 0;
 
       .react-calendar__tile {
         padding: $spacing-tiny;
@@ -298,6 +225,10 @@
 
         &:hover {
           border-radius: 50%;
+        }
+
+        &:hover .home-calendar-tile {
+          visibility: visible;
         }
       }
 
@@ -317,12 +248,12 @@
 
     &-list {
       margin-top: $spacing-small;
-
     }
 
     &-radio {
       margin-bottom: $spacing-base;
     }
   }
-
 }
+
+
