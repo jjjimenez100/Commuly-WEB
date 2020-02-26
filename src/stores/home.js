@@ -1,5 +1,6 @@
 /* eslint-disable func-names */
 import { types, flow } from 'mobx-state-tree';
+import { toast } from 'react-toastify';
 import UserService from 'services/userService';
 import { getUserDetails } from 'utils/jwt';
 import { TODO_CONTENT, SCHEDULED_CONTENT } from '../constants/card';
@@ -90,6 +91,7 @@ const Home = types
       try {
         const { userId } = getUserDetails();
         const patchType = isChecked ? DONE_STATUS : STUCK_STATUS;
+        const patchMessage = patchType.toLowerCase();
         const body = { cardId, patchType };
         yield UserService.markTodo(userId, body);
         const updatedTodoCards = self.todoCards.map(todoCard => {
@@ -100,7 +102,9 @@ const Home = types
           return { ...todoCard };
         });
         self.todoCards = updatedTodoCards;
+        toast.success(`Successfully marked todo as ${patchMessage}!`);
       } catch (error) {
+        toast.error('Failed to mark todo. Please try again later.');
         // eslint-disable-next-line no-console
         console.log(error);
         // handle error here
