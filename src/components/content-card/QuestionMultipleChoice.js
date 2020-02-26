@@ -5,7 +5,12 @@ import { getUserDetails } from 'utils/jwt';
 import { ADD_RESPONSE, MULTIPLE_CHOICE_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
-const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question, choices }, hasUserSubmittedAnswer, userResponse = {} }) => {
+const QuestionMulitpleChoice = ({
+  _id: cardId,
+  multipleChoiceContent: { question, choices, title },
+  hasUserSubmittedAnswer,
+  userResponse = {},
+}) => {
   const [answer, setAnswer] = useState('');
   const [isSubmitButtonClicked, setIsSubmitButtonClicked] = useState(false);
   const handleSubmit = async e => {
@@ -32,25 +37,26 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
     }
   };
 
-  const isUserAnswer = (choice) => {
+  const isUserAnswer = choice => {
     if (!hasUserSubmittedAnswer) {
       return false;
     }
     const { answer } = userResponse;
-    return answer === choice; 
+    return answer === choice;
   };
 
   return (
     <div className="content-generic content-multiple-choice">
       <Typography variant="h4" className="content-generic-title">
-        Here goes title
+        {title}
       </Typography>
       <Typography variant="body">{question}</Typography>
       <form className="content-multiple-choice-choices">
-        {choices.map(choice => (
+        {choices.map((choice, index) => (
           <Checkbox
             id={choice}
-            key={choice}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${title}-choice-${choice}-${index}`}
             type="radio"
             checked={choice === answer || isUserAnswer(choice)}
             className="content-multiple-choice-single"
@@ -61,8 +67,14 @@ const QuestionMulitpleChoice = ({ _id: cardId, multipleChoiceContent: { question
           </Checkbox>
         ))}
       </form>
-      <Button size="small" onClick={handleSubmit} disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}>
-        {isSubmitButtonClicked || hasUserSubmittedAnswer ? 'You already answered this question' : 'Submit'}
+      <Button
+        size="small"
+        onClick={handleSubmit}
+        disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}
+      >
+        {isSubmitButtonClicked || hasUserSubmittedAnswer
+          ? 'You already answered this question'
+          : 'Submit'}
       </Button>
     </div>
   );
