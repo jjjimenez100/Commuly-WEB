@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { ModalBody, ModalFooter, Button, Textarea, Input } from 'components';
+import { ModalBody, ModalFooter, Button, Textarea, Input, Typography } from 'components';
 import { SendIcon } from 'assets/icons';
 import { getUserDetails } from 'utils/jwt';
 import { OPEN_TEXT_QUESTION, QUESTION_CARD } from 'constants/card';
 import CardService from 'services/cardService';
 
 class CreateOpenTextQuestion extends Component {
-  state = {
-    title: '',
-    question: '',
-  };
+  constructor(props) {
+    super(props);
+    const { openTextContent = {} } = this.props.cardData;
+    const { title = '', question = '' } = openTextContent;
+    this.state = {
+      title,
+      question,
+    };
+  }
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
@@ -18,7 +23,7 @@ class CreateOpenTextQuestion extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     const { team, userId: owner } = getUserDetails();
-    const { question } = this.state;
+    const { question, title } = this.state;
     const body = {
       owner,
       team,
@@ -26,13 +31,25 @@ class CreateOpenTextQuestion extends Component {
       questionCardType: OPEN_TEXT_QUESTION,
       openTextContent: {
         question,
+        title,
       },
     };
 
+    const { addCard, updateCard, cardData } = this.props;
     try {
-      const { data } = await CardService.createNewContentCard(body);
+      if (Object.keys(cardData).length === 0) {
+        const {
+          data: { savedCard },
+        } = await CardService.createNewContentCard(body);
+        addCard(savedCard);
+      } else {
+        const { _id: cardId } = cardData;
+        const {
+          data: { updatedCard },
+        } = await CardService.updateContentCard(cardId, body);
+        updateCard(updatedCard);
+      }
 
-      await this.props.addCard(data.savedCard);
       this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -42,7 +59,11 @@ class CreateOpenTextQuestion extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, cardData } = this.props;
+    const { openTextContent = {} } = cardData;
+    const { responses = [] } = openTextContent;
+    const numberOfResponses = responses.length;
+
     return (
       <>
         <ModalBody className="create-multiple-choice">
@@ -62,11 +83,16 @@ class CreateOpenTextQuestion extends Component {
           />
         </ModalBody>
         <ModalFooter>
+          <Typography variant="subtitle" className="text-danger">
+            {numberOfResponses !== 0
+              ? 'Updating this card will reset all previously submitted answers.'
+              : ''}
+          </Typography>
           <Button type="button" size="small" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>

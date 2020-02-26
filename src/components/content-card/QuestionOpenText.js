@@ -5,7 +5,7 @@ import { getUserDetails } from 'utils/jwt';
 import { ADD_RESPONSE, OPEN_TEXT_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
-const QuestionOpenText = ({ _id: cardId, openTextContent: { question } }) => {
+const QuestionOpenText = ({ _id: cardId, openTextContent: { question, title } }) => {
   const [answer, setAnswer] = useState('');
 
   const handleSubmit = async e => {
@@ -34,7 +34,7 @@ const QuestionOpenText = ({ _id: cardId, openTextContent: { question } }) => {
   return (
     <div className="content-generic">
       <Typography variant="h4" className="content-generic-title">
-        Title here
+        {title}
       </Typography>
       <Typography variant="body">{question}</Typography>
       <Textarea
