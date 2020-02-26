@@ -8,11 +8,18 @@ import { DONE_STATUS, STUCK_STATUS } from '../constants/user';
 const Home = types
   .model('Home', {
     scheduledCards: types.array(types.frozen()),
+    filteredScheduledCards: types.array(types.frozen()),
+
     teamCards: types.array(types.frozen()),
+    filteredTeamCards: types.array(types.frozen()),
+
     todoCards: types.array(types.frozen()),
+    filteredTodoCards: types.array(types.frozen()),
+
     user: types.frozen(),
     currentCreateModalType: types.frozen(),
     currentCardData: types.frozen(),
+    searchQuery: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
@@ -22,8 +29,14 @@ const Home = types
         const { scheduledCards, teamCards, todoCards, user } = data;
         console.log(teamCards);
         self.scheduledCards = scheduledCards;
+        self.filteredScheduledCards = scheduledCards;
+
         self.teamCards = teamCards;
+        self.filteredTeamCards = teamCards;
+
         self.todoCards = todoCards;
+        self.filteredTodoCards = todoCards;
+
         self.user = user;
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -44,6 +57,8 @@ const Home = types
 
       const announcements = [cardData, ...teamCards];
       self.teamCards = announcements;
+      // refresh filtered indexes
+      self.searchCards();
     },
     updateCard(cardData) {
       const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
@@ -55,6 +70,8 @@ const Home = types
         self.todoCards = self.insertCardAtIndex(todoCards, updatedCardId, cardData);
       }
       self.teamCards = self.insertCardAtIndex(teamCards, updatedCardId, cardData);
+      // refresh filtered indexes
+      self.searchCards();
     },
     insertCardAtIndex(cardArray, cardId, cardData) {
       const newCardArray = [...cardArray];
@@ -89,6 +106,44 @@ const Home = types
         // handle error here
       }
     }),
+    setFilteredCards(filteredTeamCards, filteredTodoCards, filteredScheduledCards) {
+      self.filteredTeamCards = filteredTeamCards;
+      self.filteredTodoCards = filteredTodoCards;
+      self.filteredScheduledCards = filteredScheduledCards;
+    },
+    findMatchingObjectProperty(object, query) {
+      return (
+        object !== null &&
+        (typeof object === 'object'
+          ? Object.keys(object).some(key => this.findMatchingObjectProperty(object[key], query))
+          : String(object)
+              .toLowerCase()
+              .startsWith(query))
+      );
+    },
+    filterMatchingObjectProperties(array, query) {
+      return array.filter(element => this.findMatchingObjectProperty(element, query));
+    },
+    searchCards() {
+      const query = self.searchQuery;
+      if (query === '') {
+        self.filteredTeamCards = [...self.teamCards];
+        self.filteredTodoCards = [...self.todoCards];
+        self.filteredScheduledCards = [...self.scheduledCards];
+        return;
+      }
+
+      const lowercaseQuery = query.toLowerCase();
+      self.filteredTeamCards = this.filterMatchingObjectProperties(self.teamCards, lowercaseQuery);
+      self.filteredTodoCards = this.filterMatchingObjectProperties(self.todoCards, lowercaseQuery);
+      self.filteredScheduledCards = this.filterMatchingObjectProperties(
+        self.scheduledCards,
+        lowercaseQuery
+      );
+    },
+    setSearchQuery(query) {
+      self.searchQuery = query;
+    },
   }));
 
 export const store = Home.create({
@@ -98,6 +153,7 @@ export const store = Home.create({
   user: null,
   currentCreateModalType: '',
   currentCardData: {},
+  searchQuery: '',
 });
 
 export default Home;

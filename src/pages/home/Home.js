@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import debounce from 'lodash/debounce';
 import { observer, inject } from 'mobx-react';
 import {
   Typography,
@@ -11,6 +12,7 @@ import {
   DropdownMenuItem,
   CreateContent,
   ContentCard,
+  Input,
 } from 'components';
 import {
   CircleArrowLeftIcon,
@@ -102,14 +104,24 @@ const CreateContentButtons = {
 };
 
 class Home extends Component {
-  state = {
-    date: new Date(),
-    modalOpen: false,
-    dropdownOpen: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: new Date(),
+      modalOpen: false,
+      dropdownOpen: false,
+    };
+    const { searchCards } = this.props.store.home;
+    this.search = debounce(() => searchCards(), 300);
+  }
+
+  handleSearchQueryChange = e => {
+    const { setSearchQuery } = this.props.store.home;
+    setSearchQuery(e.target.value);
+    this.search();
   };
 
   componentDidMount = async () => {
-    // user here will be used to check which cards has been pinned, reacted, etc.
     await this.props.store.home.getCards();
   };
 
@@ -218,9 +230,10 @@ class Home extends Component {
 
   render() {
     const {
-      todoCards,
-      teamCards,
-      scheduledCards,
+      filteredTodoCards: todoCards,
+      filteredTeamCards: teamCards,
+      filteredScheduledCards: scheduledCards,
+      searchQuery,
       addCard,
       updateCard,
       currentCreateModalType,
@@ -265,6 +278,16 @@ class Home extends Component {
               <Typography variant="h4">Announcements</Typography>
             </div>
             <Line />
+            <br />
+            <div>
+              <Input
+                placeholder="Search"
+                value={searchQuery}
+                min={10}
+                max={40}
+                onChange={this.handleSearchQueryChange}
+              />
+            </div>
             <Card className="home-create-card">{this.renderCreateContentButtons()}</Card>
             <div className="home-announcements-cards">{this.renderAnnouncements(teamCards)}</div>
           </div>
