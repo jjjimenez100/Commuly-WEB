@@ -72,13 +72,41 @@ const CreateContent = ({
           />
         );
       case MULTIPLE_CHOICE_QUESTION:
-        return <CreateMultipleChoice addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateMultipleChoice
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case COLUMN_ORDERING_QUESTION:
-        return <CreateColumnOrder addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateColumnOrder
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case LIKERT_QUESTION:
-        return <CreateLikert addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateLikert
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       case OPEN_TEXT_QUESTION:
-        return <CreateOpenTextQuestion addCard={addCard} onClose={handleClose} />;
+        return (
+          <CreateOpenTextQuestion
+            addCard={addCard}
+            updateCard={updateCard}
+            onClose={handleClose}
+            cardData={cardData}
+          />
+        );
       default:
         return <DeleteContent />;
     }
