@@ -122,7 +122,7 @@ const Home = types
           ? Object.keys(object).some(key => this.findMatchingObjectProperty(object[key], query))
           : String(object)
               .toLowerCase()
-              .startsWith(query))
+              .includes(query))
       );
     },
     filterMatchingObjectProperties(array, query) {
