@@ -9,6 +9,7 @@ import CardService from 'services/cardService';
 const QuestionLikert = ({
   _id: cardId,
   likertContent: {
+    title,
     question,
     choices: { lowerBoundChoice, upperBoundChoice },
   },
@@ -40,7 +41,7 @@ const QuestionLikert = ({
   return (
     <div className="content-generic">
       <Typography variant="h4" className="content-generic-title">
-        Title here
+        {title}
       </Typography>
       <Typography variant="body">{question}</Typography>
       <div className="content-likert">

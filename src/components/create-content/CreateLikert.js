@@ -9,12 +9,18 @@ import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
 
 class CreateLikert extends Component {
-  state = {
-    title: '',
-    question: '',
-    startInput: '',
-    endInput: '',
-  };
+  constructor(props) {
+    super(props);
+    const { likertContent = {} } = this.props.cardData;
+    const { title = '', question = '', choices = {} } = likertContent;
+    const { lowerBoundChoice: startInput = '', upperBoundChoice: endInput = '' } = choices;
+    this.state = {
+      title,
+      question,
+      startInput,
+      endInput,
+    };
+  }
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
@@ -23,7 +29,12 @@ class CreateLikert extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     const { team, userId: owner } = getUserDetails();
-    const { question, startInput: lowerBoundChoice, endInput: upperBoundChoice } = this.state;
+    const {
+      question,
+      startInput: lowerBoundChoice,
+      endInput: upperBoundChoice,
+      title,
+    } = this.state;
     const body = {
       owner,
       team,
@@ -31,6 +42,7 @@ class CreateLikert extends Component {
       questionCardType: LIKERT_QUESTION,
       likertContent: {
         question,
+        title,
         choices: {
           lowerBoundChoice,
           upperBoundChoice,
@@ -38,10 +50,21 @@ class CreateLikert extends Component {
       },
     };
 
+    const { addCard, updateCard, cardData } = this.props;
     try {
-      const { data } = await CardService.createNewContentCard(body);
+      if (Object.keys(cardData).length === 0) {
+        const {
+          data: { savedCard },
+        } = await CardService.createNewContentCard(body);
+        addCard(savedCard);
+      } else {
+        const { _id: cardId } = cardData;
+        const {
+          data: { updatedCard },
+        } = await CardService.updateContentCard(cardId, body);
+        updateCard(updatedCard);
+      }
 
-      await this.props.addCard(data.savedCard);
       this.props.onClose();
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -51,7 +74,10 @@ class CreateLikert extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, cardData } = this.props;
+    const { likertContent = {} } = cardData;
+    const { responses = [] } = likertContent;
+    const numberOfResponses = responses.length;
 
     return (
       <>
@@ -95,11 +121,16 @@ class CreateLikert extends Component {
           </div>
         </ModalBody>
         <ModalFooter>
+          <Typography variant="subtitle" className="text-danger">
+            {numberOfResponses !== 0
+              ? 'Updating this card will reset all previously submitted answers.'
+              : ''}
+          </Typography>
           <Button type="button" size="small" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>
