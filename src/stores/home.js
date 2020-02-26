@@ -3,6 +3,7 @@ import { types, flow } from 'mobx-state-tree';
 import { toast } from 'react-toastify';
 import UserService from 'services/userService';
 import { getUserDetails } from 'utils/jwt';
+import { filterMatchingObjectProperties } from 'utils/search';
 import { TODO_CONTENT, SCHEDULED_CONTENT } from '../constants/card';
 import { DONE_STATUS, STUCK_STATUS } from '../constants/user';
 
@@ -110,24 +111,6 @@ const Home = types
         // handle error here
       }
     }),
-    setFilteredCards(filteredTeamCards, filteredTodoCards, filteredScheduledCards) {
-      self.filteredTeamCards = filteredTeamCards;
-      self.filteredTodoCards = filteredTodoCards;
-      self.filteredScheduledCards = filteredScheduledCards;
-    },
-    findMatchingObjectProperty(object, query) {
-      return (
-        object !== null &&
-        (typeof object === 'object'
-          ? Object.keys(object).some(key => this.findMatchingObjectProperty(object[key], query))
-          : String(object)
-              .toLowerCase()
-              .includes(query))
-      );
-    },
-    filterMatchingObjectProperties(array, query) {
-      return array.filter(element => this.findMatchingObjectProperty(element, query));
-    },
     searchCards() {
       const query = self.searchQuery;
       if (query === '') {
@@ -138,9 +121,9 @@ const Home = types
       }
 
       const lowercaseQuery = query.toLowerCase();
-      self.filteredTeamCards = this.filterMatchingObjectProperties(self.teamCards, lowercaseQuery);
-      self.filteredTodoCards = this.filterMatchingObjectProperties(self.todoCards, lowercaseQuery);
-      self.filteredScheduledCards = this.filterMatchingObjectProperties(
+      self.filteredTeamCards = filterMatchingObjectProperties(self.teamCards, lowercaseQuery);
+      self.filteredTodoCards = filterMatchingObjectProperties(self.todoCards, lowercaseQuery);
+      self.filteredScheduledCards = filterMatchingObjectProperties(
         self.scheduledCards,
         lowercaseQuery
       );
