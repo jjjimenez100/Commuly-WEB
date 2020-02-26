@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import Dropzone from 'react-dropzone';
 import classnames from 'classnames';
 import { ModalBody, ModalFooter, Button, Textarea, Typography } from 'components';
@@ -45,6 +46,7 @@ class CreateImage extends Component {
       if (Object.keys(cardData).length === 0) {
         const { data } = await CardService.createNewContentCard(formData);
         await addCard(data.savedCard);
+        toast.success('Successfully added new content!');
       } else {
         const shouldDeleteCloudFile = file !== null;
         formData.append('shouldDeleteCloudFile', shouldDeleteCloudFile);
@@ -53,9 +55,11 @@ class CreateImage extends Component {
           data: { updatedCard },
         } = await CardService.updateContentCardWithFiles(cardId, formData);
         await updateCard(updatedCard);
+        toast.success('Successfully updated content!');
       }
       this.props.onClose();
     } catch (error) {
+      toast.error('Failed to get a proper response from our services. Please try again later');
       // eslint-disable-next-line no-console
       console.log(error);
       // handle if error, or transfer this whole trycatch to mobx instead

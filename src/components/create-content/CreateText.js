@@ -3,6 +3,7 @@ suppressContentEditableWarning here: https://stackoverflow.com/questions/4963914
 */
 
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import { SketchPicker } from 'react-color';
 import {
   ModalBody,
@@ -109,16 +110,19 @@ class CreateText extends Component {
           data: { savedCard },
         } = await CardService.createNewContentCard(body);
         addCard(savedCard);
+        toast.success('Successfully added new content!');
       } else {
         const { _id: cardId } = cardData;
         const {
           data: { updatedCard },
         } = await CardService.updateContentCard(cardId, body);
         updateCard(updatedCard);
+        toast.success('Successfully updated content!');
       }
 
       this.props.onClose();
     } catch (error) {
+      toast.error('Failed to get a proper response from our services. Please try again later');
       // eslint-disable-next-line no-console
       console.log(error);
       // handle if error, or transfer this whole trycatch to mobx instead

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import { Typography, Input, Textarea, Button, ModalBody, ModalFooter } from 'components';
 import { AddPeopleIcon, SendIcon, CalendarBlackIcon, TimerIcon } from 'assets/icons';
@@ -61,15 +62,18 @@ class CreateTodo extends Component {
       if (Object.keys(cardData).length === 0) {
         const { data } = await CardService.createNewContentCard(body);
         await addCard(data.savedCard);
+        toast.success('Successfully added new content!');
       } else {
         const { _id: cardId } = cardData;
         const {
           data: { updatedCard },
         } = await CardService.updateContentCard(cardId, body);
         updateCard(updatedCard);
+        toast.success('Successfully updated content!');
       }
       onClose();
     } catch (error) {
+      toast.error('Failed to get a proper response from our services. Please try again later');
       // eslint-disable-next-line no-console
       console.log(error);
       // handle if error, or transfer this whole trycatch to mobx instead

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import classnames from 'classnames';
 import Dropzone from 'react-dropzone';
@@ -73,6 +74,7 @@ class CreateScheduledContent extends Component {
       if (Object.keys(cardData).length === 0) {
         const { data } = await CardService.createNewContentCard(formData);
         await addCard(data.savedCard);
+        toast.success('Successfully added new content!');
       } else {
         const shouldDeleteCloudFile = file !== null;
         formData.append('shouldDeleteCloudFile', shouldDeleteCloudFile);
@@ -81,6 +83,7 @@ class CreateScheduledContent extends Component {
           data: { updatedCard },
         } = await CardService.updateContentCardWithFiles(cardId, formData);
         await updateCard(updatedCard);
+        toast.success('Successfully updated content!');
       }
       onClose();
     } catch (error) {
