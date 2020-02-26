@@ -283,6 +283,7 @@ class Home extends Component {
               <Input
                 placeholder="Search"
                 value={searchQuery}
+                name="searchQuery"
                 min={10}
                 max={40}
                 onChange={this.handleSearchQueryChange}
