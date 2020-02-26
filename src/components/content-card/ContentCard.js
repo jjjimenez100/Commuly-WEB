@@ -78,6 +78,8 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
     setDropdownOpen(false);
   };
 
+  const handleViewResponses = () => {};
+
   return (
     <Card className="content-card">
       <div className="content-card-title">
@@ -92,6 +94,9 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
               <img src={VerticalMenuIcon} alt="vertical-menu" />
             </Button>
             <DropdownMenu visible={dropdownOpen}>
+              {questionCardType ? (
+                <DropdownMenuItem text="View Responses" onClick={handleViewResponses} />
+              ) : null}
               <DropdownMenuItem text="Edit" onClick={handleEditClicked} />
             </DropdownMenu>
           </DropdownContainer>
