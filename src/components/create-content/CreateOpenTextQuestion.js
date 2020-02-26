@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import { ModalBody, ModalFooter, Button, Textarea, Input, Typography } from 'components';
 import { SendIcon } from 'assets/icons';
 import { getUserDetails } from 'utils/jwt';
@@ -42,16 +43,19 @@ class CreateOpenTextQuestion extends Component {
           data: { savedCard },
         } = await CardService.createNewContentCard(body);
         addCard(savedCard);
+        toast.success('Successfully added new question!');
       } else {
         const { _id: cardId } = cardData;
         const {
           data: { updatedCard },
         } = await CardService.updateContentCard(cardId, body);
         updateCard(updatedCard);
+        toast.success('Successfully updated question!');
       }
 
       this.props.onClose();
     } catch (error) {
+      toast.error('Failed to get a proper response from our services. Please try again later');
       // eslint-disable-next-line no-console
       console.log(error);
       // handle if error, or transfer this whole trycatch to mobx instead
