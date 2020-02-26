@@ -35,7 +35,13 @@ import {
   BoredReact,
 } from 'assets/icons';
 
-const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...props }) => {
+const ContentCard = ({
+  handleModalOpen,
+  handleViewResponses,
+  contentCardType,
+  questionCardType,
+  ...props
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const renderContentCard = () => {
@@ -78,7 +84,11 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
     setDropdownOpen(false);
   };
 
-  const handleViewResponses = () => {};
+  const handleViewResponsesClicked = () => {
+    const cardData = { ...props, questionCardType };
+    handleViewResponses(cardData);
+    setDropdownOpen(false);
+  };
 
   return (
     <Card className="content-card">
@@ -95,7 +105,7 @@ const ContentCard = ({ handleModalOpen, contentCardType, questionCardType, ...pr
             </Button>
             <DropdownMenu visible={dropdownOpen}>
               {questionCardType ? (
-                <DropdownMenuItem text="View Responses" onClick={handleViewResponses} />
+                <DropdownMenuItem text="View Responses" onClick={handleViewResponsesClicked} />
               ) : null}
               <DropdownMenuItem text="Edit" onClick={handleEditClicked} />
             </DropdownMenu>

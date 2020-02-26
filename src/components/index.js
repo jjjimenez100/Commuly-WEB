@@ -42,3 +42,5 @@ export { default as QuestionColumnOrdering } from './content-card/QuestionColumn
 // form components
 export { default as Checkbox } from './checkbox/Checkbox';
 export { default as Textarea } from './textarea/Textarea';
+
+export { default as Responses } from './responses/Responses';

@@ -13,6 +13,7 @@ import {
   CreateContent,
   ContentCard,
   Input,
+  Responses,
 } from 'components';
 import {
   CircleArrowLeftIcon,
@@ -110,10 +111,25 @@ class Home extends Component {
       date: new Date(),
       modalOpen: false,
       dropdownOpen: false,
+      viewResponsesModal: false,
     };
     const { searchCards } = this.props.store.home;
     this.search = debounce(() => searchCards(), 300);
   }
+
+  openViewResponsesModal = (cardData = {}) => {
+    const { setCurrentCardData } = this.props.store.home;
+    setCurrentCardData(cardData);
+    this.setState({
+      viewResponsesModal: true,
+    });
+  };
+
+  closeViewResponsesModal = () => {
+    this.setState({
+      viewResponsesModal: false,
+    });
+  };
 
   handleSearchQueryChange = e => {
     const { setSearchQuery } = this.props.store.home;
@@ -143,6 +159,7 @@ class Home extends Component {
         <ContentCard
           key={announcement._id}
           handleModalOpen={this.handleModalOpen}
+          handleViewResponses={this.openViewResponsesModal}
           {...announcement}
         />
       ));
@@ -331,6 +348,14 @@ class Home extends Component {
           updateCard={updateCard}
           cardData={currentCardData}
         />
+        {Object.keys(currentCardData).length !== 0 ? (
+          <Responses
+            handleClose={this.closeViewResponsesModal}
+            cardData={currentCardData}
+            isOpen={this.state.viewResponsesModal}
+            key={currentCardData}
+          />
+        ) : null}
       </div>
     );
   }
