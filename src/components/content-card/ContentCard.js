@@ -90,6 +90,45 @@ const ContentCard = ({
     setDropdownOpen(false);
   };
 
+  const handleReactionClicked = async e => {
+    const { userId } = getUserDetails();
+    const body = {
+      userId,
+      reactionType: e.target.name,
+    };
+
+    // for unreact
+    if (reaction === e.target.name) {
+      setReaction('');
+      body.patchType = UNREACT;
+    } else {
+      // new reaction / change reaction
+      setReaction(e.target.name);
+      body.patchType = REACT;
+    }
+
+    try {
+      await CardService.patchCard(props._id, body);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (reactions) {
+      const { userId } = getUserDetails();
+      const returnedIndex = Object.entries(reactions).find(
+        entry =>
+          entry[1].length > 0 && Array.isArray(entry[1]) && entry[1].find(id => id === userId)
+      );
+
+      if (returnedIndex) {
+        setReaction(returnedIndex[0].toUpperCase());
+      }
+    }
+  }, []);
+
   return (
     <Card className="content-card">
       <div className="content-card-title">
