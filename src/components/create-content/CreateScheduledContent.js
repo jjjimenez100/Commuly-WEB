@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import classnames from 'classnames';
@@ -34,7 +35,12 @@ class CreateScheduledContent extends Component {
       startTime: startTime ? moment(startTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
       endTime: endTime ? moment(endTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
       file: null,
+      isSubmitButtonClicked: false,
     };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
   }
 
   handleInputChanged = e => {
@@ -47,53 +53,65 @@ class CreateScheduledContent extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { team, userId: owner } = getUserDetails();
-    const { title, description, startDate, endDate, startTime, endTime, file } = this.state;
-    const body = {
-      cardType: CONTENT_CARD,
-      contentCardType: SCHEDULED_CONTENT,
-      team,
-      owner,
-      file,
-    };
-    const scheduledEventContent = {
-      title,
-      description,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-    };
+    this.setState({ isSubmitButtonClicked: true });
+    const { cardData } = this.props;
+    const { file } = this.state;
+    if (Object.keys(cardData).length === 0 && file === null) {
+      this.validator.showMessages();
+      return;
+    }
+    if (this.validator.allValid()) {
+      const { team, userId: owner } = getUserDetails();
+      const { title, description, startDate, endDate, startTime, endTime } = this.state;
+      const body = {
+        cardType: CONTENT_CARD,
+        contentCardType: SCHEDULED_CONTENT,
+        team,
+        owner,
+        file,
+      };
+      const scheduledEventContent = {
+        title,
+        description,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+      };
 
-    const formData = new FormData();
-    Object.keys(body).forEach(key => formData.append(key, body[key]));
-    formData.append('scheduledEventContent', JSON.stringify(scheduledEventContent));
+      const formData = new FormData();
+      Object.keys(body).forEach(key => formData.append(key, body[key]));
+      formData.append('scheduledEventContent', JSON.stringify(scheduledEventContent));
 
-    try {
-      const { addCard, updateCard, cardData, onClose } = this.props;
-      if (Object.keys(cardData).length === 0) {
-        const { data } = await CardService.createNewContentCard(formData);
-        await addCard(data.savedCard);
-        toast.success('Successfully added new content!');
-      } else {
-        const shouldDeleteCloudFile = file !== null;
-        formData.append('shouldDeleteCloudFile', shouldDeleteCloudFile);
-        const { _id: cardId } = cardData;
-        const {
-          data: { updatedCard },
-        } = await CardService.updateContentCardWithFiles(cardId, formData);
-        await updateCard(updatedCard);
-        toast.success('Successfully updated content!');
+      try {
+        const { addCard, updateCard, onClose } = this.props;
+        if (Object.keys(cardData).length === 0) {
+          const { data } = await CardService.createNewContentCard(formData);
+          await addCard(data.savedCard);
+          toast.success('Successfully added new content!');
+        } else {
+          const shouldDeleteCloudFile = file !== null;
+          formData.append('shouldDeleteCloudFile', shouldDeleteCloudFile);
+          const { _id: cardId } = cardData;
+          const {
+            data: { updatedCard },
+          } = await CardService.updateContentCardWithFiles(cardId, formData);
+          await updateCard(updatedCard);
+          toast.success('Successfully updated content!');
+        }
+        onClose();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        // handle if error, or transfer this whole trycatch to mobx instead
       }
-      onClose();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-      // handle if error, or transfer this whole trycatch to mobx instead
+    } else {
+      this.validator.showMessages();
     }
   };
 
   render() {
+    const { file, isSubmitButtonClicked } = this.state;
     const { onClose, cardData } = this.props;
     return (
       <>
@@ -105,6 +123,7 @@ class CreateScheduledContent extends Component {
             onChange={this.handleInputChanged}
             value={this.state.title}
           />
+          {this.validator.message('title', this.state.title, 'required')}
           <Textarea
             name="description"
             labelText="Description"
@@ -112,41 +131,56 @@ class CreateScheduledContent extends Component {
             onChange={this.handleInputChanged}
             value={this.state.description}
           />
+          {this.validator.message('description', this.state.description, 'required')}
           <div className="create-event-date">
-            <Input
-              icon={CalendarBlackIcon}
-              type="date"
-              labelText="Start Date"
-              name="startDate"
-              onChange={this.handleInputChanged}
-              value={this.state.startDate}
-            />
+            <div>
+              <Input
+                icon={CalendarBlackIcon}
+                type="date"
+                labelText="Start Date"
+                name="startDate"
+                onChange={this.handleInputChanged}
+                value={this.state.startDate}
+                min={moment().format('YYYY-MM-DD')}
+              />
+              {this.validator.message('startDate', this.state.startDate, 'required')}
+            </div>
             <Typography>-</Typography>
-            <Input
-              type="date"
-              labelText="End Date"
-              name="endDate"
-              onChange={this.handleInputChanged}
-              value={this.state.endDate}
-            />
+            <div>
+              <Input
+                type="date"
+                labelText="End Date"
+                name="endDate"
+                onChange={this.handleInputChanged}
+                value={this.state.endDate}
+                min={moment().format('YYYY-MM-DD')}
+              />
+              {this.validator.message('endDate', this.state.endDate, 'required')}
+            </div>
           </div>
           <div className="create-event-time">
-            <Input
-              icon={TimerIcon}
-              type="time"
-              labelText="Start Time"
-              name="startTime"
-              onChange={this.handleInputChanged}
-              value={this.state.startTime}
-            />
+            <div>
+              <Input
+                icon={TimerIcon}
+                type="time"
+                labelText="Start Time"
+                name="startTime"
+                onChange={this.handleInputChanged}
+                value={this.state.startTime}
+              />
+              {this.validator.message('startTime', this.state.startTime, 'required')}
+            </div>
             <Typography>-</Typography>
-            <Input
-              type="time"
-              labelText="End Time"
-              name="endTime"
-              onChange={this.handleInputChanged}
-              value={this.state.endTime}
-            />
+            <div>
+              <Input
+                type="time"
+                labelText="End Time"
+                name="endTime"
+                onChange={this.handleInputChanged}
+                value={this.state.endTime}
+              />
+              {this.validator.message('endTime', this.state.endTime, 'required')}
+            </div>
           </div>
           <Typography variant="subtitle">Image</Typography>
           <Dropzone accept="image/*" onDrop={this.handleFileUpload}>
@@ -167,6 +201,11 @@ class CreateScheduledContent extends Component {
               </div>
             )}
           </Dropzone>
+          <p className="text-danger">
+            {file === null && isSubmitButtonClicked && Object.keys(cardData).length === 0
+              ? 'File upload is required'
+              : ''}
+          </p>
         </ModalBody>
         <ModalFooter>
           <Button size="small" type="button" variant="ghost" onClick={onClose}>

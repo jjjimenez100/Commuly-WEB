@@ -111,36 +111,42 @@ class CreateTodo extends Component {
           />
           {this.validator.message('description', this.state.description, 'required')}
           <div className="create-event-time">
-            <Input
-              icon={CalendarBlackIcon}
-              type="date"
-              labelText="Start Date"
-              name="startDate"
-              onChange={this.handleInputChanged}
-              value={this.state.startDate}
-              className="create-todo-date"
-              min={moment().format('YYYY-MM-DD')}
-            />
-            <Input
-              icon={TimerIcon}
-              type="time"
-              labelText="Start Time"
-              name="startTime"
-              onChange={this.handleInputChanged}
-              value={this.state.startTime}
-            />
+            <div>
+              <Input
+                icon={CalendarBlackIcon}
+                type="date"
+                labelText="Start Date"
+                name="startDate"
+                onChange={this.handleInputChanged}
+                value={this.state.startDate}
+                className="create-todo-date"
+                min={moment().format('YYYY-MM-DD')}
+              />
+              {this.validator.message('startDate', this.state.startDate, 'required')}
+            </div>
+            <div>
+              <Input
+                icon={TimerIcon}
+                type="time"
+                labelText="Start Time"
+                name="startTime"
+                onChange={this.handleInputChanged}
+                value={this.state.startTime}
+              />
+              {this.validator.message('startTime', this.state.startTime, 'required')}
+            </div>
             <Typography>-</Typography>
-            <Input
-              type="time"
-              labelText="End Time"
-              name="endTime"
-              onChange={this.handleInputChanged}
-              value={this.state.endTime}
-            />
+            <div>
+              <Input
+                type="time"
+                labelText="End Time"
+                name="endTime"
+                onChange={this.handleInputChanged}
+                value={this.state.endTime}
+              />
+              {this.validator.message('endTime', this.state.endTime, 'required')}
+            </div>
           </div>
-          {this.validator.message('startDate', this.state.startDate, 'required') ||
-            this.validator.message('startTime', this.state.startTime, 'required') ||
-            this.validator.message('endTime', this.state.endTime, 'required')}
         </ModalBody>
         <ModalFooter>
           <Button size="small" type="button" variant="ghost" onClick={onClose}>
