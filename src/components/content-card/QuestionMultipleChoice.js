@@ -8,11 +8,9 @@ import CardService from 'services/cardService';
 const QuestionMulitpleChoice = ({
   _id: cardId,
   multipleChoiceContent: { question, choices, title },
-  hasUserSubmittedAnswer,
-  userResponse = {},
+  removeQuestionCard,
 }) => {
   const [answer, setAnswer] = useState('');
-  const [isSubmitButtonClicked, setIsSubmitButtonClicked] = useState(false);
   const handleSubmit = async e => {
     e.preventDefault();
     const { userId } = getUserDetails();
@@ -27,22 +25,14 @@ const QuestionMulitpleChoice = ({
     };
 
     try {
-      setIsSubmitButtonClicked(true);
       await CardService.addQuestionResponse(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
+      removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
-  };
-
-  const isUserAnswer = choice => {
-    if (!hasUserSubmittedAnswer) {
-      return false;
-    }
-    const { answer } = userResponse;
-    return answer === choice;
   };
 
   return (
@@ -58,23 +48,16 @@ const QuestionMulitpleChoice = ({
             // eslint-disable-next-line react/no-array-index-key
             key={`${title}-choice-${choice}-${index}`}
             type="radio"
-            checked={choice === answer || isUserAnswer(choice)}
+            checked={choice === answer}
             className="content-multiple-choice-single"
             onChange={() => setAnswer(choice)}
-            disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}
           >
             <Typography>{choice}</Typography>
           </Checkbox>
         ))}
       </form>
-      <Button
-        size="small"
-        onClick={handleSubmit}
-        disabled={isSubmitButtonClicked || hasUserSubmittedAnswer}
-      >
-        {isSubmitButtonClicked || hasUserSubmittedAnswer
-          ? 'You already answered this question'
-          : 'Submit'}
+      <Button size="small" onClick={handleSubmit}>
+        Submit
       </Button>
     </div>
   );
