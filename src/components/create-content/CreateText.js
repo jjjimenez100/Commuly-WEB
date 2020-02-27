@@ -198,6 +198,7 @@ class CreateText extends Component {
                   min={10}
                   max={40}
                 />
+                {this.validator.message('textSize', this.state.textSize, 'required|numeric')}
                 <Typography variant="subtitle" className="create-text-sidebar-subtitle">
                   Text Color
                 </Typography>
