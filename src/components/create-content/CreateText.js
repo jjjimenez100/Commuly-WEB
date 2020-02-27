@@ -3,6 +3,7 @@ suppressContentEditableWarning here: https://stackoverflow.com/questions/4963914
 */
 
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { toast } from 'react-toastify';
 import { SketchPicker } from 'react-color';
 import {
@@ -40,6 +41,10 @@ class CreateText extends Component {
       backgroundColor: '#FFFFFF',
       mainText: title || 'Sample Text',
     };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
   }
 
   componentDidMount() {
@@ -84,48 +89,52 @@ class CreateText extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const title = document.getElementById('create-textarea').innerText;
-    const { description: content, textSize, textColor, backgroundColor } = this.state;
-    const textContent = {
-      title,
-      content,
-      textSize,
-      textColor,
-      backgroundColor,
-      fontStyle: 'Lato',
-    };
-    const { team, userId: owner } = getUserDetails();
-    const body = {
-      cardType: CONTENT_CARD,
-      contentCardType: TEXT_CONTENT,
-      team,
-      owner,
-      textContent,
-    };
+    if (this.validator.allValid()) {
+      const title = document.getElementById('create-textarea').innerText;
+      const { description: content, textSize, textColor, backgroundColor } = this.state;
+      const textContent = {
+        title,
+        content,
+        textSize,
+        textColor,
+        backgroundColor,
+        fontStyle: 'Lato',
+      };
+      const { team, userId: owner } = getUserDetails();
+      const body = {
+        cardType: CONTENT_CARD,
+        contentCardType: TEXT_CONTENT,
+        team,
+        owner,
+        textContent,
+      };
 
-    const { addCard, updateCard, cardData } = this.props;
-    try {
-      if (Object.keys(cardData).length === 0) {
-        const {
-          data: { savedCard },
-        } = await CardService.createNewContentCard(body);
-        addCard(savedCard);
-        toast.success('Successfully added new content!');
-      } else {
-        const { _id: cardId } = cardData;
-        const {
-          data: { updatedCard },
-        } = await CardService.updateContentCard(cardId, body);
-        updateCard(updatedCard);
-        toast.success('Successfully updated content!');
+      const { addCard, updateCard, cardData } = this.props;
+      try {
+        if (Object.keys(cardData).length === 0) {
+          const {
+            data: { savedCard },
+          } = await CardService.createNewContentCard(body);
+          addCard(savedCard);
+          toast.success('Successfully added new content!');
+        } else {
+          const { _id: cardId } = cardData;
+          const {
+            data: { updatedCard },
+          } = await CardService.updateContentCard(cardId, body);
+          updateCard(updatedCard);
+          toast.success('Successfully updated content!');
+        }
+
+        this.props.onClose();
+      } catch (error) {
+        toast.error('Failed to get a proper response from our services. Please try again later');
+        // eslint-disable-next-line no-console
+        console.log(error);
+        // handle if error, or transfer this whole trycatch to mobx instead
       }
-
-      this.props.onClose();
-    } catch (error) {
-      toast.error('Failed to get a proper response from our services. Please try again later');
-      // eslint-disable-next-line no-console
-      console.log(error);
-      // handle if error, or transfer this whole trycatch to mobx instead
+    } else {
+      this.validator.showMessages();
     }
   };
 
@@ -176,6 +185,7 @@ class CreateText extends Component {
               onChange={this.handleInputChanged}
               value={this.state.description}
             />
+            {this.validator.message('description', this.state.description, 'required')}
             <div className="create-text-bg">
               <div className="create-text-sidebar">
                 <Input
