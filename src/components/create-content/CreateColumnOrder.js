@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { ModalBody, ModalFooter, Button, Textarea, Input, Typography } from 'components';
 import { SendIcon } from 'assets/icons';
 import { getUserDetails } from 'utils/jwt';
@@ -7,12 +8,19 @@ import { COLUMN_ORDERING_QUESTION, QUESTION_CARD } from 'constants/card';
 import CardService from 'services/cardService';
 
 class CreateColumnOrder extends Component {
-  state = {
-    title: '',
-    question: '',
-    options: ['Option 1', 'Option 2', 'Option 3'],
-    optionDragIndex: -1,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      question: '',
+      options: ['Option 1', 'Option 2', 'Option 3'],
+      optionDragIndex: -1,
+    };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
+  }
 
   handleInputChanged = e => {
     this.setState({ [`${e.target.name}`]: e.target.value });
@@ -67,35 +75,39 @@ class CreateColumnOrder extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { team, userId: owner } = getUserDetails();
-    const { question, options: choices } = this.state;
-    const body = {
-      owner,
-      team,
-      cardType: QUESTION_CARD,
-      questionCardType: COLUMN_ORDERING_QUESTION,
-      columnReorderingContent: {
-        question,
-        choices,
-      },
-    };
+    if (this.validator.allValid()) {
+      const { team, userId: owner } = getUserDetails();
+      const { question, options: choices } = this.state;
+      const body = {
+        owner,
+        team,
+        cardType: QUESTION_CARD,
+        questionCardType: COLUMN_ORDERING_QUESTION,
+        columnReorderingContent: {
+          question,
+          choices,
+        },
+      };
 
-    try {
-      const { data } = await CardService.createNewContentCard(body);
+      try {
+        const { data } = await CardService.createNewContentCard(body);
 
-      await this.props.addCard(data.savedCard);
-      this.props.onClose();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-      // handle if error, or transfer this whole trycatch to mobx instead
+        await this.props.addCard(data.savedCard);
+        this.props.onClose();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        // handle if error, or transfer this whole trycatch to mobx instead
+      }
+    } else {
+      this.validator.showMessages();
     }
   };
 
   render() {
     const { onClose } = this.props;
     const { optionDragIndex } = this.state;
-
+    this.validator.purgeFields();
     return (
       <>
         <ModalBody className="create-column-order">
@@ -106,6 +118,7 @@ class CreateColumnOrder extends Component {
             onChange={this.handleInputChanged}
             value={this.state.title}
           />
+          {this.validator.message('title', this.state.title, 'required')}
           <Textarea
             name="question"
             labelText="Question"
@@ -113,6 +126,7 @@ class CreateColumnOrder extends Component {
             onChange={this.handleInputChanged}
             value={this.state.question}
           />
+          {this.validator.message('question', this.state.question, 'required')}
           <div className="create-column-order-columns">
             <ul className="create-column-order-options">
               <Typography variant="subtitle" className="input-description">
@@ -139,6 +153,7 @@ class CreateColumnOrder extends Component {
                       name={i.toString()}
                     />
                   </div>
+                  {this.validator.message(`Option ${i + 1}`, this.state.options[i], 'required')}
                 </li>
               ))}
             </ul>
