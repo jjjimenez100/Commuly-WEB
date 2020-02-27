@@ -152,7 +152,11 @@ const ContentCard = ({
         setReaction(returnedIndex[0].toUpperCase());
       }
     }
+<<<<<<< HEAD
   }, [reactions]);
+=======
+  }, []);
+>>>>>>> 2e71f00... Linter fixes
 
   return (
     <Card className="content-card">
