@@ -46,6 +46,7 @@ class QuestionColumnOrdering extends Component {
     const {
       _id: cardId,
       columnReorderingContent: { choices },
+      removeQuestionCard,
     } = this.props;
     const { options: answer } = this.state;
     const body = {
@@ -62,6 +63,7 @@ class QuestionColumnOrdering extends Component {
       await CardService.addQuestionResponse(cardId, body);
       toast.success('Thank you for answering!');
       this.setState({ options: choices });
+      removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

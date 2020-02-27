@@ -13,6 +13,7 @@ const QuestionLikert = ({
     question,
     choices: { lowerBoundChoice, upperBoundChoice },
   },
+  removeQuestionCard,
 }) => {
   const [answer, setAnswer] = useState(0);
   const handleSubmit = async e => {
@@ -32,6 +33,7 @@ const QuestionLikert = ({
       await CardService.addQuestionResponse(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer(0);
+      removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);

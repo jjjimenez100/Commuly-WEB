@@ -5,7 +5,11 @@ import { getUserDetails } from 'utils/jwt';
 import { ADD_RESPONSE, OPEN_TEXT_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
-const QuestionOpenText = ({ _id: cardId, openTextContent: { question, title } }) => {
+const QuestionOpenText = ({
+  _id: cardId,
+  openTextContent: { question, title },
+  removeQuestionCard,
+}) => {
   const [answer, setAnswer] = useState('');
 
   const handleSubmit = async e => {
@@ -25,6 +29,7 @@ const QuestionOpenText = ({ _id: cardId, openTextContent: { question, title } })
       await CardService.addQuestionResponse(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
+      removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
