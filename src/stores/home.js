@@ -68,12 +68,23 @@ const Home = types
     addCard(cardData) {
       const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
 
-      if (cardType === SCHEDULED_CONTENT) {
-        const data = [cardData, ...scheduledCards];
-        self.scheduledCards = data;
-      } else if (cardType === TODO_CONTENT) {
-        const data = [cardData, ...todoCards];
-        self.todoCards = data;
+      if (cardType === SCHEDULED_CONTENT || cardType === TODO_CONTENT) {
+        if (cardType === SCHEDULED_CONTENT) {
+          const data = [cardData, ...scheduledCards];
+          self.scheduledCards = data;
+        } else if (cardType === TODO_CONTENT) {
+          const data = [cardData, ...todoCards];
+          self.todoCards = data;
+        }
+
+        const { eventCards } = self;
+        if (!eventCards[cardData.startDate]) {
+          eventCards[cardData.startDate] = [cardData];
+        } else {
+          eventCards[cardData.startDate] = [...eventCards[cardData.startDate], cardData];
+        }
+
+        self.eventCards = eventCards;
       }
 
       const announcements = [cardData, ...teamCards];
@@ -162,12 +173,9 @@ export const store = Home.create({
   todoCards: [],
   user: null,
   currentCreateModalType: '',
-<<<<<<< HEAD
   currentCardData: {},
   searchQuery: '',
-=======
   eventCards: {},
->>>>>>> 6388c72... #89 - Initial on hover for events in sidebar calendar
 });
 
 export default Home;
