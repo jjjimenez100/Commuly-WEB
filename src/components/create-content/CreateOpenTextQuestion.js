@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { toast } from 'react-toastify';
 import { ModalBody, ModalFooter, Button, Textarea, Input, Typography } from 'components';
 import { SendIcon } from 'assets/icons';
@@ -15,6 +16,10 @@ class CreateOpenTextQuestion extends Component {
       title,
       question,
     };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
   }
 
   handleInputChanged = e => {
@@ -23,42 +28,46 @@ class CreateOpenTextQuestion extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { team, userId: owner } = getUserDetails();
-    const { question, title } = this.state;
-    const body = {
-      owner,
-      team,
-      cardType: QUESTION_CARD,
-      questionCardType: OPEN_TEXT_QUESTION,
-      openTextContent: {
-        question,
-        title,
-      },
-    };
+    if (this.validator.allValid()) {
+      const { team, userId: owner } = getUserDetails();
+      const { question, title } = this.state;
+      const body = {
+        owner,
+        team,
+        cardType: QUESTION_CARD,
+        questionCardType: OPEN_TEXT_QUESTION,
+        openTextContent: {
+          question,
+          title,
+        },
+      };
 
-    const { addCard, updateCard, cardData } = this.props;
-    try {
-      if (Object.keys(cardData).length === 0) {
-        const {
-          data: { savedCard },
-        } = await CardService.createNewContentCard(body);
-        addCard(savedCard);
-        toast.success('Successfully added new question!');
-      } else {
-        const { _id: cardId } = cardData;
-        const {
-          data: { updatedCard },
-        } = await CardService.updateContentCard(cardId, body);
-        updateCard(updatedCard);
-        toast.success('Successfully updated question!');
+      const { addCard, updateCard, cardData } = this.props;
+      try {
+        if (Object.keys(cardData).length === 0) {
+          const {
+            data: { savedCard },
+          } = await CardService.createNewContentCard(body);
+          addCard(savedCard);
+          toast.success('Successfully added new question!');
+        } else {
+          const { _id: cardId } = cardData;
+          const {
+            data: { updatedCard },
+          } = await CardService.updateContentCard(cardId, body);
+          updateCard(updatedCard);
+          toast.success('Successfully updated question!');
+        }
+
+        this.props.onClose();
+      } catch (error) {
+        toast.error('Failed to get a proper response from our services. Please try again later');
+        // eslint-disable-next-line no-console
+        console.log(error);
+        // handle if error, or transfer this whole trycatch to mobx instead
       }
-
-      this.props.onClose();
-    } catch (error) {
-      toast.error('Failed to get a proper response from our services. Please try again later');
-      // eslint-disable-next-line no-console
-      console.log(error);
-      // handle if error, or transfer this whole trycatch to mobx instead
+    } else {
+      this.validator.showMessages();
     }
   };
 
@@ -78,6 +87,7 @@ class CreateOpenTextQuestion extends Component {
             onChange={this.handleInputChanged}
             value={this.state.title}
           />
+          {this.validator.message('title', this.state.title, 'required')}
           <Textarea
             name="question"
             labelText="Question"
@@ -85,6 +95,7 @@ class CreateOpenTextQuestion extends Component {
             onChange={this.handleInputChanged}
             value={this.state.question}
           />
+          {this.validator.message('question', this.state.question, 'required')}
         </ModalBody>
         <ModalFooter>
           <Typography variant="subtitle" className="text-danger">
