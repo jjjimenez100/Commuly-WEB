@@ -16,8 +16,17 @@ const QuestionLikert = ({
   removeQuestionCard,
 }) => {
   const [answer, setAnswer] = useState(0);
+  const [hasAnswerError, setAnswerError] = useState(false);
+
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (answer === 0) {
+      setAnswerError(true);
+      return;
+    }
+
+    setAnswerError(false);
     const { userId } = getUserDetails();
     const body = {
       userId,
@@ -68,6 +77,9 @@ const QuestionLikert = ({
           {upperBoundChoice}
         </Typography>
       </div>
+      <p className="text-danger" style={{ display: 'flex', justifyContent: 'center' }}>
+        {hasAnswerError ? 'Select a valid choice.' : ''}
+      </p>
       <Button size="small" onClick={handleSubmit}>
         Submit
       </Button>
