@@ -2,6 +2,7 @@
 
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { toast } from 'react-toastify';
 import { ModalBody, ModalFooter, Button, Textarea, Input, Typography } from 'components';
 import { SendIcon } from 'assets/icons';
@@ -21,6 +22,10 @@ class CreateLikert extends Component {
       startInput,
       endInput,
     };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
   }
 
   handleInputChanged = e => {
@@ -29,51 +34,55 @@ class CreateLikert extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { team, userId: owner } = getUserDetails();
-    const {
-      question,
-      startInput: lowerBoundChoice,
-      endInput: upperBoundChoice,
-      title,
-    } = this.state;
-    const body = {
-      owner,
-      team,
-      cardType: QUESTION_CARD,
-      questionCardType: LIKERT_QUESTION,
-      likertContent: {
+    if (this.validator.allValid()) {
+      const { team, userId: owner } = getUserDetails();
+      const {
         question,
+        startInput: lowerBoundChoice,
+        endInput: upperBoundChoice,
         title,
-        choices: {
-          lowerBoundChoice,
-          upperBoundChoice,
+      } = this.state;
+      const body = {
+        owner,
+        team,
+        cardType: QUESTION_CARD,
+        questionCardType: LIKERT_QUESTION,
+        likertContent: {
+          question,
+          title,
+          choices: {
+            lowerBoundChoice,
+            upperBoundChoice,
+          },
         },
-      },
-    };
+      };
 
-    const { addCard, updateCard, cardData } = this.props;
-    try {
-      if (Object.keys(cardData).length === 0) {
-        const {
-          data: { savedCard },
-        } = await CardService.createNewContentCard(body);
-        addCard(savedCard);
-        toast.success('Successfully added new question!');
-      } else {
-        const { _id: cardId } = cardData;
-        const {
-          data: { updatedCard },
-        } = await CardService.updateContentCard(cardId, body);
-        updateCard(updatedCard);
-        toast.success('Successfully updated question!');
+      const { addCard, updateCard, cardData } = this.props;
+      try {
+        if (Object.keys(cardData).length === 0) {
+          const {
+            data: { savedCard },
+          } = await CardService.createNewContentCard(body);
+          addCard(savedCard);
+          toast.success('Successfully added new question!');
+        } else {
+          const { _id: cardId } = cardData;
+          const {
+            data: { updatedCard },
+          } = await CardService.updateContentCard(cardId, body);
+          updateCard(updatedCard);
+          toast.success('Successfully updated question!');
+        }
+
+        this.props.onClose();
+      } catch (error) {
+        toast.error('Failed to get a proper response from our services. Please try again later');
+        // eslint-disable-next-line no-console
+        console.log(error);
+        // handle if error, or transfer this whole trycatch to mobx instead
       }
-
-      this.props.onClose();
-    } catch (error) {
-      toast.error('Failed to get a proper response from our services. Please try again later');
-      // eslint-disable-next-line no-console
-      console.log(error);
-      // handle if error, or transfer this whole trycatch to mobx instead
+    } else {
+      this.validator.showMessages();
     }
   };
 
@@ -93,6 +102,7 @@ class CreateLikert extends Component {
             onChange={this.handleInputChanged}
             value={this.state.title}
           />
+          {this.validator.message('title', this.state.title, 'required')}
           <Textarea
             name="question"
             labelText="Question"
@@ -100,28 +110,35 @@ class CreateLikert extends Component {
             onChange={this.handleInputChanged}
             value={this.state.question}
           />
+          {this.validator.message('question', this.state.question, 'required')}
           <Typography variant="subtitle">Likert Chart</Typography>
           <div className="create-likert-chart">
-            <Input
-              placeholder="Start Input"
-              className="create-likert-chart-input"
-              value={this.state.startInput}
-              name="startInput"
-              onChange={this.handleInputChanged}
-            />
+            <div>
+              <Input
+                placeholder="Start Input"
+                className="create-likert-chart-input"
+                value={this.state.startInput}
+                name="startInput"
+                onChange={this.handleInputChanged}
+              />
+              {this.validator.message('startInput', this.state.startInput, 'required')}
+            </div>
             {[...Array(10).keys()].map((_, i) => (
               <div className="create-likert-circle" key={i}>
                 <Typography variant="subtitle">{i + 1}</Typography>
                 <div className={`default-circle create-likert-circle-${i + 1}`} key={i} />
               </div>
             ))}
-            <Input
-              placeholder="End Input"
-              className="create-likert-chart-input"
-              value={this.state.endInput}
-              name="endInput"
-              onChange={this.handleInputChanged}
-            />
+            <div>
+              <Input
+                placeholder="End Input"
+                className="create-likert-chart-input"
+                value={this.state.endInput}
+                name="endInput"
+                onChange={this.handleInputChanged}
+              />
+              {this.validator.message('endInput', this.state.endInput, 'required')}
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>
