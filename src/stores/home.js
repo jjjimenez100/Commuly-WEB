@@ -59,7 +59,6 @@ const Home = types
 
       const announcements = [cardData, ...teamCards];
       self.teamCards = announcements;
-      // refresh filtered indexes
       self.searchCards();
     },
     updateCard(cardData) {
@@ -72,7 +71,13 @@ const Home = types
         self.todoCards = self.insertCardAtIndex(todoCards, updatedCardId, cardData);
       }
       self.teamCards = self.insertCardAtIndex(teamCards, updatedCardId, cardData);
-      // refresh filtered indexes
+      self.searchCards();
+    },
+    removeQuestionCard(questionCardId) {
+      const questionCardIndex = self.teamCards.findIndex(({ _id: id }) => id === questionCardId);
+      const newTeamCards = [...self.teamCards];
+      newTeamCards.splice(questionCardIndex, 1);
+      self.teamCards = newTeamCards;
       self.searchCards();
     },
     insertCardAtIndex(cardArray, cardId, cardData) {
