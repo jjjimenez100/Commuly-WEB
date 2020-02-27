@@ -45,6 +45,7 @@ import {
 } from 'constants/card';
 import { DONE_STATUS } from 'constants/user';
 import Calendar from 'react-calendar';
+import { convertTime } from 'utils/time';
 import { boardData } from './data';
 
 const CreateContentButtons = {
@@ -104,12 +105,26 @@ const CreateContentButtons = {
   },
 };
 
-const EventTile = ({
-  props: {
-    todoContent: { title, startDate, endDate, startTime, endTime },
-  },
-}) => {
-  console.log('event tile here ::: ', title);
+const EventTile = ({ props }) => {
+  let title = '';
+  let startDate = '';
+  let endDate = '';
+  let startTime = '';
+  let endTime = '';
+
+  if (props.contentCardType === SCHEDULED_CONTENT) {
+    title = props.scheduledEventContent.title;
+    startDate = props.scheduledEventContent.startDate;
+    endDate = props.scheduledEventContent.endDate;
+    startTime = props.scheduledEventContent.startTime;
+    endTime = props.scheduledEventContent.endTime;
+  } else if (props.contentCardType === TODO_CONTENT) {
+    title = props.todoContent.title;
+    startDate = props.todoContent.startDate;
+    startTime = props.todoContent.startTime;
+    endTime = props.todoContent.endTime;
+  }
+
   return (
     <div className="home-calendar-tile-event">
       <Typography variant="subtitle">
@@ -118,7 +133,7 @@ const EventTile = ({
       </Typography>
       <Typography variant="h5">{title}</Typography>
       <Typography variant="subtitle">
-        {startTime}-{endTime}
+        {convertTime(startTime)} - {convertTime(endTime)}
       </Typography>
     </div>
   );
@@ -269,15 +284,12 @@ class Home extends Component {
   );
 
   renderCalendar = eventCards => {
-    console.log('inside render calendar event cards ::: ', eventCards);
-
     const renderCalendarTile = ({ date }) => {
       const newDate = moment(date).format('YYYY-MM-DD');
       if (eventCards[newDate]) {
         return (
           <div className="home-calendar-tile">
             {eventCards[newDate].map(event => {
-              console.log('event event ::: ', event);
               return <EventTile key={event._id} props={event} />;
             })}
           </div>
