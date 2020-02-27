@@ -11,9 +11,17 @@ const QuestionOpenText = ({
   removeQuestionCard,
 }) => {
   const [answer, setAnswer] = useState('');
+  const [hasAnswerError, setAnswerError] = useState(false);
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (answer === '') {
+      setAnswerError(true);
+      return;
+    }
+
+    setAnswerError(false);
     const { userId } = getUserDetails();
     const body = {
       userId,
@@ -48,6 +56,8 @@ const QuestionOpenText = ({
         name="answer"
         className="content-generic-textarea"
       />
+      <p className="text-danger">{hasAnswerError ? 'Enter your response.' : ''}</p>
+      <br />
       <Button size="small" onClick={handleSubmit}>
         Submit
       </Button>
