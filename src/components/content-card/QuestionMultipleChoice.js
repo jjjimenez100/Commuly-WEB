@@ -11,8 +11,17 @@ const QuestionMulitpleChoice = ({
   removeQuestionCard,
 }) => {
   const [answer, setAnswer] = useState('');
+  const [hasAnswerError, setAnswerError] = useState(false);
+
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (answer === '') {
+      setAnswerError(true);
+      return;
+    }
+
+    setAnswerError(false);
     const { userId } = getUserDetails();
     const body = {
       userId,
@@ -50,11 +59,17 @@ const QuestionMulitpleChoice = ({
             type="radio"
             checked={choice === answer}
             className="content-multiple-choice-single"
-            onChange={() => setAnswer(choice)}
+            onChange={() => {
+              setAnswer(choice);
+              setAnswerError(false);
+            }}
           >
             <Typography>{choice}</Typography>
           </Checkbox>
         ))}
+        <Typography variant="body" className="text-danger">
+          {hasAnswerError ? 'Select a valid choice.' : ''}
+        </Typography>
       </form>
       <Button size="small" onClick={handleSubmit}>
         Submit
