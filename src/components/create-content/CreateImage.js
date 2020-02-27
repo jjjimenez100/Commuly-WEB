@@ -39,8 +39,14 @@ class CreateImage extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     this.setState({ isSubmitButtonClicked: true });
+    const { cardData } = this.props;
+    const { file } = this.state;
+    if (Object.keys(cardData).length === 0 && file === null) {
+      this.validator.showMessages();
+      return;
+    }
     if (this.validator.allValid()) {
-      const { file, imageDescription } = this.state;
+      const { imageDescription } = this.state;
       const { team, userId: owner } = getUserDetails();
       const body = {
         cardType: CONTENT_CARD,
@@ -53,7 +59,7 @@ class CreateImage extends Component {
       const formData = new FormData();
       Object.keys(body).forEach(key => formData.append(key, body[key]));
       try {
-        const { addCard, updateCard, cardData } = this.props;
+        const { addCard, updateCard } = this.props;
         if (Object.keys(cardData).length === 0) {
           const { data } = await CardService.createNewContentCard(formData);
           await addCard(data.savedCard);
@@ -114,7 +120,9 @@ class CreateImage extends Component {
               )}
             </Dropzone>
             <p className="text-danger">
-              {file === null && isSubmitButtonClicked ? 'File upload is required' : ''}
+              {file === null && isSubmitButtonClicked && Object.keys(cardData).length === 0
+                ? 'File upload is required'
+                : ''}
             </p>
           </form>
         </ModalBody>
