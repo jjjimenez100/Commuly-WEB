@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
 import { toast } from 'react-toastify';
 import { ModalBody, ModalFooter, Button, Input, Textarea, Typography } from 'components';
 import { SendIcon, DeleteIcon } from 'assets/icons';
@@ -17,6 +18,10 @@ class CreateMultipleChoice extends Component {
       question,
       choices,
     };
+    this.validator = new SimpleReactValidator({
+      className: 'text-danger',
+      autoForceUpdate: this,
+    });
   }
 
   handleInputChanged = e => {
@@ -32,44 +37,48 @@ class CreateMultipleChoice extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    const { team, userId: owner } = getUserDetails();
-    const { question, choices, title } = this.state;
-    const notEmptyChoices = choices.filter(choice => choice.trim() !== '');
-    const body = {
-      owner,
-      team,
-      cardType: QUESTION_CARD,
-      questionCardType: MULTIPLE_CHOICE_QUESTION,
-      multipleChoiceContent: {
-        title,
-        choices: notEmptyChoices,
-        question,
-      },
-    };
+    if (this.validator.allValid()) {
+      const { team, userId: owner } = getUserDetails();
+      const { question, choices, title } = this.state;
+      const notEmptyChoices = choices.filter(choice => choice.trim() !== '');
+      const body = {
+        owner,
+        team,
+        cardType: QUESTION_CARD,
+        questionCardType: MULTIPLE_CHOICE_QUESTION,
+        multipleChoiceContent: {
+          title,
+          choices: notEmptyChoices,
+          question,
+        },
+      };
 
-    const { addCard, updateCard, cardData } = this.props;
-    try {
-      if (Object.keys(cardData).length === 0) {
-        const {
-          data: { savedCard },
-        } = await CardService.createNewContentCard(body);
-        addCard(savedCard);
-        toast.success('Successfully added new question!');
-      } else {
-        const { _id: cardId } = cardData;
-        const {
-          data: { updatedCard },
-        } = await CardService.updateContentCard(cardId, body);
-        updateCard(updatedCard);
-        toast.success('Successfully updated question!');
+      const { addCard, updateCard, cardData } = this.props;
+      try {
+        if (Object.keys(cardData).length === 0) {
+          const {
+            data: { savedCard },
+          } = await CardService.createNewContentCard(body);
+          addCard(savedCard);
+          toast.success('Successfully added new question!');
+        } else {
+          const { _id: cardId } = cardData;
+          const {
+            data: { updatedCard },
+          } = await CardService.updateContentCard(cardId, body);
+          updateCard(updatedCard);
+          toast.success('Successfully updated question!');
+        }
+
+        this.props.onClose();
+      } catch (error) {
+        toast.error('Failed to get a proper response from our services. Please try again later');
+        // eslint-disable-next-line no-console
+        console.log(error);
+        // handle if error, or transfer this whole trycatch to mobx instead
       }
-
-      this.props.onClose();
-    } catch (error) {
-      toast.error('Failed to get a proper response from our services. Please try again later');
-      // eslint-disable-next-line no-console
-      console.log(error);
-      // handle if error, or transfer this whole trycatch to mobx instead
+    } else {
+      this.validator.showMessages();
     }
   };
 
@@ -92,7 +101,7 @@ class CreateMultipleChoice extends Component {
     const { multipleChoiceContent = {} } = cardData;
     const { responses = [] } = multipleChoiceContent;
     const numberOfResponses = responses.length;
-
+    this.validator.purgeFields();
     return (
       <>
         <ModalBody className="create-multiple-choice">
@@ -103,6 +112,7 @@ class CreateMultipleChoice extends Component {
             onChange={this.handleInputChanged}
             value={this.state.title}
           />
+          {this.validator.message('title', this.state.title, 'required')}
           <Textarea
             name="question"
             labelText="Question"
@@ -110,29 +120,36 @@ class CreateMultipleChoice extends Component {
             onChange={this.handleInputChanged}
             value={this.state.question}
           />
+          {this.validator.message('question', this.state.question, 'required')}
           <Typography variant="subtitle" className="input-description">
             Choices
           </Typography>
           <div className="create-multiple-choice-choices">
             {this.state.choices.map((choice, i) => (
-              <div
-                className="create-multiple-choice-input"
-                // eslint-disable-next-line react/no-array-index-key
-                key={`choice-${i}`}
-              >
-                <Input
-                  name={i.toString()}
-                  placeholder={`Choice ${i + 1}`}
-                  onChange={this.handleChoiceInputChanged}
-                  value={choice}
-                />
-                <Button
-                  name={i.toString()}
-                  icon={DeleteIcon}
-                  variant="inline"
-                  className="create-multiple-choice-input-button"
-                  onClick={this.handleChoiceDeleted}
-                />
+              <div>
+                <div
+                  className="create-multiple-choice-input"
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`choice-${i}`}
+                >
+                  <Input
+                    name={i.toString()}
+                    placeholder={`Choice ${i + 1}`}
+                    onChange={this.handleChoiceInputChanged}
+                    value={choice}
+                  />
+                  <Button
+                    name={i.toString()}
+                    icon={DeleteIcon}
+                    variant="inline"
+                    className="create-multiple-choice-input-button"
+                    onClick={this.handleChoiceDeleted}
+                  />
+                </div>
+                <span>
+                  {this.validator.message(`Choice ${i + 1}`, this.state.choices[i], 'required')}
+                </span>
+                <br />
               </div>
             ))}
           </div>
