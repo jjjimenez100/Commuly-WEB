@@ -128,8 +128,8 @@ const EventTile = ({ props }) => {
   return (
     <div className="home-calendar-tile-event">
       <Typography variant="subtitle">
-        {startDate}
-        {endDate && `- ${endDate}`}
+        {moment(startDate).format('MMM D YYYY')}
+        {endDate && `- ${moment(endDate).format('MMM D YYYY')}`}
       </Typography>
       <Typography variant="h5">{title}</Typography>
       <Typography variant="subtitle">
