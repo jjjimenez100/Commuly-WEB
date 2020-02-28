@@ -3,7 +3,7 @@ import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import { observer, inject } from 'mobx-react';
 import { Typography, Button, CreateContent } from 'components';
 import { PlusIcon } from 'assets/icons';
-import { SCHEDULED_CONTENT } from 'constants/card';
+import { SCHEDULED_CONTENT, TODO_CONTENT } from 'constants/card';
 import moment from 'moment';
 
 const localizer = momentLocalizer(moment);
@@ -33,7 +33,10 @@ class Calendar extends Component {
           ...accumulator,
           {
             start: currentValue.startDate,
-            end: currentValue.endDate,
+            end:
+              currentValue.contentCardType === TODO_CONTENT
+                ? currentValue.startDate
+                : currentValue.endDate,
             ...currentValue,
           },
         ];
@@ -56,7 +59,7 @@ class Calendar extends Component {
           startAccessor="start"
           endAccessor="end"
           style={{ height: 500 }}
-          views={['month', 'week', 'day']}
+          views={['month']}
         />
         <CreateContent
           contentType={SCHEDULED_CONTENT}
