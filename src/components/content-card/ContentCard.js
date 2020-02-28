@@ -116,6 +116,17 @@ const ContentCard = ({
       body.patchType = UNREACT;
     } else {
       // new reaction / change reaction
+      try {
+        await CardService.patchCard(props._id, {
+          userId,
+          reactionType: reaction,
+          patchType: UNREACT,
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      }
+
       setReaction(e.target.name);
       body.patchType = REACT;
     }
