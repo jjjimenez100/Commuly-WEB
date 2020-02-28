@@ -1,4 +1,4 @@
-import { Login, Signup, Home } from 'pages/';
+import { Login, Signup, Home, Calendar } from 'pages/';
 
 // use allowedRoles attribute and pass an array of roles to be permitted
 // no allowedRoles property = all roles are authorized
@@ -14,6 +14,12 @@ export const routes = [
     path: '/dashboard',
     isPublic: false,
     component: Home,
+  },
+  {
+    type: 'route',
+    path: '/calendar',
+    isPublic: false,
+    component: Calendar,
   },
   {
     type: 'route',

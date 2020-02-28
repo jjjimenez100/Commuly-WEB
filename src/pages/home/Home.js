@@ -291,7 +291,7 @@ class Home extends Component {
         return (
           <div className="home-calendar-tile">
             {eventCards[newDate].map(event => {
-              return <EventTile key={event._id} props={event} />;
+              return <EventTile key={event._id} {...event} />;
             })}
           </div>
         );

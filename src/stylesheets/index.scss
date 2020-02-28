@@ -1,5 +1,6 @@
 // import scss files here
 @import './../assets/fonts/lato.scss';
+@import 'react-big-calendar/lib/sass/styles';
 
 // base files first
 @import 'constants.scss';
@@ -43,3 +44,4 @@
 @import 'pages/styleguide.scss';
 @import 'pages/home.scss';
 @import 'pages/login.scss';
+@import 'pages/calendar.scss';

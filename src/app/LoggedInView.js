@@ -19,7 +19,13 @@ class LoggedInView extends Component {
         />
         <div className="container">
           <Navbar handleSidebarOpen={this.handleSidebarOpen} />
-          <main className="main">{this.props.childComponent}</main>
+          <main
+            className={`main ${
+              this.state.isSidebarOpen ? 'main-sidebar-open' : 'main-sidebar-closed'
+            }`}
+          >
+            {this.props.childComponent}
+          </main>
         </div>
       </div>
     );
