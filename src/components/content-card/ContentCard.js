@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   Button,
@@ -25,6 +25,8 @@ import {
   OPEN_TEXT_QUESTION,
   LIKERT_QUESTION,
   COLUMN_ORDERING_QUESTION,
+  REACT,
+  UNREACT,
 } from 'constants/card';
 import {
   PinIcon,
@@ -34,15 +36,20 @@ import {
   ConfusedReact,
   BoredReact,
 } from 'assets/icons';
+import { getUserDetails } from 'utils/jwt';
+
+import CardService from 'services/cardService';
 
 const ContentCard = ({
   handleModalOpen,
   handleViewResponses,
   contentCardType,
   questionCardType,
+  reactions,
   ...props
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [reaction, setReaction] = useState('');
 
   const renderContentCard = () => {
     if (contentCardType) {
@@ -127,7 +134,7 @@ const ContentCard = ({
         setReaction(returnedIndex[0].toUpperCase());
       }
     }
-  }, []);
+  }, [reactions]);
 
   return (
     <Card className="content-card">
@@ -154,16 +161,16 @@ const ContentCard = ({
       <Line small className="content-card-line" />
       {renderContentCard()}
       <div className="content-card-reacts">
-        <Button inline className="content-card-react">
+        <Button onClick={handleReactionClicked} inline className="content-card-react">
           <img src={UnderstoodReact} alt="understood-icon" />
         </Button>
-        <Button inline className="content-card-react">
+        <Button onClick={handleReactionClicked} inline className="content-card-react">
           <img src={ExcitedReact} alt="excited-icon" />
         </Button>
-        <Button inline className="content-card-react">
+        <Button onClick={handleReactionClicked} inline className="content-card-react">
           <img src={BoredReact} alt="bored-icon" />
         </Button>
-        <Button inline className="content-card-react">
+        <Button onClick={handleReactionClicked} inline className="content-card-react">
           <img src={ConfusedReact} alt="confused-icon" />
         </Button>
       </div>
