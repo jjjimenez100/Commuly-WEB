@@ -45,6 +45,7 @@ import {
   BoredReactBW,
 } from 'assets/icons';
 import { getUserDetails } from 'utils/jwt';
+import CardService from 'services/cardService';
 
 const ContentCard = ({
   handleModalOpen,
