@@ -3,7 +3,7 @@ $sidebar-width-closed: 100px;
 $sidebar-color: #2E323E;
 
 .sidebar {
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   background-color: $sidebar-color;
   padding: $spacing-small 0;
   z-index: 1;

@@ -22,6 +22,10 @@ export { default as CalendarBlackIcon } from './calendar-black.svg';
 export { default as TimerIcon } from './timer.svg';
 export { default as DeleteIcon } from './delete.svg';
 export { default as VerticalMenuIcon } from './vertical-menu.svg';
+export { default as UnderstoodReactBW } from './understood-react-bw.png';
+export { default as BoredReactBW } from './bored-react-bw.png';
+export { default as ConfusedReactBW } from './confused-react-bw.png';
+export { default as ExcitedReactBW } from './excited-react-bw.png';
 // export { default as } from '.svg'
 
 export { default as TempAvatar } from 'assets/images/avatar.jpg';

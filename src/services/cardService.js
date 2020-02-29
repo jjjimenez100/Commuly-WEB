@@ -22,7 +22,7 @@ const CardService = {
   updateContentCardWithFiles(cardId, requestBody, additionalConfig = {}) {
     return httpService.post(`/card/${cardId}`, requestBody, additionalConfig);
   },
-  addQuestionResponse(cardId, requestBody, additionalConfig = {}) {
+  patchCard(cardId, requestBody, additionalConfig = {}) {
     return httpService.patch(`/card/${cardId}`, requestBody, additionalConfig);
   },
 };

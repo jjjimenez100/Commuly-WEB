@@ -29,7 +29,6 @@ const Home = types
         const { userId } = getUserDetails();
         const { data } = yield UserService.getCardsByUser(userId);
         const { scheduledCards, teamCards, todoCards, user } = data;
-        console.log(teamCards);
         self.scheduledCards = scheduledCards;
         self.filteredScheduledCards = scheduledCards;
 
@@ -137,7 +136,6 @@ const Home = types
       self.searchQuery = query;
     },
   }));
-
 export const store = Home.create({
   scheduledCards: [],
   teamCards: [],

@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Typography } from 'components';
+import { convertTime } from 'utils/time';
 
 // FIXME @ced
 const ContentTodo = ({
@@ -16,7 +17,7 @@ const ContentTodo = ({
         </Typography>
         <Typography variant="h5">{description}</Typography>
         <Typography>
-          {moment(startDate).format('LL')} ({`${startTime}`}) - ({`${endTime}`})
+          {moment(startDate).format('LL')} ({convertTime(startTime)}) - ({convertTime(endTime)})
         </Typography>
       </div>
     </div>
