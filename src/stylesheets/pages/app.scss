@@ -1,12 +1,9 @@
 .app {
   display: flex;
-  height: 100%;
   z-index: 0;
-  flex: 1;
 
   .container {
-    height: 100%;
-    width: 100%;
+    flex: 1 0 auto;
     z-index: 1;
   }
 

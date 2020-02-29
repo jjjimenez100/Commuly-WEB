@@ -34,7 +34,7 @@ const QuestionOpenText = ({
     };
 
     try {
-      await CardService.addQuestionResponse(cardId, body);
+      await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
       removeQuestionCard(cardId);

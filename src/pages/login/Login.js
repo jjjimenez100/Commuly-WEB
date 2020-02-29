@@ -19,7 +19,7 @@ class Login extends Component {
       className: 'text-danger',
       autoForceUpdate: this,
     });
-  };
+  }
 
   componentDidMount = () => {
     const { state } = this.props.location;
@@ -37,7 +37,7 @@ class Login extends Component {
   routeToRegisterPage = () => this.setState({ redirectToRegistration: true });
 
   loginUser = async () => {
-    if(!this.validator.allValid()) {
+    if (!this.validator.allValid()) {
       this.validator.showMessages();
       return;
     }

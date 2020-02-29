@@ -36,15 +36,16 @@
   }
 
   &-react {
+    position: relative;
     margin-right: calc(#{$spacing-tiny} / 2);
     
-    &:hover {
+    &:hover:enabled {
       transform: scale(1.2);
       transform-origin: bottom;
       margin: 0 $spacing-tiny;
     }
 
-    &:first-child:hover {
+    &:first-child:hover:enabled {
       margin: 0 $spacing-tiny 0 0;
     }
   }
