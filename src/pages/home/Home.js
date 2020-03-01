@@ -30,6 +30,7 @@ import {
   OrderingIcon,
   QuestionIcon,
   ArrowDownIcon,
+  SearchIcon,
 } from 'assets/icons';
 
 import {
@@ -105,26 +106,7 @@ const CreateContentButtons = {
   },
 };
 
-const EventTile = ({ props }) => {
-  let title = '';
-  let startDate = '';
-  let endDate = '';
-  let startTime = '';
-  let endTime = '';
-
-  if (props.contentCardType === SCHEDULED_CONTENT) {
-    title = props.scheduledEventContent.title;
-    startDate = props.scheduledEventContent.startDate;
-    endDate = props.scheduledEventContent.endDate;
-    startTime = props.scheduledEventContent.startTime;
-    endTime = props.scheduledEventContent.endTime;
-  } else if (props.contentCardType === TODO_CONTENT) {
-    title = props.todoContent.title;
-    startDate = props.todoContent.startDate;
-    startTime = props.todoContent.startTime;
-    endTime = props.todoContent.endTime;
-  }
-
+const EventTile = ({ startDate, endDate, title, startTime, endTime }) => {
   return (
     <div className="home-calendar-tile-event">
       <Typography variant="subtitle">
@@ -266,23 +248,37 @@ class Home extends Component {
     return <div>No scheduled events!</div>;
   };
 
-  renderCreateContentButtons = () => (
-    <div className="home-create-card-buttons">
-      {Object.values(CreateContentButtons)
-        .sort((a, b) => (a.order > b.order ? 1 : -1))
-        .map(btn => (
-          <Button
-            key={btn.type}
-            name={btn.name}
-            variant="inline"
-            className="home-create-card-button"
-            onClick={() => this.handleModalOpen(btn.type)}
-          >
-            <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
-          </Button>
-        ))}
-    </div>
-  );
+  renderCreateContentButtons = () => {
+    const { searchQuery } = this.props.store.home;
+
+    return (
+      <Card className="home-create-card">
+        <Input
+          placeholder="Search announcements..."
+          value={searchQuery}
+          name="searchQuery"
+          min={10}
+          max={40}
+          onChange={this.handleSearchQueryChange}
+          className="home-create-card-search"
+          icon={SearchIcon}
+        />
+        {Object.values(CreateContentButtons)
+          .sort((a, b) => (a.order > b.order ? 1 : -1))
+          .map(btn => (
+            <Button
+              key={btn.type}
+              name={btn.name}
+              variant="inline"
+              className="home-create-card-button"
+              onClick={() => this.handleModalOpen(btn.type)}
+            >
+              <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
+            </Button>
+          ))}
+      </Card>
+    );
+  };
 
   renderCalendar = eventCards => {
     const renderCalendarTile = ({ date }) => {
@@ -321,7 +317,6 @@ class Home extends Component {
       filteredTodoCards: todoCards,
       filteredTeamCards: teamCards,
       filteredScheduledCards: scheduledCards,
-      searchQuery,
       addCard,
       updateCard,
       currentCreateModalType,
@@ -368,17 +363,8 @@ class Home extends Component {
             </div>
             <Line />
             <br />
-            <div>
-              <Input
-                placeholder="Search"
-                value={searchQuery}
-                name="searchQuery"
-                min={10}
-                max={40}
-                onChange={this.handleSearchQueryChange}
-              />
-            </div>
-            <Card className="home-create-card">{this.renderCreateContentButtons()}</Card>
+
+            {this.renderCreateContentButtons()}
             <div className="home-announcements-cards">{this.renderAnnouncements(teamCards)}</div>
           </div>
         </div>
