@@ -106,13 +106,14 @@ const ContentCard = ({
 
   const handleReactionClicked = async e => {
     const { userId } = getUserDetails();
+    const { name: newReaction } = e.target;
     const body = {
       userId,
-      reactionType: e.target.name,
+      reactionType: newReaction,
     };
 
     // for unreact
-    if (reaction === e.target.name) {
+    if (reaction === newReaction) {
       setReaction('');
       body.patchType = UNREACT;
     } else {
@@ -128,7 +129,7 @@ const ContentCard = ({
         console.log(error);
       }
 
-      setReaction(e.target.name);
+      setReaction(newReaction);
       body.patchType = REACT;
     }
 
