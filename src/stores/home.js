@@ -30,6 +30,7 @@ const Home = types
         const { userId } = getUserDetails();
         const { data } = yield UserService.getCardsByUser(userId);
         const { scheduledCards, teamCards, todoCards, user } = data;
+
         self.scheduledCards = scheduledCards;
         self.filteredScheduledCards = scheduledCards;
 
@@ -90,7 +91,7 @@ const Home = types
           self.todoCards = data;
         }
 
-        const { eventCards } = self;
+        const eventCards = { ...self.eventCards };
         if (!eventCards[cardData.startDate]) {
           eventCards[cardData.startDate] = [cardData];
         } else {

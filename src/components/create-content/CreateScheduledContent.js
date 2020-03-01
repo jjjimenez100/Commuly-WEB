@@ -85,6 +85,7 @@ class CreateScheduledContent extends Component {
 
       try {
         const { addCard, updateCard, onClose } = this.props;
+
         if (Object.keys(cardData).length === 0) {
           const { data } = await CardService.createNewContentCard(formData);
           await addCard(data.savedCard);
@@ -99,6 +100,7 @@ class CreateScheduledContent extends Component {
           await updateCard(updatedCard);
           toast.success('Successfully updated content!');
         }
+
         onClose();
       } catch (error) {
         // eslint-disable-next-line no-console
