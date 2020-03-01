@@ -43,16 +43,29 @@ const Home = types
 
         const eventCards = [...todoCards, ...scheduledCards].reduce((accumulator, currentValue) => {
           let startDate = '';
-          if (currentValue.contentCardType === TODO_CONTENT) {
+          const { _id, cardType, contentCardType, owner } = currentValue;
+          const newValue = { _id, cardType, contentCardType, owner };
+
+          if (contentCardType === TODO_CONTENT) {
             startDate = currentValue.todoContent.startDate;
-          } else if (currentValue.contentCardType === SCHEDULED_CONTENT) {
+            newValue.startDate = currentValue.todoContent.startDate;
+            newValue.endDate = currentValue.todoContent.endDate;
+            newValue.startTime = currentValue.todoContent.startTime;
+            newValue.endTime = currentValue.todoContent.endTime;
+            newValue.title = currentValue.todoContent.title;
+          } else if (contentCardType === SCHEDULED_CONTENT) {
             startDate = currentValue.scheduledEventContent.startDate;
+            newValue.startDate = currentValue.scheduledEventContent.startDate;
+            newValue.endDate = currentValue.scheduledEventContent.endDate;
+            newValue.startTime = currentValue.scheduledEventContent.startTime;
+            newValue.endTime = currentValue.scheduledEventContent.endTime;
+            newValue.title = currentValue.scheduledEventContent.title;
           }
 
           if (!accumulator[startDate]) {
-            accumulator[startDate] = [currentValue];
+            accumulator[startDate] = [newValue];
           } else {
-            accumulator[startDate] = [...accumulator[startDate], currentValue];
+            accumulator[startDate] = [...accumulator[startDate], newValue];
           }
 
           return accumulator;

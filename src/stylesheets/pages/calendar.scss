@@ -1,0 +1,50 @@
+.calendar {
+  padding: $spacing-medium;
+  
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-base;
+  }
+
+  .rbc-calendar {
+    height: 700px !important; 
+  }
+
+  .rbc-header {
+    padding: $spacing-small $spacing-tiny;
+    & > span { 
+      text-transform: uppercase;
+      color: lighten($black-color, 0.3);
+    }
+  }
+
+  .rbc-date-cell {
+    margin: $spacing-small;
+    
+    & > a {
+      color: $neutral-m-color;
+    }
+  }
+
+  .rbc-current {
+    padding: 0;
+
+    & > a {
+      background-color: $primary-color;
+      color: $white-color;
+      padding: $spacing-tiny;
+      border-radius: 50%;
+    }
+  }
+
+  .rbc-event {
+    background-color: rgba($primary-color, 0.2);
+    padding: $spacing-tiny;
+    border-left: 6px solid $primary-color;
+    border-radius: 0px;
+    color: $primary-color;
+    font-weight: $font-bold;
+  }
+}

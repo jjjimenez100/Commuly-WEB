@@ -2,6 +2,11 @@ export { default as UnderstoodReact } from './understood-react.svg';
 export { default as ExcitedReact } from './excited-react.svg';
 export { default as ConfusedReact } from './confused-react.svg';
 export { default as BoredReact } from './bored-react.svg';
+export { default as HomeIcon } from './home.svg';
+export { default as CalendarIcon } from './calendar.svg';
+export { default as ResourcesIcon } from './resources.svg';
+export { default as ChallengesIcon } from './challenges.svg';
+export { default as AnalyticsIcon } from './leaderboard.svg';
 export { default as PinIcon } from './pin.svg';
 export { default as CircleArrowLeftIcon } from './circle-arrow-left.svg';
 export { default as CircleArrowRightIcon } from './circle-arrow-right.svg';
@@ -26,6 +31,7 @@ export { default as UnderstoodReactBW } from './understood-react-bw.png';
 export { default as BoredReactBW } from './bored-react-bw.png';
 export { default as ConfusedReactBW } from './confused-react-bw.png';
 export { default as ExcitedReactBW } from './excited-react-bw.png';
+export { default as PlusIcon } from './plus.svg';
 // export { default as } from '.svg'
 
 export { default as TempAvatar } from 'assets/images/avatar.jpg';

@@ -5,18 +5,22 @@ TODO:
 */
 
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import classnames from 'classnames';
 import { Button } from 'components';
-
-import HomeIcon from 'assets/icons/home.svg';
-import CalendarIcon from 'assets/icons/calendar.svg';
-import ResourcesIcon from 'assets/icons/resources.svg';
-import ChallengesIcon from 'assets/icons/challenges.svg';
-import AnalyticsIcon from 'assets/icons/leaderboard.svg';
+import { HomeIcon, CalendarIcon, ResourcesIcon, ChallengesIcon, AnalyticsIcon } from 'assets/icons';
 import TempAvatar from 'assets/images/avatar.jpg';
 
 class Sidebar extends Component {
+  state = {
+    redirect: '',
+  };
+
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     const { isSidebarOpen } = this.props;
     const sidebarButtonClass = classnames('sidebar-button', {
       'sidebar-button-close': !isSidebarOpen,
@@ -52,11 +56,23 @@ class Sidebar extends Component {
             <p className="sidebar-info-text">View Avatar Space</p>
           </div>
         )}
-        <Button variant="inline" className={sidebarButtonClass}>
+        <Button
+          onClick={() =>
+            this.setState({ redirect: '/dashboard' }, () => this.setState({ redirect: '' }))
+          }
+          variant="inline"
+          className={sidebarButtonClass}
+        >
           <img src={HomeIcon} alt="home-icon" />
           {isSidebarOpen && <p className="sidebar-button-text">Home</p>}
         </Button>
-        <Button variant="inline" className={sidebarButtonClass}>
+        <Button
+          onClick={() =>
+            this.setState({ redirect: '/calendar' }, () => this.setState({ redirect: '' }))
+          }
+          variant="inline"
+          className={sidebarButtonClass}
+        >
           <img src={CalendarIcon} alt="calendar-icon" />
           {isSidebarOpen && <p className="sidebar-button-text">Calendar</p>}
         </Button>
