@@ -22,6 +22,7 @@ const Home = types
     currentCreateModalType: types.frozen(),
     currentCardData: types.frozen(),
     searchQuery: types.frozen(),
+    eventCards: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
@@ -39,6 +40,25 @@ const Home = types
         self.filteredTodoCards = todoCards;
 
         self.user = user;
+
+        const eventCards = [...todoCards, ...scheduledCards].reduce((accumulator, currentValue) => {
+          let startDate = '';
+          if (currentValue.contentCardType === TODO_CONTENT) {
+            startDate = currentValue.todoContent.startDate;
+          } else if (currentValue.contentCardType === SCHEDULED_CONTENT) {
+            startDate = currentValue.scheduledEventContent.startDate;
+          }
+
+          if (!accumulator[startDate]) {
+            accumulator[startDate] = [currentValue];
+          } else {
+            accumulator[startDate] = [...accumulator[startDate], currentValue];
+          }
+
+          return accumulator;
+        }, {});
+
+        self.eventCards = eventCards;
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
@@ -48,12 +68,23 @@ const Home = types
     addCard(cardData) {
       const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
 
-      if (cardType === SCHEDULED_CONTENT) {
-        const data = [cardData, ...scheduledCards];
-        self.scheduledCards = data;
-      } else if (cardType === TODO_CONTENT) {
-        const data = [cardData, ...todoCards];
-        self.todoCards = data;
+      if (cardType === SCHEDULED_CONTENT || cardType === TODO_CONTENT) {
+        if (cardType === SCHEDULED_CONTENT) {
+          const data = [cardData, ...scheduledCards];
+          self.scheduledCards = data;
+        } else if (cardType === TODO_CONTENT) {
+          const data = [cardData, ...todoCards];
+          self.todoCards = data;
+        }
+
+        const { eventCards } = self;
+        if (!eventCards[cardData.startDate]) {
+          eventCards[cardData.startDate] = [cardData];
+        } else {
+          eventCards[cardData.startDate] = [...eventCards[cardData.startDate], cardData];
+        }
+
+        self.eventCards = eventCards;
       }
 
       const announcements = [cardData, ...teamCards];
@@ -144,6 +175,7 @@ export const store = Home.create({
   currentCreateModalType: '',
   currentCardData: {},
   searchQuery: '',
+  eventCards: {},
 });
 
 export default Home;
