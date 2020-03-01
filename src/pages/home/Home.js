@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import { observer, inject } from 'mobx-react';
+import moment from 'moment';
 import {
   Typography,
   HorizontalLine as Line,
@@ -30,8 +31,6 @@ import {
   QuestionIcon,
   ArrowDownIcon,
 } from 'assets/icons';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 
 import {
   TEXT_CONTENT,
@@ -45,6 +44,8 @@ import {
   OPEN_TEXT_QUESTION,
 } from 'constants/card';
 import { DONE_STATUS } from 'constants/user';
+import Calendar from 'react-calendar';
+import { convertTime } from 'utils/time';
 import { boardData } from './data';
 
 const CreateContentButtons = {
@@ -102,6 +103,40 @@ const CreateContentButtons = {
     type: OPEN_TEXT_QUESTION,
     order: 9,
   },
+};
+
+const EventTile = ({ props }) => {
+  let title = '';
+  let startDate = '';
+  let endDate = '';
+  let startTime = '';
+  let endTime = '';
+
+  if (props.contentCardType === SCHEDULED_CONTENT) {
+    title = props.scheduledEventContent.title;
+    startDate = props.scheduledEventContent.startDate;
+    endDate = props.scheduledEventContent.endDate;
+    startTime = props.scheduledEventContent.startTime;
+    endTime = props.scheduledEventContent.endTime;
+  } else if (props.contentCardType === TODO_CONTENT) {
+    title = props.todoContent.title;
+    startDate = props.todoContent.startDate;
+    startTime = props.todoContent.startTime;
+    endTime = props.todoContent.endTime;
+  }
+
+  return (
+    <div className="home-calendar-tile-event">
+      <Typography variant="subtitle">
+        {moment(startDate).format('MMM D YYYY')}
+        {endDate && `- ${moment(endDate).format('MMM D YYYY')}`}
+      </Typography>
+      <Typography variant="h5">{title}</Typography>
+      <Typography variant="subtitle">
+        {convertTime(startTime)} - {convertTime(endTime)}
+      </Typography>
+    </div>
+  );
 };
 
 class Home extends Component {
@@ -249,6 +284,38 @@ class Home extends Component {
     </div>
   );
 
+  renderCalendar = eventCards => {
+    const renderCalendarTile = ({ date }) => {
+      const newDate = moment(date).format('YYYY-MM-DD');
+      if (eventCards[newDate]) {
+        return (
+          <div className="home-calendar-tile">
+            {eventCards[newDate].map(event => {
+              return <EventTile key={event._id} props={event} />;
+            })}
+          </div>
+        );
+      }
+
+      return null;
+    };
+
+    return (
+      <div className="home-calendar">
+        <Typography variant="h4" className="home-calendar-title">
+          Calendar
+        </Typography>
+        <Line />
+        <Calendar
+          calendarType="US"
+          onChange={this.onChange}
+          value={this.state.date}
+          tileContent={renderCalendarTile}
+        />
+      </div>
+    );
+  };
+
   render() {
     const {
       filteredTodoCards: todoCards,
@@ -259,6 +326,7 @@ class Home extends Component {
       updateCard,
       currentCreateModalType,
       currentCardData,
+      eventCards,
     } = this.props.store.home;
     return (
       <div className="home">
@@ -322,13 +390,7 @@ class Home extends Component {
             <Line />
             <div className="home-leaderboard-board">{this.renderLeaderboard(boardData)}</div>
           </div>
-          <div className="home-calendar">
-            <Typography variant="h4" className="home-calendar-title">
-              Calendar
-            </Typography>
-            <Line />
-            <Calendar calendarType="US" onChange={this.onChange} value={this.state.date} />
-          </div>
+          {this.renderCalendar(eventCards)}
           <div className="home-todo">
             <Typography variant="h4" className="home-todo-title">
               To do
