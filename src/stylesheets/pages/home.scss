@@ -104,25 +104,31 @@
       padding: $spacing-small;
     }
 
+    #home-scheduled-events {
+      white-space: nowrap;
+      width: calc(100vw - 310px - 100px - (#{$spacing-medium} * 2));
+      overflow-x: auto;
+      padding-bottom: $spacing-tiny;
+    }
+    
     &-cards {
       margin-top: $spacing-base;
       display: flex;
-      overflow: auto;
 
       .card {
-        &-date {
-          margin-bottom: $spacing-tiny;
-        }
-
         &-line {
           margin-bottom: $spacing-small;
         }
-
-        &-title {
+        
+        &-title, & > .typography-subtitle {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          width: calc(250px - #{$spacing-small * 2});
+          width: calc(250px - (#{$spacing-small} * 2));
+        }
+
+        &-title {
+          margin-bottom: $spacing-tiny;
         }
       }
     }

@@ -20,106 +20,15 @@ import {
   CircleArrowLeftIcon,
   CircleArrowRightIcon,
   TempAvatar,
-  TextIcon,
-  ChartIcon,
-  ImageIcon,
-  PinOutlineIcon,
-  EventIcon,
-  ChoiceIcon,
-  LikertIcon,
-  OrderingIcon,
-  QuestionIcon,
   ArrowDownIcon,
   SearchIcon,
 } from 'assets/icons';
 
-import {
-  TEXT_CONTENT,
-  CHART_CONTENT,
-  IMAGE_CONTENT,
-  TODO_CONTENT,
-  SCHEDULED_CONTENT,
-  MULTIPLE_CHOICE_QUESTION,
-  LIKERT_QUESTION,
-  COLUMN_ORDERING_QUESTION,
-  OPEN_TEXT_QUESTION,
-} from 'constants/card';
 import { DONE_STATUS } from 'constants/user';
 import Calendar from 'react-calendar';
-import { convertTime } from 'utils/time';
-import { boardData } from './data';
-
-const CreateContentButtons = {
-  [TEXT_CONTENT]: {
-    name: 'Text',
-    icon: TextIcon,
-    type: TEXT_CONTENT,
-    order: 1,
-  },
-  [CHART_CONTENT]: {
-    name: 'Chart',
-    icon: ChartIcon,
-    type: CHART_CONTENT,
-    order: 2,
-  },
-  [IMAGE_CONTENT]: {
-    name: 'Image',
-    icon: ImageIcon,
-    type: IMAGE_CONTENT,
-    order: 3,
-  },
-  [TODO_CONTENT]: {
-    name: 'To Do',
-    icon: PinOutlineIcon,
-    type: TODO_CONTENT,
-    order: 4,
-  },
-  [SCHEDULED_CONTENT]: {
-    name: 'Scheduled Event',
-    icon: EventIcon,
-    type: SCHEDULED_CONTENT,
-    order: 5,
-  },
-  [MULTIPLE_CHOICE_QUESTION]: {
-    name: 'Multiple Choice',
-    icon: ChoiceIcon,
-    type: MULTIPLE_CHOICE_QUESTION,
-    order: 6,
-  },
-  [LIKERT_QUESTION]: {
-    name: 'Likert',
-    icon: LikertIcon,
-    type: LIKERT_QUESTION,
-    order: 7,
-  },
-  [COLUMN_ORDERING_QUESTION]: {
-    name: 'Column Order',
-    icon: OrderingIcon,
-    type: COLUMN_ORDERING_QUESTION,
-    order: 8,
-  },
-  [OPEN_TEXT_QUESTION]: {
-    name: 'Open Question',
-    icon: QuestionIcon,
-    type: OPEN_TEXT_QUESTION,
-    order: 9,
-  },
-};
-
-const EventTile = ({ startDate, endDate, title, startTime, endTime }) => {
-  return (
-    <div className="home-calendar-tile-event">
-      <Typography variant="subtitle">
-        {moment(startDate).format('MMM D YYYY')}
-        {endDate && `- ${moment(endDate).format('MMM D YYYY')}`}
-      </Typography>
-      <Typography variant="h5">{title}</Typography>
-      <Typography variant="subtitle">
-        {convertTime(startTime)} - {convertTime(endTime)}
-      </Typography>
-    </div>
-  );
-};
+import EventTile from './components/EventTile';
+import ScheduledEvent from './components/ScheduledEvent';
+import { boardData, CreateContentButtons } from './data';
 
 class Home extends Component {
   constructor(props) {
@@ -226,26 +135,11 @@ class Home extends Component {
 
   renderScheduledEvents = data => {
     if (data.length > 0) {
-      return data.map(
-        ({
-          _id: id,
-          // TODO: include other date and time fields on card
-          // eslint-disable-next-line no-unused-vars
-          scheduledEventContent: { description, title, startDate, startTime, endDate, endTime },
-        }) => {
-          return (
-            <Card key={id} className="home-events-card">
-              <Typography className="card-date">{title}</Typography>
-              <Line small className="card-line" />
-              <Typography variant="h5" className="card-title">
-                {description}
-              </Typography>
-              <Typography variant="subtitle">{startDate}</Typography>
-            </Card>
-          );
-        }
-      );
+      return data.map(({ _id: id, scheduledEventContent }) => (
+        <ScheduledEvent key={id} {...scheduledEventContent} />
+      ));
     }
+
     return <div>No scheduled events!</div>;
   };
 
@@ -313,6 +207,14 @@ class Home extends Component {
     );
   };
 
+  handleEventScrollLeft = () => {
+    document.getElementById('home-scheduled-events').scrollLeft -= 266;
+  };
+
+  handleEventScrollRight = () => {
+    document.getElementById('home-scheduled-events').scrollLeft += 266;
+  };
+
   render() {
     const {
       filteredTodoCards: todoCards,
@@ -324,6 +226,7 @@ class Home extends Component {
       currentCardData,
       eventCards,
     } = this.props.store.home;
+
     return (
       <div className="home">
         <div className="home-container">
@@ -347,16 +250,18 @@ class Home extends Component {
             <div className="home-events-title">
               <Typography variant="h4">Scheduled Events</Typography>
               <div className="home-events-title-buttons">
-                <Button inline>
+                <Button inline onClick={this.handleEventScrollLeft}>
                   <img src={CircleArrowLeftIcon} alt="circle-arrow-left" />
                 </Button>
-                <Button inline>
+                <Button inline onClick={this.handleEventScrollRight}>
                   <img src={CircleArrowRightIcon} alt="circle-arrow-right" />
                 </Button>
               </div>
             </div>
             <Line />
-            <div className="home-events-cards">{this.renderScheduledEvents(scheduledCards)}</div>
+            <div className="home-events-cards" id="home-scheduled-events">
+              {this.renderScheduledEvents(scheduledCards)}
+            </div>
           </div>
           <div className="home-announcements">
             <div className="home-announcements-title">
