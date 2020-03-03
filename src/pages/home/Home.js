@@ -174,13 +174,14 @@ class Home extends Component {
     const { removeQuestionCard } = this.props.store.home;
 
     if (data.length > 0) {
-      return data.map(announcement => (
+      return data.map((announcement, i) => (
         <ContentCard
           key={announcement._id}
           handleModalOpen={this.handleModalOpen}
           handleViewResponses={this.openViewResponsesModal}
           removeQuestionCard={removeQuestionCard}
           {...announcement}
+          isPinned={i === 0}
         />
       ));
     }

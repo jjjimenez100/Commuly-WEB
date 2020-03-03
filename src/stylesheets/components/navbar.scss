@@ -9,6 +9,7 @@ $navbar-height: 72px;
   box-shadow: 0 1px 3px rgba($neutral-d-color, 0.2);
   padding: $spacing-small;
   width: 100%;
+  z-index: 10;
   
   &-button {
     height: calc(#{$navbar-height} - (#{$spacing-small} * 2));
