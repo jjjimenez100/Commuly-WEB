@@ -4,10 +4,24 @@
   margin-bottom: $spacing-base;
   width: 100%;
   flex-grow: 0;
+  box-shadow: 0 2px 6px rgba($neutral-l-color,1);
 
-  // &:hover {
-  //   background-color: $bg-color;
-  // }
+  &-pinned {
+    transform: scale(1.02);
+    box-shadow: 0 2px 6px rgba($neutral-d-color, 0.2);
+
+    &-button {
+      padding: calc(#{$spacing-tiny} / 2) $spacing-tiny;
+      border-radius: 8px;
+      display: flex;
+      color: $white-color;
+      background-color: $primary-color;
+
+      &:hover {
+        color: $white-color;
+      }
+    }
+  }
 
   &-line {
     padding: 0 $spacing-small;
@@ -27,8 +41,6 @@
       flex: 1;
     }
   }
-
-  
 
   &-reacts {
     display: flex;
@@ -52,6 +64,8 @@
 
   &-buttons {
     display: flex;
+    justify-content: center;
+    align-items: center;
 
     & > button:first-child {
       margin-right: $spacing-small;

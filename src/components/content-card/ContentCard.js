@@ -34,6 +34,7 @@ import {
 } from 'constants/card';
 import {
   PinIcon,
+  PinBlackIcon,
   VerticalMenuIcon,
   UnderstoodReact,
   ExcitedReact,
@@ -53,6 +54,7 @@ const ContentCard = ({
   contentCardType,
   questionCardType,
   reactions,
+  isPinned,
   ...props
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -156,13 +158,19 @@ const ContentCard = ({
   }, [reactions]);
 
   return (
-    <Card className="content-card">
+    <Card className={`content-card ${isPinned && 'content-card-pinned'}`}>
       <div className="content-card-title">
         <Typography variant="h5">New Supervisor Post</Typography>
         <div className="content-card-buttons">
-          <Button inline>
-            <img src={PinIcon} alt="pin-icon" />
-          </Button>
+          {isPinned ? (
+            <Button icon={PinIcon} size="small" className="content-card-pinned-button">
+              <Typography variant="subtitle">Pinned Post</Typography>
+            </Button>
+          ) : (
+            <Button inline>
+              <img src={PinBlackIcon} alt="pin-icon" />
+            </Button>
+          )}
 
           <DropdownContainer className="content-card-dropdown">
             <Button inline onClick={() => setDropdownOpen(!dropdownOpen)}>
