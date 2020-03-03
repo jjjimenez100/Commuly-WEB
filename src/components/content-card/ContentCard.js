@@ -47,6 +47,10 @@ import {
 } from 'assets/icons';
 import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
+// eslint-disable-next-line no-unused-vars
+import UserService from 'services/userService';
+// eslint-disable-next-line no-unused-vars
+import { EMPLOYEE_ROLE, SUPERVISOR_ROLE, PROGRAM_ADMINISTRATOR_ROLE } from '../../constants/user';
 
 const ContentCard = ({
   handleModalOpen,
@@ -158,6 +162,41 @@ const ContentCard = ({
     }
   };
 
+  const renderPinOptions = (isPinned, pinType = '') => {
+    const { role } = getUserDetails();
+    if (isPinned) {
+      // User pinned card
+      if (!pinType) {
+        return <DropdownMenuItem text="Unpin Post" />;
+      }
+      // Supervisor or Program admin pinned card
+      if (role === PROGRAM_ADMINISTRATOR_ROLE || (role === SUPERVISOR_ROLE && role === pinType)) {
+        return <DropdownMenuItem text={`Unpin Post as ${pinType}`} />;
+      }
+    }
+
+    if (role === PROGRAM_ADMINISTRATOR_ROLE) {
+      return (
+        <>
+          <DropdownMenuItem text={`Pin Post as ${PROGRAM_ADMINISTRATOR_ROLE}`} />
+          <DropdownMenuItem text={`Pin Post as ${SUPERVISOR_ROLE}`} />
+          <DropdownMenuItem text="Pin Post" />
+        </>
+      );
+    }
+
+    if (role === SUPERVISOR_ROLE) {
+      return (
+        <>
+          <DropdownMenuItem text={`Pin Post as ${SUPERVISOR_ROLE}`} />
+          <DropdownMenuItem text="Pin Post" />
+        </>
+      );
+    }
+
+    return <DropdownMenuItem text="Pin Post" />;
+  };
+
   useEffect(() => {
     if (reactions) {
       const { userId } = getUserDetails();
@@ -193,8 +232,7 @@ const ContentCard = ({
               </Button>
             )}
             <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
-              <DropdownMenuItem text="View Responses" />
-              <DropdownMenuItem text="Edit" />
+              {renderPinOptions(isPinned)}
             </DropdownMenu>
           </DropdownContainer>
 
