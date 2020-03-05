@@ -6,7 +6,13 @@ import UserService from 'services/userService';
 import { getUserDetails } from 'utils/jwt';
 import { filterMatchingObjectProperties } from 'utils/search';
 import { TODO_CONTENT, SCHEDULED_CONTENT } from '../constants/card';
-import { DONE_STATUS, STUCK_STATUS } from '../constants/user';
+import {
+  DONE_STATUS,
+  STUCK_STATUS,
+  EMPLOYEE_ROLE,
+  SUPERVISOR_ROLE,
+  PROGRAM_ADMINISTRATOR_ROLE,
+} from '../constants/user';
 
 const Home = types
   .model('Home', {
@@ -24,6 +30,10 @@ const Home = types
     currentCardData: types.frozen(),
     searchQuery: types.frozen(),
     eventCards: types.frozen(),
+
+    hasPinnedCardAsEmployee: types.frozen(),
+    hasPinnedCardAsProgramAdministrator: types.frozen(),
+    hasPinnedCardAsSupervisor: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
@@ -31,6 +41,11 @@ const Home = types
         const { userId } = getUserDetails();
         const { data } = yield UserService.getCardsByUser(userId);
         const { scheduledCards, teamCards, todoCards, pinnedCards, user } = data;
+        const {
+          hasPinnedCardAsEmployee,
+          hasPinnedCardAsProgramAdministrator,
+          hasPinnedCardAsSupervisor,
+        } = user;
 
         self.scheduledCards = scheduledCards;
         self.filteredScheduledCards = scheduledCards;
@@ -45,6 +60,10 @@ const Home = types
         self.filteredPinnedCards = pinnedCards;
 
         self.user = user;
+
+        self.hasPinnedCardAsEmployee = hasPinnedCardAsEmployee;
+        self.hasPinnedCardAsProgramAdministrator = hasPinnedCardAsProgramAdministrator;
+        self.hasPinnedCardAsSupervisor = hasPinnedCardAsSupervisor;
 
         const eventCards = [...todoCards, ...scheduledCards].reduce((accumulator, currentValue) => {
           let startDate = '';
@@ -83,7 +102,17 @@ const Home = types
         // handle error here
       }
     }),
+    changePinStatus(pinType, booleanValue) {
+      if (pinType === EMPLOYEE_ROLE) {
+        self.hasPinnedCardAsEmployee = booleanValue;
+      } else if (pinType === SUPERVISOR_ROLE) {
+        self.hasPinnedCardAsSupervisor = booleanValue;
+      } else if (pinType === PROGRAM_ADMINISTRATOR_ROLE) {
+        self.hasPinnedCardAsProgramAdministrator = booleanValue;
+      }
+    },
     pinCard(pinnedCardData, pinType) {
+      self.changePinStatus(pinType, true);
       const { _id: cardId } = pinnedCardData;
       const newPinnedCardData = { ...pinnedCardData, isPinned: true, pinType };
       const { teamCards } = self;
@@ -94,7 +123,8 @@ const Home = types
       );
       self.searchCards();
     },
-    unpinCard(pinnedCardData) {
+    unpinCard(pinnedCardData, pinType) {
+      self.changePinStatus(pinType, false);
       const { _id: cardId } = pinnedCardData;
       const newPinnedCardData = { ...pinnedCardData, isPinned: false, pinType: '' };
 
@@ -239,6 +269,9 @@ export const store = Home.create({
   currentCardData: {},
   searchQuery: '',
   eventCards: {},
+  hasPinnedCardAsEmployee: false,
+  hasPinnedCardAsProgramAdministrator: false,
+  hasPinnedCardAsSupervisor: false,
 });
 
 export default Home;

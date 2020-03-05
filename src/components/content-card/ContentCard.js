@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import {
   Card,
   Button,
@@ -64,6 +65,9 @@ const ContentCard = cardData => {
     reactions,
     isPinned,
     pinType = '',
+    hasPinnedCardAsEmployee,
+    hasPinnedCardAsProgramAdministrator,
+    hasPinnedCardAsSupervisor,
     ...props
   } = cardData;
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -173,12 +177,17 @@ const ContentCard = cardData => {
 
     pinCard(cardData, role);
     setDropdownOpen(false);
-    if (role === SUPERVISOR_ROLE) {
-      await TeamService.pinCardToTeamStream(team, cardId, SUPERVISOR_ROLE);
-    } else if (role === PROGRAM_ADMINISTRATOR_ROLE) {
-      await TeamService.pinCardToTeamStream(team, cardId, PROGRAM_ADMINISTRATOR_ROLE);
-    } else if (role === EMPLOYEE_ROLE) {
-      await UserService.pinCardToUserStream(userId, cardId);
+    try {
+      if (role === SUPERVISOR_ROLE) {
+        await TeamService.pinCardToTeamStream(team, cardId, SUPERVISOR_ROLE);
+      } else if (role === PROGRAM_ADMINISTRATOR_ROLE) {
+        await TeamService.pinCardToTeamStream(team, cardId, PROGRAM_ADMINISTRATOR_ROLE);
+      } else if (role === EMPLOYEE_ROLE) {
+        await UserService.pinCardToUserStream(userId, cardId);
+      }
+      toast.success('Successfully pinned card!');
+    } catch (error) {
+      toast.error('Failed to pin card. Please try again later.');
     }
   };
 
@@ -186,14 +195,19 @@ const ContentCard = cardData => {
     const { team, userId } = getUserDetails();
     const { _id: cardId } = cardData;
 
-    unpinCard(cardData);
+    unpinCard(cardData, role);
     setDropdownOpen(false);
-    if (role === SUPERVISOR_ROLE) {
-      await TeamService.unpinCardToTeamStream(team, cardId);
-    } else if (role === PROGRAM_ADMINISTRATOR_ROLE) {
-      await TeamService.unpinCardToTeamStream(team, cardId);
-    } else if (role === EMPLOYEE_ROLE) {
-      await UserService.unpinCardToUserStream(userId, cardId);
+    try {
+      if (role === SUPERVISOR_ROLE) {
+        await TeamService.unpinCardToTeamStream(team, cardId);
+      } else if (role === PROGRAM_ADMINISTRATOR_ROLE) {
+        await TeamService.unpinCardToTeamStream(team, cardId);
+      } else if (role === EMPLOYEE_ROLE) {
+        await UserService.unpinCardToUserStream(userId, cardId);
+      }
+      toast.success('Successfully unpinned card!');
+    } catch (error) {
+      toast.error('Failed to pin card. Please try again later.');
     }
   };
 
@@ -201,20 +215,38 @@ const ContentCard = cardData => {
     const { role } = getUserDetails();
     if (isPinned) {
       let pinPostText = '';
-      if (pinType === EMPLOYEE_ROLE && role === EMPLOYEE_ROLE) {
+      if (pinType === EMPLOYEE_ROLE && role === EMPLOYEE_ROLE && hasPinnedCardAsEmployee === true) {
         pinPostText = 'Unpin Post';
-      } else if (pinType === SUPERVISOR_ROLE && role === SUPERVISOR_ROLE) {
+      } else if (
+        pinType === SUPERVISOR_ROLE &&
+        role === SUPERVISOR_ROLE &&
+        hasPinnedCardAsSupervisor === true
+      ) {
         pinPostText = 'Unpin Post as Supervisor';
-      } else if (pinType === PROGRAM_ADMINISTRATOR_ROLE && role === PROGRAM_ADMINISTRATOR_ROLE) {
+      } else if (
+        pinType === PROGRAM_ADMINISTRATOR_ROLE &&
+        role === PROGRAM_ADMINISTRATOR_ROLE &&
+        hasPinnedCardAsProgramAdministrator === true
+      ) {
         pinPostText = 'Unpin Post as Program Admin';
       }
-
       return (
         <DropdownMenuItem text={pinPostText} onClick={() => unpinCardHandler(cardData, role)} />
       );
     }
 
-    return <DropdownMenuItem text="Pin Post" onClick={() => pinCardHandler(cardData, role)} />;
+    let pinPostText = '';
+    if (role === EMPLOYEE_ROLE && hasPinnedCardAsEmployee === false) {
+      pinPostText = 'Pin Post';
+    } else if (role === SUPERVISOR_ROLE && hasPinnedCardAsSupervisor === false) {
+      pinPostText = 'Pin Post as Supervisor';
+    } else if (
+      role === PROGRAM_ADMINISTRATOR_ROLE &&
+      hasPinnedCardAsProgramAdministrator === false
+    ) {
+      pinPostText = 'Pin Post as Program Admin';
+    }
+    return <DropdownMenuItem text={pinPostText} onClick={() => pinCardHandler(cardData, role)} />;
   };
 
   const getPinType = () => {

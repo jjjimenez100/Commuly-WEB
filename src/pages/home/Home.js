@@ -80,7 +80,14 @@ class Home extends Component {
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
   renderAnnouncements = data => {
-    const { removeQuestionCard, pinCard, unpinCard } = this.props.store.home;
+    const {
+      removeQuestionCard,
+      pinCard,
+      unpinCard,
+      hasPinnedCardAsEmployee,
+      hasPinnedCardAsProgramAdministrator,
+      hasPinnedCardAsSupervisor,
+    } = this.props.store.home;
 
     if (data.length > 0) {
       return data.map(announcement => (
@@ -91,6 +98,9 @@ class Home extends Component {
           removeQuestionCard={removeQuestionCard}
           pinCard={pinCard}
           unpinCard={unpinCard}
+          hasPinnedCardAsEmployee={hasPinnedCardAsEmployee}
+          hasPinnedCardAsProgramAdministrator={hasPinnedCardAsProgramAdministrator}
+          hasPinnedCardAsSupervisor={hasPinnedCardAsSupervisor}
           {...announcement}
         />
       ));
