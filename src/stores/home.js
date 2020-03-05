@@ -1,4 +1,5 @@
 /* eslint-disable func-names */
+import findLastIndex from 'lodash/findLastIndex';
 import { types, flow } from 'mobx-state-tree';
 import { toast } from 'react-toastify';
 import UserService from 'services/userService';
@@ -29,7 +30,7 @@ const Home = types
       try {
         const { userId } = getUserDetails();
         const { data } = yield UserService.getCardsByUser(userId);
-        const { scheduledCards, teamCards, todoCards, user } = data;
+        const { scheduledCards, teamCards, todoCards, pinnedCards, user } = data;
 
         self.scheduledCards = scheduledCards;
         self.filteredScheduledCards = scheduledCards;
@@ -39,6 +40,9 @@ const Home = types
 
         self.todoCards = todoCards;
         self.filteredTodoCards = todoCards;
+
+        self.pinnedCards = pinnedCards;
+        self.filteredPinnedCards = pinnedCards;
 
         self.user = user;
 
@@ -79,9 +83,28 @@ const Home = types
         // handle error here
       }
     }),
+    pinCard(pinnedCardData, pinType) {
+      const { _id: cardId } = pinnedCardData;
+      const newPinnedCardData = { ...pinnedCardData, isPinned: true, pinType };
+      const { teamCards } = self;
+      self.teamCards = self.insertCardAtStartAndRemoveExistingCard(
+        teamCards,
+        cardId,
+        newPinnedCardData
+      );
+      self.searchCards();
+    },
+    unpinCard(pinnedCardData) {
+      const { _id: cardId } = pinnedCardData;
+      const newPinnedCardData = { ...pinnedCardData, isPinned: false, pinType: '' };
+
+      const { teamCards } = self;
+      self.teamCards = self.removeCardAndInsertAtEnd(teamCards, cardId, newPinnedCardData);
+      self.searchCards();
+    },
     addCard(cardData) {
       const { scheduledCards, teamCards, todoCards, currentCreateModalType: cardType } = self;
-
+      cardData.isPinned = false;
       if (cardType === SCHEDULED_CONTENT || cardType === TODO_CONTENT) {
         if (cardType === SCHEDULED_CONTENT) {
           const data = [cardData, ...scheduledCards];
@@ -101,8 +124,7 @@ const Home = types
         self.eventCards = eventCards;
       }
 
-      const announcements = [cardData, ...teamCards];
-      self.teamCards = announcements;
+      self.teamCards = self.insertCardAfterLastPinnedCard(teamCards, cardData);
       self.searchCards();
     },
     updateCard(cardData) {
@@ -110,11 +132,11 @@ const Home = types
       const { _id: updatedCardId } = cardData;
 
       if (cardType === SCHEDULED_CONTENT) {
-        self.scheduledCards = self.insertCardAtIndex(scheduledCards, updatedCardId, cardData);
+        self.scheduledCards = self.updateCardAtIndex(scheduledCards, updatedCardId, cardData);
       } else if (cardType === TODO_CONTENT) {
-        self.todoCards = self.insertCardAtIndex(todoCards, updatedCardId, cardData);
+        self.todoCards = self.updateCardAtIndex(todoCards, updatedCardId, cardData);
       }
-      self.teamCards = self.insertCardAtIndex(teamCards, updatedCardId, cardData);
+      self.teamCards = self.updateCardAtIndex(teamCards, updatedCardId, cardData);
       self.searchCards();
     },
     removeQuestionCard(questionCardId) {
@@ -124,7 +146,34 @@ const Home = types
       self.teamCards = newTeamCards;
       self.searchCards();
     },
-    insertCardAtIndex(cardArray, cardId, cardData) {
+    removeCardAndInsertAtEnd(cardArray, cardId, cardData) {
+      const newCardArray = [...cardArray];
+      const foundIndex = newCardArray.findIndex(({ _id }) => cardId === _id);
+      const deletedExistingCard = newCardArray.splice(foundIndex - 1, 1);
+      return [...deletedExistingCard, cardData];
+    },
+    insertCardAtStartAndRemoveExistingCard(cardArray, cardId, cardData) {
+      const newCardArray = [...cardArray];
+      const foundIndex = newCardArray.findIndex(({ _id }) => cardId === _id);
+      if (foundIndex === -1) {
+        newCardArray.splice(0, 0, cardData);
+        return newCardArray;
+      }
+      const deletedExistingCard = newCardArray.splice(foundIndex - 1, 1);
+      return [cardData, ...deletedExistingCard];
+    },
+    insertCardAfterLastPinnedCard(cardArray, cardData) {
+      const newCardArray = [...cardArray];
+      const foundIndex = findLastIndex(cardArray, { isPinned: true });
+      if (foundIndex === -1) {
+        newCardArray.splice(0, 0, cardData);
+      } else {
+        newCardArray.splice(foundIndex + 1, 0, cardData);
+      }
+
+      return newCardArray;
+    },
+    updateCardAtIndex(cardArray, cardId, cardData) {
       const newCardArray = [...cardArray];
       const updatedCardIndex = newCardArray.findIndex(({ _id }) => cardId === _id);
       newCardArray.splice(updatedCardIndex, 1, cardData);

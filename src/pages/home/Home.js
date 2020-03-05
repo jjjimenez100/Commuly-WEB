@@ -80,17 +80,18 @@ class Home extends Component {
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
   renderAnnouncements = data => {
-    const { removeQuestionCard } = this.props.store.home;
+    const { removeQuestionCard, pinCard, unpinCard } = this.props.store.home;
 
     if (data.length > 0) {
-      return data.map((announcement, i) => (
+      return data.map(announcement => (
         <ContentCard
           key={announcement._id}
           handleModalOpen={this.handleModalOpen}
           handleViewResponses={this.openViewResponsesModal}
           removeQuestionCard={removeQuestionCard}
+          pinCard={pinCard}
+          unpinCard={unpinCard}
           {...announcement}
-          isPinned={i === 0}
         />
       ));
     }

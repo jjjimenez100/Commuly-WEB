@@ -49,18 +49,23 @@ import { getUserDetails } from 'utils/jwt';
 import CardService from 'services/cardService';
 // eslint-disable-next-line no-unused-vars
 import UserService from 'services/userService';
+import TeamService from '../../services/teamService';
 // eslint-disable-next-line no-unused-vars
 import { EMPLOYEE_ROLE, SUPERVISOR_ROLE, PROGRAM_ADMINISTRATOR_ROLE } from '../../constants/user';
 
-const ContentCard = ({
-  handleModalOpen,
-  handleViewResponses,
-  contentCardType,
-  questionCardType,
-  reactions,
-  isPinned,
-  ...props
-}) => {
+const ContentCard = cardData => {
+  const {
+    pinCard,
+    unpinCard,
+    handleModalOpen,
+    handleViewResponses,
+    contentCardType,
+    questionCardType,
+    reactions,
+    isPinned,
+    pinType = '',
+    ...props
+  } = cardData;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState('');
   const [reaction, setReaction] = useState('');
@@ -162,39 +167,68 @@ const ContentCard = ({
     }
   };
 
+  const pinCardHandler = async (cardData, role) => {
+    const { team, userId } = getUserDetails();
+    const { _id: cardId } = cardData;
+
+    pinCard(cardData, role);
+    setDropdownOpen(false);
+    if (role === SUPERVISOR_ROLE) {
+      await TeamService.pinCardToTeamStream(team, cardId, SUPERVISOR_ROLE);
+    } else if (role === PROGRAM_ADMINISTRATOR_ROLE) {
+      await TeamService.pinCardToTeamStream(team, cardId, PROGRAM_ADMINISTRATOR_ROLE);
+    } else if (role === EMPLOYEE_ROLE) {
+      await UserService.pinCardToUserStream(userId, cardId);
+    }
+  };
+
+  const unpinCardHandler = async (cardData, role) => {
+    const { team, userId } = getUserDetails();
+    const { _id: cardId } = cardData;
+
+    unpinCard(cardData);
+    setDropdownOpen(false);
+    if (role === SUPERVISOR_ROLE) {
+      await TeamService.unpinCardToTeamStream(team, cardId);
+    } else if (role === PROGRAM_ADMINISTRATOR_ROLE) {
+      await TeamService.unpinCardToTeamStream(team, cardId);
+    } else if (role === EMPLOYEE_ROLE) {
+      await UserService.unpinCardToUserStream(userId, cardId);
+    }
+  };
+
   const renderPinOptions = (isPinned, pinType = '') => {
     const { role } = getUserDetails();
     if (isPinned) {
-      // User pinned card
-      if (!pinType) {
-        return <DropdownMenuItem text="Unpin Post" />;
+      let pinPostText = '';
+      if (pinType === EMPLOYEE_ROLE && role === EMPLOYEE_ROLE) {
+        pinPostText = 'Unpin Post';
+      } else if (pinType === SUPERVISOR_ROLE && role === SUPERVISOR_ROLE) {
+        pinPostText = 'Unpin Post as Supervisor';
+      } else if (pinType === PROGRAM_ADMINISTRATOR_ROLE && role === PROGRAM_ADMINISTRATOR_ROLE) {
+        pinPostText = 'Unpin Post as Program Admin';
       }
-      // Supervisor or Program admin pinned card
-      if (role === PROGRAM_ADMINISTRATOR_ROLE || (role === SUPERVISOR_ROLE && role === pinType)) {
-        return <DropdownMenuItem text={`Unpin Post as ${pinType}`} />;
-      }
-    }
 
-    if (role === PROGRAM_ADMINISTRATOR_ROLE) {
       return (
-        <>
-          <DropdownMenuItem text={`Pin Post as ${PROGRAM_ADMINISTRATOR_ROLE}`} />
-          <DropdownMenuItem text={`Pin Post as ${SUPERVISOR_ROLE}`} />
-          <DropdownMenuItem text="Pin Post" />
-        </>
+        <DropdownMenuItem text={pinPostText} onClick={() => unpinCardHandler(cardData, role)} />
       );
     }
 
-    if (role === SUPERVISOR_ROLE) {
-      return (
-        <>
-          <DropdownMenuItem text={`Pin Post as ${SUPERVISOR_ROLE}`} />
-          <DropdownMenuItem text="Pin Post" />
-        </>
-      );
+    return <DropdownMenuItem text="Pin Post" onClick={() => pinCardHandler(cardData, role)} />;
+  };
+
+  const getPinType = () => {
+    if (pinType === EMPLOYEE_ROLE) {
+      return 'Your ';
+    }
+    if (pinType === SUPERVISOR_ROLE) {
+      return 'Supervisor ';
+    }
+    if (pinType === PROGRAM_ADMINISTRATOR_ROLE) {
+      return 'Program Administrator ';
     }
 
-    return <DropdownMenuItem text="Pin Post" />;
+    return '';
   };
 
   useEffect(() => {
@@ -224,7 +258,7 @@ const ContentCard = ({
                 size="small"
                 className="content-card-pinned-button"
               >
-                <Typography variant="subtitle">Pinned Post</Typography>
+                <Typography variant="subtitle">{getPinType()}Pinned Post</Typography>
               </Button>
             ) : (
               <Button onClick={() => handleDropdownOpen('pin')} inline>
@@ -232,7 +266,7 @@ const ContentCard = ({
               </Button>
             )}
             <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
-              {renderPinOptions(isPinned)}
+              {renderPinOptions(isPinned, pinType)}
             </DropdownMenu>
           </DropdownContainer>
 
