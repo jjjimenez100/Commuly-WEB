@@ -70,6 +70,7 @@ const ContentCard = cardData => {
     hasPinnedCardAsSupervisor,
     ...props
   } = cardData;
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState('');
   const [reaction, setReaction] = useState('');
@@ -229,9 +230,13 @@ const ContentCard = cardData => {
         hasPinnedCardAsProgramAdministrator === true
       ) {
         pinPostText = 'Unpin Post as Program Admin';
+      } else if (hasPinnedCardAsEmployee) {
+        pinPostText = 'Unpin Post';
       }
       return (
-        <DropdownMenuItem text={pinPostText} onClick={() => unpinCardHandler(cardData, role)} />
+        <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
+          <DropdownMenuItem text={pinPostText} onClick={() => unpinCardHandler(cardData, role)} />
+        </DropdownMenu>
       );
     }
 
@@ -245,8 +250,14 @@ const ContentCard = cardData => {
       hasPinnedCardAsProgramAdministrator === false
     ) {
       pinPostText = 'Pin Post as Program Admin';
+    } else if (hasPinnedCardAsEmployee === false) {
+      pinPostText = 'Pin Post';
     }
-    return <DropdownMenuItem text={pinPostText} onClick={() => pinCardHandler(cardData, role)} />;
+    return (
+      <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
+        <DropdownMenuItem text={pinPostText} onClick={() => pinCardHandler(cardData, role)} />
+      </DropdownMenu>
+    );
   };
 
   const getPinType = () => {
@@ -297,9 +308,7 @@ const ContentCard = cardData => {
                 <img src={PinBlackIcon} alt="pin-icon" />
               </Button>
             )}
-            <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
-              {renderPinOptions(isPinned, pinType)}
-            </DropdownMenu>
+            {renderPinOptions(isPinned, pinType)}
           </DropdownContainer>
 
           <DropdownContainer className="content-card-dropdown">

@@ -79,16 +79,17 @@ class Home extends Component {
   handleDropdownOpen = () =>
     this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
-  renderAnnouncements = data => {
-    const {
+  renderAnnouncements = (
+    data,
+    {
       removeQuestionCard,
       pinCard,
       unpinCard,
       hasPinnedCardAsEmployee,
       hasPinnedCardAsProgramAdministrator,
       hasPinnedCardAsSupervisor,
-    } = this.props.store.home;
-
+    }
+  ) => {
     if (data.length > 0) {
       return data.map(announcement => (
         <ContentCard
@@ -282,7 +283,9 @@ class Home extends Component {
             <br />
 
             {this.renderCreateContentButtons()}
-            <div className="home-announcements-cards">{this.renderAnnouncements(teamCards)}</div>
+            <div className="home-announcements-cards">
+              {this.renderAnnouncements(teamCards, this.props.store.home)}
+            </div>
           </div>
         </div>
         <div className="home-sidebar">
