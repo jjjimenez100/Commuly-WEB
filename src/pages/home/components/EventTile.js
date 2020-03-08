@@ -13,7 +13,9 @@ const EventTile = ({ startDate, endDate, title, startTime, endTime }) => {
               'MMMM D, YYYY'
             )}`}
       </Typography>
-      <Typography variant="h5">{title}</Typography>
+      <Typography variant="h5" className="home-calendar-tile-event-title">
+        {title}
+      </Typography>
       <Typography variant="subtitle">
         {startTime === endTime
           ? convertTime(endTime)

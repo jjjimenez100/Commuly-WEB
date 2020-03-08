@@ -40,7 +40,9 @@ class CreateText extends Component {
       textColor: '#000000',
       backgroundColor: '#FFFFFF',
       mainText: title || 'Sample Text',
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -111,6 +113,7 @@ class CreateText extends Component {
 
       const { addCard, updateCard, cardData } = this.props;
       try {
+        this.setState({ loading: true });
         if (Object.keys(cardData).length === 0) {
           const {
             data: { savedCard },
@@ -125,6 +128,8 @@ class CreateText extends Component {
           updateCard(updatedCard);
           toast.success('Successfully updated content!');
         }
+
+        this.setState({ loading: false });
 
         this.props.onClose();
       } catch (error) {
@@ -276,13 +281,25 @@ class CreateText extends Component {
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button type="button" size="small" variant="ghost" onClick={onClose}>
+          <Button
+            disabled={this.state.loading}
+            type="button"
+            size="small"
+            variant="ghost"
+            onClick={onClose}
+          >
             Cancel
           </Button>
-          <Button type="button" size="small" icon={AddPeopleIcon}>
+          <Button disabled={this.state.loading} type="button" size="small" icon={AddPeopleIcon}>
             Tag Teammates
           </Button>
-          <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            type="submit"
+            size="small"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+            loading={this.state.loading}
+          >
             {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>

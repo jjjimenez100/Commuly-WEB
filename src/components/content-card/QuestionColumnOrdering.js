@@ -8,61 +8,32 @@ import CardService from 'services/cardService';
 
 class QuestionColumnOrdering extends Component {
   state = {
-    optionDragIndex: -1,
-    options: this.props.columnReorderingContent ? this.props.columnReorderingContent.choices : [],
-  };
-
-  onOptionDragStart = (e, index) => {
-    const { options } = this.state;
-    this.draggedItem = options[index];
-    this.setState({ optionDragIndex: index });
-    const { dataTransfer } = e;
-    dataTransfer.effectAllowed = 'move';
-    dataTransfer.setData('text/html', e.target.parentNode);
-    dataTransfer.setDragImage(e.target.parentNode, 20, 20);
-  };
-
-  onOptionDragOver = index => {
-    const { options } = this.state;
-    const draggedItem = options[index];
-
-    if (this.draggedItem !== draggedItem) {
-      this.setState({ optionDragIndex: index });
-      const stateItems = [...options];
-      const items = stateItems.filter(item => item !== this.draggedItem);
-      items.splice(index, 0, this.draggedItem);
-      this.setState({ options: items });
-    }
-  };
-
-  onOptionDragEnd = () => {
-    this.draggedItem = null;
-    this.setState({ optionDragIndex: -1 });
+    choices: this.props.columnReorderingContent ? this.props.columnReorderingContent.choices : [],
+    answers: [],
+    activeDrop: '',
+    loading: false,
   };
 
   handleSubmit = async e => {
     e.preventDefault();
     const { userId } = getUserDetails();
-    const {
-      _id: cardId,
-      columnReorderingContent: { choices },
-      removeQuestionCard,
-    } = this.props;
-    const { options: answer } = this.state;
+    const { _id: cardId, removeQuestionCard } = this.props;
+    const { answers } = this.state;
     const body = {
       userId,
       patchType: ADD_RESPONSE,
       questionCardType: COLUMN_ORDERING_QUESTION,
       response: {
-        answer,
+        answers,
         userId,
       },
     };
 
     try {
+      this.setState({ loading: true });
       await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
-      this.setState({ options: choices });
+      this.setState({ loading: false });
       removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -70,8 +41,57 @@ class QuestionColumnOrdering extends Component {
     }
   };
 
+  onDragStart = (ev, id, activeDrop) => {
+    ev.dataTransfer.setData('id', id);
+    ev.dataTransfer.setData('draggedItem', id);
+    this.setState({ activeDrop });
+  };
+
+  onDragOver = ev => {
+    ev.preventDefault();
+  };
+
+  onDragOverItem = (ev, category, index) => {
+    const currentDraggedItem = ev.dataTransfer.getData('draggedItem');
+    if (category === this.state.activeDrop) {
+      if (category === 'choices') {
+        const { choices } = this.state;
+        const draggedItem = choices[index];
+        if (currentDraggedItem !== draggedItem) {
+          const newItems = choices.filter(item => item !== currentDraggedItem);
+          newItems.splice(index, 0, currentDraggedItem);
+          this.setState({ choices: newItems });
+        }
+      } else {
+        const { answers } = this.state;
+        const draggedItem = answers[index];
+        if (currentDraggedItem !== draggedItem) {
+          const newItems = answers.filter(item => item !== currentDraggedItem);
+          newItems.splice(index, 0, currentDraggedItem);
+          this.setState({ answers: newItems });
+        }
+      }
+    }
+  };
+
+  onDrop = (ev, category) => {
+    const id = ev.dataTransfer.getData('id');
+    const { choices, answers } = this.state;
+
+    if (category !== this.state.activeDrop) {
+      if (category === 'choices') {
+        choices.push(id);
+        const newAnswers = answers.filter(answer => answer !== id);
+        this.setState({ choices, answers: newAnswers });
+      } else if (category === 'answers') {
+        answers.push(id);
+        const newChoices = choices.filter(choice => choice !== id);
+        this.setState({ answers, choices: newChoices });
+      }
+    }
+  };
+
   render() {
-    const { optionDragIndex } = this.state;
     const { question } = this.props.columnReorderingContent;
     return (
       <div className="content-generic content-column-order">
@@ -79,28 +99,54 @@ class QuestionColumnOrdering extends Component {
           Title here
         </Typography>
         <Typography variant="body">{question}</Typography>
-        <ul className="content-column-order-options">
-          {this.state.options.map((option, i) => (
-            <li
-              className="content-column-order-drag content-column-order-option"
-              key={`option-${i}`}
-              onDragOver={() => this.onOptionDragOver(i)}
-            >
+        <div className="content-column-order-container">
+          <div
+            id="choices"
+            className="content-column-order-drag content-column-order-choices"
+            onDragOver={e => this.onDragOver(e)}
+            onDrop={e => {
+              this.onDrop(e, 'choices');
+            }}
+          >
+            <Typography variant="h5">Choices</Typography>
+            {this.state.choices.map((choice, i) => (
               <div
-                key={i}
-                className={`draggable draggable-option ${
-                  i === optionDragIndex ? 'draggable-dragged-option' : ''
-                }`}
+                key={choice}
+                onDragStart={e => this.onDragStart(e, choice, 'choices', i)}
+                onDragOver={e => this.onDragOverItem(e, 'choices', i)}
                 draggable
-                onDragStart={e => this.onOptionDragStart(e, i)}
-                onDragEnd={this.onOptionDragEnd}
+                className="draggable draggable-option"
               >
-                <Typography className="content-column-order-text">{option}</Typography>
+                {choice}
               </div>
-            </li>
-          ))}
-        </ul>
-        <Button size="small">Submit</Button>
+            ))}
+          </div>
+          <div
+            id="answers"
+            className="content-column-order-drag content-column-order-answers"
+            onDragOver={e => this.onDragOver(e)}
+            onDrop={e => this.onDrop(e, 'answers')}
+          >
+            <Typography variant="h5">Answers</Typography>
+            {this.state.answers.map((choice, i) => (
+              <div
+                key={choice}
+                onDragStart={e => this.onDragStart(e, choice, 'answers', i)}
+                draggable
+                onDragOver={e => this.onDragOverItem(e, 'answers', i)}
+                className="draggable draggable-answer"
+              >
+                {choice}
+              </div>
+            ))}
+            {this.state.answers.length === 0 && (
+              <Typography variant="subtitle">Drag and reorder your answers here.</Typography>
+            )}
+          </div>
+        </div>
+        <Button loading={this.state.loading} size="small">
+          Submit
+        </Button>
       </div>
     );
   }

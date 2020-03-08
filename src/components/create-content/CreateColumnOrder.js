@@ -15,7 +15,9 @@ class CreateColumnOrder extends Component {
       question: '',
       options: ['Option 1', 'Option 2', 'Option 3'],
       optionDragIndex: -1,
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -90,9 +92,11 @@ class CreateColumnOrder extends Component {
       };
 
       try {
+        this.setState({ loading: true });
         const { data } = await CardService.createNewContentCard(body);
 
         await this.props.addCard(data.savedCard);
+        this.setState({ loading: false });
         this.props.onClose();
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -158,17 +162,27 @@ class CreateColumnOrder extends Component {
               ))}
             </ul>
           </div>
-          <div className="create-column-order-button">
-            <Button size="small" onClick={this.handleAddOptions}>
-              Add New Choice
-            </Button>
-          </div>
+          <Button size="small" onClick={this.handleAddOptions}>
+            Add New Choice
+          </Button>
         </ModalBody>
         <ModalFooter>
-          <Button type="button" size="small" variant="ghost" onClick={onClose}>
+          <Button
+            disabled={this.state.loading}
+            type="button"
+            size="small"
+            variant="ghost"
+            onClick={onClose}
+          >
             Cancel
           </Button>
-          <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            loading={this.state.loading}
+            type="submit"
+            size="small"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+          >
             Post
           </Button>
         </ModalFooter>

@@ -12,10 +12,13 @@ class CreateOpenTextQuestion extends Component {
     super(props);
     const { openTextContent = {} } = this.props.cardData;
     const { title = '', question = '' } = openTextContent;
+
     this.state = {
       title,
       question,
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -44,6 +47,7 @@ class CreateOpenTextQuestion extends Component {
 
       const { addCard, updateCard, cardData } = this.props;
       try {
+        this.setState({ loading: true });
         if (Object.keys(cardData).length === 0) {
           const {
             data: { savedCard },
@@ -59,6 +63,7 @@ class CreateOpenTextQuestion extends Component {
           toast.success('Successfully updated question!');
         }
 
+        this.setState({ loading: false });
         this.props.onClose();
       } catch (error) {
         toast.error('Failed to get a proper response from our services. Please try again later');
@@ -103,10 +108,22 @@ class CreateOpenTextQuestion extends Component {
               ? 'Updating this card will reset all previously submitted answers.'
               : ''}
           </Typography>
-          <Button type="button" size="small" variant="ghost" onClick={onClose}>
+          <Button
+            disabled={this.state.loading}
+            type="button"
+            size="small"
+            variant="ghost"
+            onClick={onClose}
+          >
             Cancel
           </Button>
-          <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            loading={this.state.loading}
+            type="submit"
+            size="small"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+          >
             {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>

@@ -23,6 +23,7 @@ class CreateScheduledContent extends Component {
       title = '',
       description = '',
     } = scheduledEventContent;
+
     this.state = {
       title: title || '',
       description: description || '',
@@ -35,8 +36,9 @@ class CreateScheduledContent extends Component {
       startTime: startTime ? moment(startTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
       endTime: endTime ? moment(endTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
       file: null,
-      isSubmitButtonClicked: false,
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -53,13 +55,14 @@ class CreateScheduledContent extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    this.setState({ isSubmitButtonClicked: true });
+    this.setState({ loading: true });
     const { cardData } = this.props;
     const { file } = this.state;
     if (Object.keys(cardData).length === 0 && file === null) {
       this.validator.showMessages();
       return;
     }
+
     if (this.validator.allValid()) {
       const { team, userId: owner } = getUserDetails();
       const { title, description, startDate, endDate, startTime, endTime } = this.state;
@@ -101,6 +104,7 @@ class CreateScheduledContent extends Component {
           toast.success('Successfully updated content!');
         }
 
+        this.setState({ loading: false });
         onClose();
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -113,7 +117,7 @@ class CreateScheduledContent extends Component {
   };
 
   render() {
-    const { file, isSubmitButtonClicked } = this.state;
+    const { file, loading } = this.state;
     const { onClose, cardData } = this.props;
     return (
       <>
@@ -204,19 +208,25 @@ class CreateScheduledContent extends Component {
             )}
           </Dropzone>
           <p className="text-danger">
-            {file === null && isSubmitButtonClicked && Object.keys(cardData).length === 0
+            {file === null && loading && Object.keys(cardData).length === 0
               ? 'File upload is required'
               : ''}
           </p>
         </ModalBody>
         <ModalFooter>
-          <Button size="small" type="button" variant="ghost" onClick={onClose}>
+          <Button disabled={loading} size="small" type="button" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button size="small" type="button" icon={AddPeopleIcon}>
+          <Button disabled={loading} size="small" type="button" icon={AddPeopleIcon}>
             Tag Teammates
           </Button>
-          <Button size="small" type="submit" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            loading={loading}
+            size="small"
+            type="submit"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+          >
             {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>

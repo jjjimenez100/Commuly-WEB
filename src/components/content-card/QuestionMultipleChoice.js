@@ -10,6 +10,7 @@ const QuestionMulitpleChoice = ({
   multipleChoiceContent: { question, choices, title },
   removeQuestionCard,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState('');
   const [hasAnswerError, setAnswerError] = useState(false);
 
@@ -34,9 +35,11 @@ const QuestionMulitpleChoice = ({
     };
 
     try {
+      setLoading(false);
       await CardService.addQuestionResponse(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
+      setLoading(true);
       removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -71,7 +74,7 @@ const QuestionMulitpleChoice = ({
           {hasAnswerError ? 'Select a valid choice.' : ''}
         </Typography>
       </form>
-      <Button size="small" onClick={handleSubmit}>
+      <Button loading={loading} size="small" onClick={handleSubmit}>
         Submit
       </Button>
     </div>

@@ -18,7 +18,9 @@ class CreateImage extends Component {
       file: null,
       imageDescription: imageDescription || '',
       isSubmitButtonClicked: false,
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -45,6 +47,7 @@ class CreateImage extends Component {
       this.validator.showMessages();
       return;
     }
+
     if (this.validator.allValid()) {
       const { imageDescription } = this.state;
       const { team, userId: owner } = getUserDetails();
@@ -59,6 +62,7 @@ class CreateImage extends Component {
       const formData = new FormData();
       Object.keys(body).forEach(key => formData.append(key, body[key]));
       try {
+        this.setState({ loading: true });
         const { addCard, updateCard } = this.props;
         if (Object.keys(cardData).length === 0) {
           const { data } = await CardService.createNewContentCard(formData);
@@ -74,6 +78,7 @@ class CreateImage extends Component {
           await updateCard(updatedCard);
           toast.success('Successfully updated content!');
         }
+        this.setState({ loading: false });
         this.props.onClose();
       } catch (error) {
         toast.error('Failed to get a proper response from our services. Please try again later');
@@ -127,13 +132,18 @@ class CreateImage extends Component {
           </form>
         </ModalBody>
         <ModalFooter>
-          <Button size="small" variant="ghost" onClick={onClose}>
+          <Button disabled={this.state.loading} size="small" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button size="small" icon={AddPeopleIcon}>
+          <Button disabled={this.state.loading} size="small" icon={AddPeopleIcon}>
             Tag Teammates
           </Button>
-          <Button size="small" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            loading={this.state.loading}
+            size="small"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+          >
             {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>

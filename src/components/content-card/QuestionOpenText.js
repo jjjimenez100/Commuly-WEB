@@ -10,6 +10,7 @@ const QuestionOpenText = ({
   openTextContent: { question, title },
   removeQuestionCard,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState('');
   const [hasAnswerError, setAnswerError] = useState(false);
 
@@ -34,9 +35,11 @@ const QuestionOpenText = ({
     };
 
     try {
+      setLoading(true);
       await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer('');
+      setLoading(false);
       removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -58,7 +61,7 @@ const QuestionOpenText = ({
       />
       <p className="text-danger">{hasAnswerError ? 'Enter your response.' : ''}</p>
       <br />
-      <Button size="small" onClick={handleSubmit}>
+      <Button loading={loading} size="small" onClick={handleSubmit}>
         Submit
       </Button>
     </div>
