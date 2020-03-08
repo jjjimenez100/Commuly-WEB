@@ -19,6 +19,7 @@ class CreateTodo extends Component {
       startTime = '',
       endTime = '',
     } = todoContent;
+
     this.state = {
       title: title || '',
       description: description || '',
@@ -27,7 +28,9 @@ class CreateTodo extends Component {
         : moment().format('YYYY-MM-DD'),
       startTime: startTime ? moment(startTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
       endTime: endTime ? moment(endTime, 'HH:mm').format('HH:mm') : moment().format('HH:mm'),
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -65,6 +68,7 @@ class CreateTodo extends Component {
 
       const { addCard, updateCard, cardData, onClose } = this.props;
       try {
+        this.setState({ loading: true });
         if (Object.keys(cardData).length === 0) {
           const { data } = await CardService.createNewContentCard(body);
           await addCard(data.savedCard);
@@ -77,6 +81,8 @@ class CreateTodo extends Component {
           updateCard(updatedCard);
           toast.success('Successfully updated content!');
         }
+
+        this.setState({ loading: false });
         onClose();
       } catch (error) {
         toast.error('Failed to get a proper response from our services. Please try again later');
@@ -149,13 +155,25 @@ class CreateTodo extends Component {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button size="small" type="button" variant="ghost" onClick={onClose}>
+          <Button
+            disabled={this.state.loading}
+            size="small"
+            type="button"
+            variant="ghost"
+            onClick={onClose}
+          >
             Cancel
           </Button>
-          <Button size="small" type="button" icon={AddPeopleIcon}>
+          <Button disabled={this.state.loading} size="small" type="button" icon={AddPeopleIcon}>
             Tag Teammates
           </Button>
-          <Button size="small" type="submit" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            loading={this.state.loading}
+            size="small"
+            type="submit"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+          >
             {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>

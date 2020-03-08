@@ -1,37 +1,17 @@
 .create-column-order {
   &-columns {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
     margin-top: $spacing-tiny;
 
-    & > ul {
-      flex-basis: 50%;
-
-      & > li {
-        margin-bottom: $spacing-tiny;
-      }
+    & > ul > li  {
+      margin-bottom: $spacing-tiny;
     }
-
   }
 
   &-options {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-  }
-
-  &-options {
     margin-right: $spacing-small;
-  }
-
-
-  &-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: $spacing-small;
   }
 
   &-drag {

@@ -15,6 +15,7 @@ const QuestionLikert = ({
   },
   removeQuestionCard,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState(0);
   const [hasAnswerError, setAnswerError] = useState(false);
 
@@ -39,9 +40,11 @@ const QuestionLikert = ({
     };
 
     try {
+      setLoading(true);
       await CardService.patchCard(cardId, body);
       toast.success('Thank you for answering!');
       setAnswer(0);
+      setLoading(false);
       removeQuestionCard(cardId);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -80,7 +83,7 @@ const QuestionLikert = ({
       <p className="text-danger" style={{ display: 'flex', justifyContent: 'center' }}>
         {hasAnswerError ? 'Select a valid choice.' : ''}
       </p>
-      <Button size="small" onClick={handleSubmit}>
+      <Button loading={loading} size="small" onClick={handleSubmit}>
         Submit
       </Button>
     </div>

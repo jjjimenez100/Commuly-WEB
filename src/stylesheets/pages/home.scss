@@ -10,6 +10,8 @@
     padding: $spacing-medium;
     flex: 1;
     z-index: 2;
+    overflow: auto;
+    height: calc(100vh - #{$navbar-height});
   }
   
   &-sidebar {
@@ -18,20 +20,21 @@
     border-left: 1px solid $border-color;
     padding: $spacing-base;
     height: 100%;
-    z-index: 1;
+    z-index: 4;
   }
   
   &-create-card {
-    width: 100%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin-top: $spacing-small;
     padding: $spacing-small $spacing-medium;
+    flex-wrap: wrap;
+    width: 100%;
 
     &-search {
       margin-right: auto;
-      width: 50%;
+      flex-basis: 50%;
     }
 
     &-button {
@@ -65,12 +68,14 @@
 
   &-announcements {
     margin-top: $spacing-medium;
-
+    display: flex;
+    flex-direction: column;
+    
     &-title {
       flex: 1;
       margin-bottom: $spacing-tiny;
     }
-
+    
     &-cards {
       margin-top: $spacing-small;
     }
@@ -105,8 +110,7 @@
     }
 
     #home-scheduled-events {
-      white-space: nowrap;
-      width: calc(100vw - 310px - 100px - (#{$spacing-medium} * 2));
+      width: calc(100vw - 310px - 120px - (#{$spacing-medium} * 2));
       overflow-x: auto;
       padding-bottom: $spacing-tiny;
     }
@@ -209,10 +213,12 @@
         flex-direction: column;
         color: $black-color;
 
-        & > h5 {
+        &-title {
+          width: calc(300px - (#{$spacing-small} * 2));
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          text-align: left;
         }
       }
 

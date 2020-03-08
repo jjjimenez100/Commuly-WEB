@@ -17,7 +17,9 @@ class CreateMultipleChoice extends Component {
       title,
       question,
       choices,
+      loading: false,
     };
+
     this.validator = new SimpleReactValidator({
       className: 'text-danger',
       autoForceUpdate: this,
@@ -55,6 +57,7 @@ class CreateMultipleChoice extends Component {
 
       const { addCard, updateCard, cardData } = this.props;
       try {
+        this.setState({ loading: true });
         if (Object.keys(cardData).length === 0) {
           const {
             data: { savedCard },
@@ -70,6 +73,7 @@ class CreateMultipleChoice extends Component {
           toast.success('Successfully updated question!');
         }
 
+        this.setState({ loading: false });
         this.props.onClose();
       } catch (error) {
         toast.error('Failed to get a proper response from our services. Please try again later');
@@ -126,12 +130,11 @@ class CreateMultipleChoice extends Component {
           </Typography>
           <div className="create-multiple-choice-choices">
             {this.state.choices.map((choice, i) => (
-              <div>
-                <div
-                  className="create-multiple-choice-input"
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={`choice-${i}`}
-                >
+              <div
+                // eslint-disable-next-line react/no-array-index-key
+                key={`choice-${i}`}
+              >
+                <div className="create-multiple-choice-input">
                   <Input
                     name={i.toString()}
                     placeholder={`Choice ${i + 1}`}
@@ -149,7 +152,6 @@ class CreateMultipleChoice extends Component {
                 <span>
                   {this.validator.message(`Choice ${i + 1}`, this.state.choices[i], 'required')}
                 </span>
-                <br />
               </div>
             ))}
           </div>
@@ -163,10 +165,22 @@ class CreateMultipleChoice extends Component {
               ? 'Updating this card will reset all previously submitted answers.'
               : ''}
           </Typography>
-          <Button type="button" size="small" variant="ghost" onClick={onClose}>
+          <Button
+            disabled={this.state.loading}
+            type="button"
+            size="small"
+            variant="ghost"
+            onClick={onClose}
+          >
             Cancel
           </Button>
-          <Button type="submit" size="small" icon={SendIcon} onClick={this.handleSubmit}>
+          <Button
+            loading={this.state.loading}
+            type="submit"
+            size="small"
+            icon={SendIcon}
+            onClick={this.handleSubmit}
+          >
             {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
