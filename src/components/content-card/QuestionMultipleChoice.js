@@ -56,7 +56,7 @@ const QuestionMulitpleChoice = ({
       <form className="content-multiple-choice-choices">
         {choices.map((choice, index) => (
           <Checkbox
-            id={choice}
+            id={`${title}-choice-${choice}-${index}`}
             // eslint-disable-next-line react/no-array-index-key
             key={`${title}-choice-${choice}-${index}`}
             type="radio"

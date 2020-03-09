@@ -34,6 +34,7 @@ export { default as ConfusedReactBW } from './confused-react-bw.png';
 export { default as ExcitedReactBW } from './excited-react-bw.png';
 export { default as PlusIcon } from './plus.svg';
 export { default as SearchIcon } from './search.svg';
+export { default as EditIcon } from './edit.svg';
 // export { default as } from '.svg'
 
 export { default as TempAvatar } from 'assets/images/avatar.jpg';

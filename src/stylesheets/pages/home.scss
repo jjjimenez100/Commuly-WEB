@@ -15,12 +15,13 @@
   }
   
   &-sidebar {
-    width: 310px;
+    width: 320px;
     background-color: $white-color;
     border-left: 1px solid $border-color;
     padding: $spacing-base;
-    height: 100%;
-    z-index: 4;
+    height: calc(100vh - #{$navbar-height});
+    z-index: 999;
+    overflow: auto;
   }
   
   &-create-card {
@@ -193,7 +194,7 @@
       min-height: 40px;
       max-height: 200px;
       width: 300px;
-      z-index: 2;
+      z-index: 999;
       display: flex;
       right: 0;
       margin-top: $spacing-tiny;
@@ -288,6 +289,40 @@
 
     &-radio {
       margin-bottom: $spacing-base;
+      
+      & > .checkbox-circle {
+        width: 20px;
+      }
+      
+      & > .checkbox-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      &-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+  
+        & > p {
+          width: calc(310px - (#{$spacing-base} * 2) - 20px - #{$spacing-small} - 15px - (#{$spacing-tiny} * 2));
+        }
+      }
+
+      &-edit {
+        margin-left: $spacing-tiny;
+        border-radius: 50%;
+        padding: calc(#{$spacing-tiny} / 2);
+
+        & > img {
+          width: 15px;
+          height: 15px;
+        }
+
+        &:hover {
+          background-color: lighten($neutral-m-color, 30);
+        }
+      }
     }
   }
 }
