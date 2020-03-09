@@ -1,13 +1,22 @@
+/*
+Components with separate components:
+1. EventTile - for onhover on sidebar calendar
+2. ScheduledEvent - for mini cards on top of announcements
+3. TodoTile - For todo cards on sidebar
+4. Create Content Cards
+5. Content Cards
+*/
+
 import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import { observer, inject } from 'mobx-react';
 import moment from 'moment';
+import Calendar from 'react-calendar';
 import {
   Typography,
   HorizontalLine as Line,
   Card,
   Button,
-  Checkbox,
   DropdownContainer,
   DropdownMenu,
   DropdownMenuItem,
@@ -24,11 +33,11 @@ import {
   SearchIcon,
 } from 'assets/icons';
 
-import { DONE_STATUS } from 'constants/user';
-import Calendar from 'react-calendar';
+import { boardData, CreateContentButtons } from './data';
+
 import EventTile from './components/EventTile';
 import ScheduledEvent from './components/ScheduledEvent';
-import { boardData, CreateContentButtons } from './data';
+import TodoTile from './components/TodoTile';
 
 class Home extends Component {
   constructor(props) {
@@ -67,6 +76,7 @@ class Home extends Component {
     await this.props.store.home.getCards();
   };
 
+  // cardData to be able to handle edit on modals
   handleModalOpen = (activeContentType = '', cardData = {}) => {
     const { setCurrentCreateModalType, setCurrentCardData } = this.props.store.home;
     setCurrentCreateModalType(activeContentType);
@@ -88,23 +98,27 @@ class Home extends Component {
       hasPinnedCardAsEmployee,
       hasPinnedCardAsProgramAdministrator,
       hasPinnedCardAsSupervisor,
+      markTodo,
     }
   ) => {
     if (data.length > 0) {
-      return data.map(announcement => (
-        <ContentCard
-          key={announcement._id}
-          handleModalOpen={this.handleModalOpen}
-          handleViewResponses={this.openViewResponsesModal}
-          removeQuestionCard={removeQuestionCard}
-          pinCard={pinCard}
-          unpinCard={unpinCard}
-          hasPinnedCardAsEmployee={hasPinnedCardAsEmployee}
-          hasPinnedCardAsProgramAdministrator={hasPinnedCardAsProgramAdministrator}
-          hasPinnedCardAsSupervisor={hasPinnedCardAsSupervisor}
-          {...announcement}
-        />
-      ));
+      return data.map(announcement => {
+        return (
+          <ContentCard
+            key={announcement._id}
+            handleModalOpen={this.handleModalOpen}
+            handleViewResponses={this.openViewResponsesModal}
+            removeQuestionCard={removeQuestionCard}
+            pinCard={pinCard}
+            unpinCard={unpinCard}
+            hasPinnedCardAsEmployee={hasPinnedCardAsEmployee}
+            hasPinnedCardAsProgramAdministrator={hasPinnedCardAsProgramAdministrator}
+            hasPinnedCardAsSupervisor={hasPinnedCardAsSupervisor}
+            markTodo={markTodo}
+            {...announcement}
+          />
+        );
+      });
     }
     return <Card className="home-announcements-empty">No announcements yet!</Card>;
   };
@@ -113,23 +127,21 @@ class Home extends Component {
     const { markTodo } = this.props.store.home;
 
     if (data.length > 0) {
-      return data.map(({ _id: id, todoContent: { title }, status }) => {
+      return data.map(todo => {
         return (
-          <Checkbox
-            key={id}
-            id={id}
-            className="home-todo-radio"
-            checked={status === DONE_STATUS}
-            onChange={({ target: { checked } }) => markTodo(id, checked)}
-          >
-            <Typography>{title}</Typography>
-          </Checkbox>
+          <TodoTile
+            key={todo._id}
+            handleModalOpen={this.handleModalOpen}
+            markTodo={markTodo}
+            {...todo}
+          />
         );
       });
     }
     return <div>No todos!</div>;
   };
 
+  // Use placeholders until this gets finalized
   renderLeaderboard = data =>
     data.map(person => (
       <div key={person.id} className="home-leaderboard-person">
@@ -155,6 +167,8 @@ class Home extends Component {
     return <div>No scheduled events!</div>;
   };
 
+  // Create Content Buttons are treated as constants because they have a specific ordering
+  // TODO: Decide on implementation of search (if only on announcements or in global)
   renderCreateContentButtons = () => {
     const { searchQuery } = this.props.store.home;
 
@@ -187,6 +201,7 @@ class Home extends Component {
     );
   };
 
+  // sidebar calendar
   renderCalendar = eventCards => {
     const renderCalendarTile = ({ date }) => {
       const newDate = moment(date).format('YYYY-MM-DD');
@@ -219,6 +234,7 @@ class Home extends Component {
     );
   };
 
+  // handlers for manual scrolling using buttons on Scheduled Events
   handleEventScrollLeft = () => {
     document.getElementById('home-scheduled-events').scrollLeft -= 266;
   };

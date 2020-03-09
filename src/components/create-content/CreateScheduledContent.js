@@ -14,19 +14,26 @@ import CardService from 'services/cardService';
 class CreateScheduledContent extends Component {
   constructor(props) {
     super(props);
-    const { scheduledEventContent = {} } = this.props.cardData;
-    const {
-      startDate = '',
-      endDate = '',
-      startTime = '',
-      endTime = '',
-      title = '',
-      description = '',
-    } = scheduledEventContent;
+
+    let startDate = '';
+    let endDate = '';
+    let startTime = '';
+    let endTime = '';
+    let title = '';
+    let description = '';
+
+    if (this.props.cardData && this.props.cardData.scheduledEventContent) {
+      startDate = this.props.cardData.scheduledEventContent.startDate || '';
+      endDate = this.props.cardData.scheduledEventContent.endDate || '';
+      startTime = this.props.cardData.scheduledEventContent.startTime || '';
+      endTime = this.props.cardData.scheduledEventContent.endTime || '';
+      title = this.props.cardData.scheduledEventContent.title || '';
+      description = this.props.cardData.scheduledEventContent.description || '';
+    }
 
     this.state = {
-      title: title || '',
-      description: description || '',
+      title,
+      description,
       startDate: startDate
         ? moment(new Date(startDate)).format('YYYY-MM-DD')
         : moment().format('YYYY-MM-DD'),
@@ -227,7 +234,7 @@ class CreateScheduledContent extends Component {
             icon={SendIcon}
             onClick={this.handleSubmit}
           >
-            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
+            {cardData && Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>
