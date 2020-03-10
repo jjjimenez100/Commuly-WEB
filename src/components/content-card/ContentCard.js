@@ -274,6 +274,11 @@ const ContentCard = cardData => {
     return '';
   };
 
+  const isNotEmployeeRole = () => {
+    const { role } = getUserDetails();
+    return role !== EMPLOYEE_ROLE;
+  };
+
   useEffect(() => {
     if (reactions) {
       const { userId } = getUserDetails();
@@ -311,17 +316,19 @@ const ContentCard = cardData => {
             {renderPinOptions(isPinned, pinType)}
           </DropdownContainer>
 
-          <DropdownContainer className="content-card-dropdown">
-            <Button inline onClick={() => handleDropdownOpen('options')}>
-              <img src={VerticalMenuIcon} alt="vertical-menu" />
-            </Button>
-            <DropdownMenu visible={dropdownOpen && activeDropdown === 'options'}>
-              {questionCardType ? (
-                <DropdownMenuItem text="View Responses" onClick={handleViewResponsesClicked} />
-              ) : null}
-              <DropdownMenuItem text="Edit" onClick={handleEditClicked} />
-            </DropdownMenu>
-          </DropdownContainer>
+          {isNotEmployeeRole() ? (
+            <DropdownContainer className="content-card-dropdown">
+              <Button inline onClick={() => handleDropdownOpen('options')}>
+                <img src={VerticalMenuIcon} alt="vertical-menu" />
+              </Button>
+              <DropdownMenu visible={dropdownOpen && activeDropdown === 'options'}>
+                {questionCardType ? (
+                  <DropdownMenuItem text="View Responses" onClick={handleViewResponsesClicked} />
+                ) : null}
+                <DropdownMenuItem text="Edit" onClick={handleEditClicked} />
+              </DropdownMenu>
+            </DropdownContainer>
+          ) : null}
         </div>
       </div>
       <Line small className="content-card-line" />
