@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Typography, Checkbox, Button } from 'components';
 import { toast } from 'react-toastify';
 import { getUserDetails } from 'utils/jwt';
+import { isEmployee } from 'utils/user';
 import { ADD_RESPONSE, MULTIPLE_CHOICE_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
@@ -74,9 +75,11 @@ const QuestionMulitpleChoice = ({
           {hasAnswerError ? 'Select a valid choice.' : ''}
         </Typography>
       </form>
-      <Button loading={loading} size="small" onClick={handleSubmit}>
-        Submit
-      </Button>
+      {!isEmployee() ? (
+        <Button loading={loading} size="small" onClick={handleSubmit}>
+          Submit
+        </Button>
+      ) : null}
     </div>
   );
 };

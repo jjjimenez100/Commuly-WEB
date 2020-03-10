@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Textarea, Typography, Button } from 'components';
 import { toast } from 'react-toastify';
 import { getUserDetails } from 'utils/jwt';
+import { isEmployee } from 'utils/user';
 import { ADD_RESPONSE, OPEN_TEXT_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
@@ -61,9 +62,11 @@ const QuestionOpenText = ({
       />
       <p className="text-danger">{hasAnswerError ? 'Enter your response.' : ''}</p>
       <br />
-      <Button loading={loading} size="small" onClick={handleSubmit}>
-        Submit
-      </Button>
+      {!isEmployee() ? (
+        <Button loading={loading} size="small" onClick={handleSubmit}>
+          Submit
+        </Button>
+      ) : null}
     </div>
   );
 };

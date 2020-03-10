@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Typography, Button } from 'components';
 import { toast } from 'react-toastify';
 import { getUserDetails } from 'utils/jwt';
+import { isEmployee } from 'utils/user';
 import { ADD_RESPONSE, COLUMN_ORDERING_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
@@ -144,9 +145,11 @@ class QuestionColumnOrdering extends Component {
             )}
           </div>
         </div>
-        <Button loading={this.state.loading} size="small">
-          Submit
-        </Button>
+        {!isEmployee() ? (
+          <Button loading={this.state.loading} size="small" onClick={this.handleSubmit}>
+            Submit
+          </Button>
+        ) : null}
       </div>
     );
   }

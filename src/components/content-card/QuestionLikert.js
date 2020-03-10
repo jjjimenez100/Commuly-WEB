@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Checkbox, Typography, Button } from 'components';
 import { toast } from 'react-toastify';
 import { getUserDetails } from 'utils/jwt';
+import { isEmployee } from 'utils/user';
 import { ADD_RESPONSE, LIKERT_QUESTION } from 'constants/card';
 import CardService from 'services/cardService';
 
@@ -83,9 +84,11 @@ const QuestionLikert = ({
       <p className="text-danger" style={{ display: 'flex', justifyContent: 'center' }}>
         {hasAnswerError ? 'Select a valid choice.' : ''}
       </p>
-      <Button loading={loading} size="small" onClick={handleSubmit}>
-        Submit
-      </Button>
+      {!isEmployee() ? (
+        <Button loading={loading} size="small" onClick={handleSubmit}>
+          Submit
+        </Button>
+      ) : null}
     </div>
   );
 };
