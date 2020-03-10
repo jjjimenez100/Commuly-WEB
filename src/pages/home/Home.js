@@ -33,6 +33,8 @@ import {
   SearchIcon,
 } from 'assets/icons';
 
+import { getUserDetails } from 'utils/jwt';
+import { EMPLOYEE_ROLE } from 'constants/user';
 import { boardData, CreateContentButtons } from './data';
 
 import EventTile from './components/EventTile';
@@ -170,6 +172,7 @@ class Home extends Component {
   // Create Content Buttons are treated as constants because they have a specific ordering
   // TODO: Decide on implementation of search (if only on announcements or in global)
   renderCreateContentButtons = () => {
+    const { role } = getUserDetails();
     const { searchQuery } = this.props.store.home;
 
     return (
@@ -184,19 +187,21 @@ class Home extends Component {
           className="home-create-card-search"
           icon={SearchIcon}
         />
-        {Object.values(CreateContentButtons)
-          .sort((a, b) => (a.order > b.order ? 1 : -1))
-          .map(btn => (
-            <Button
-              key={btn.type}
-              name={btn.name}
-              variant="inline"
-              className="home-create-card-button"
-              onClick={() => this.handleModalOpen(btn.type)}
-            >
-              <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
-            </Button>
-          ))}
+        {role !== EMPLOYEE_ROLE
+          ? Object.values(CreateContentButtons)
+              .sort((a, b) => (a.order > b.order ? 1 : -1))
+              .map(btn => (
+                <Button
+                  key={btn.type}
+                  name={btn.name}
+                  variant="inline"
+                  className="home-create-card-button"
+                  onClick={() => this.handleModalOpen(btn.type)}
+                >
+                  <img src={btn.icon} alt={`${btn.name}`} className="create-icon" />
+                </Button>
+              ))
+          : null}
       </Card>
     );
   };
