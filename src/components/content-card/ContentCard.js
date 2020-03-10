@@ -333,49 +333,56 @@ const ContentCard = cardData => {
       </div>
       <Line small className="content-card-line" />
       {renderContentCard()}
-      <div className="content-card-reacts">
-        <Button
-          onClick={handleReactionClicked}
-          name={UNDERSTOOD}
-          inline
-          className="content-card-react"
-        >
-          <img
-            src={
-              reaction.length > 0 && reaction !== UNDERSTOOD ? UnderstoodReactBW : UnderstoodReact
-            }
-            alt="understood-icon"
-          />
-        </Button>
-        <Button
-          onClick={handleReactionClicked}
-          name={EXCITED}
-          inline
-          className="content-card-react"
-        >
-          <img
-            src={reaction.length > 0 && reaction !== EXCITED ? ExcitedReactBW : ExcitedReact}
-            alt="excited-icon"
-          />
-        </Button>
-        <Button onClick={handleReactionClicked} name={BORED} inline className="content-card-react">
-          <img
-            src={reaction.length > 0 && reaction !== BORED ? BoredReactBW : BoredReact}
-            alt="bored-icon"
-          />
-        </Button>
-        <Button
-          onClick={handleReactionClicked}
-          name={CONFUSED}
-          inline
-          className="content-card-react"
-        >
-          <img
-            src={reaction.length > 0 && reaction !== CONFUSED ? ConfusedReactBW : ConfusedReact}
-            alt="confused-icon"
-          />
-        </Button>
-      </div>
+      {!isNotEmployeeRole() ? (
+        <div className="content-card-reacts">
+          <Button
+            onClick={handleReactionClicked}
+            name={UNDERSTOOD}
+            inline
+            className="content-card-react"
+          >
+            <img
+              src={
+                reaction.length > 0 && reaction !== UNDERSTOOD ? UnderstoodReactBW : UnderstoodReact
+              }
+              alt="understood-icon"
+            />
+          </Button>
+          <Button
+            onClick={handleReactionClicked}
+            name={EXCITED}
+            inline
+            className="content-card-react"
+          >
+            <img
+              src={reaction.length > 0 && reaction !== EXCITED ? ExcitedReactBW : ExcitedReact}
+              alt="excited-icon"
+            />
+          </Button>
+          <Button
+            onClick={handleReactionClicked}
+            name={BORED}
+            inline
+            className="content-card-react"
+          >
+            <img
+              src={reaction.length > 0 && reaction !== BORED ? BoredReactBW : BoredReact}
+              alt="bored-icon"
+            />
+          </Button>
+          <Button
+            onClick={handleReactionClicked}
+            name={CONFUSED}
+            inline
+            className="content-card-react"
+          >
+            <img
+              src={reaction.length > 0 && reaction !== CONFUSED ? ConfusedReactBW : ConfusedReact}
+              alt="confused-icon"
+            />
+          </Button>
+        </div>
+      ) : null}
     </Card>
   );
 };
