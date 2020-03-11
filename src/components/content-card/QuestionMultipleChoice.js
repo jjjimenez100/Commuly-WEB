@@ -75,7 +75,7 @@ const QuestionMulitpleChoice = ({
           {hasAnswerError ? 'Select a valid choice.' : ''}
         </Typography>
       </form>
-      {!isEmployee() ? (
+      {isEmployee() ? (
         <Button loading={loading} size="small" onClick={handleSubmit}>
           Submit
         </Button>

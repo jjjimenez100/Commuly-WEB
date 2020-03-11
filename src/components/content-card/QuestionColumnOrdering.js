@@ -145,7 +145,7 @@ class QuestionColumnOrdering extends Component {
             )}
           </div>
         </div>
-        {!isEmployee() ? (
+        {isEmployee() ? (
           <Button loading={this.state.loading} size="small" onClick={this.handleSubmit}>
             Submit
           </Button>

@@ -84,7 +84,7 @@ const QuestionLikert = ({
       <p className="text-danger" style={{ display: 'flex', justifyContent: 'center' }}>
         {hasAnswerError ? 'Select a valid choice.' : ''}
       </p>
-      {!isEmployee() ? (
+      {isEmployee() ? (
         <Button loading={loading} size="small" onClick={handleSubmit}>
           Submit
         </Button>

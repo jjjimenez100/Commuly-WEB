@@ -62,7 +62,7 @@ const QuestionOpenText = ({
       />
       <p className="text-danger">{hasAnswerError ? 'Enter your response.' : ''}</p>
       <br />
-      {!isEmployee() ? (
+      {isEmployee() ? (
         <Button loading={loading} size="small" onClick={handleSubmit}>
           Submit
         </Button>
