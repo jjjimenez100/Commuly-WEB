@@ -21,6 +21,8 @@ class Calendar extends Component {
   }
 
   handleModalOpen = () => {
+    const { setCurrentCreateModalType } = this.props.store.home;
+    setCurrentCreateModalType(SCHEDULED_CONTENT);
     this.setState(prevState => ({ isModalOpen: !prevState.isModalOpen }));
   };
 

@@ -14,26 +14,19 @@ import CardService from 'services/cardService';
 class CreateScheduledContent extends Component {
   constructor(props) {
     super(props);
-
-    let startDate = '';
-    let endDate = '';
-    let startTime = '';
-    let endTime = '';
-    let title = '';
-    let description = '';
-
-    if (this.props.cardData && this.props.cardData.scheduledEventContent) {
-      startDate = this.props.cardData.scheduledEventContent.startDate || '';
-      endDate = this.props.cardData.scheduledEventContent.endDate || '';
-      startTime = this.props.cardData.scheduledEventContent.startTime || '';
-      endTime = this.props.cardData.scheduledEventContent.endTime || '';
-      title = this.props.cardData.scheduledEventContent.title || '';
-      description = this.props.cardData.scheduledEventContent.description || '';
-    }
+    const { scheduledEventContent = {} } = this.props.cardData || {};
+    const {
+      startDate = '',
+      endDate = '',
+      startTime = '',
+      endTime = '',
+      title = '',
+      description = '',
+    } = scheduledEventContent;
 
     this.state = {
-      title,
-      description,
+      title: title || '',
+      description: description || '',
       startDate: startDate
         ? moment(new Date(startDate)).format('YYYY-MM-DD')
         : moment().format('YYYY-MM-DD'),
@@ -63,7 +56,7 @@ class CreateScheduledContent extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     this.setState({ loading: true });
-    const { cardData } = this.props;
+    const { cardData = {} } = this.props;
     const { file } = this.state;
     if (Object.keys(cardData).length === 0 && file === null) {
       this.validator.showMessages();
@@ -125,7 +118,7 @@ class CreateScheduledContent extends Component {
 
   render() {
     const { file, loading } = this.state;
-    const { onClose, cardData } = this.props;
+    const { onClose, cardData = {} } = this.props;
     return (
       <>
         <ModalBody className="create-event">
@@ -234,7 +227,7 @@ class CreateScheduledContent extends Component {
             icon={SendIcon}
             onClick={this.handleSubmit}
           >
-            {cardData && Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>
