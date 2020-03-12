@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { Typography, Button } from 'components';
 import { convertTime } from 'utils/time';
+import { isEmployee } from 'utils/user';
 // import { DONE_STATUS } from 'constants/user';
 
 const ContentTodo = ({
@@ -23,16 +24,18 @@ const ContentTodo = ({
           {moment(startDate).format('LL')} ({convertTime(startTime)}) - ({convertTime(endTime)})
         </Typography>
         {/* TODO: Add checker if done, hide button; else show */}
-        <Button
-          size="small"
-          className="content-todo-button"
-          onClick={() => {
-            markTodo(cardId, true);
-            removeQuestionCard(cardId);
-          }}
-        >
-          Mark as Done
-        </Button>
+        {isEmployee() ? (
+          <Button
+            size="small"
+            className="content-todo-button"
+            onClick={() => {
+              markTodo(cardId, true);
+              removeQuestionCard(cardId);
+            }}
+          >
+            Mark as Done
+          </Button>
+        ) : null}
       </div>
     </div>
   );

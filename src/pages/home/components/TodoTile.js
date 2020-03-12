@@ -4,6 +4,7 @@ import { convertTime } from 'utils/time';
 import { Typography, Checkbox, Button } from 'components';
 import { DONE_STATUS } from 'constants/user';
 import { TODO_CONTENT } from 'constants/card';
+import { isEmployee } from 'utils/user';
 import { EditIcon } from 'assets/icons';
 
 const TodoTile = props => {
@@ -17,6 +18,7 @@ const TodoTile = props => {
       className="home-todo-radio"
       checked={status === DONE_STATUS}
       onChange={({ target: { checked } }) => markTodo(id, checked)}
+      disabled={!isEmployee()}
     >
       <Typography variant="subtitle">{moment(startDate).format('LL')}</Typography>
       <div className="home-todo-radio-title">
