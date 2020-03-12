@@ -66,7 +66,7 @@ class CreateTodo extends Component {
         todoType,
       };
 
-      const { addCard, updateCard, cardData, onClose } = this.props;
+      const { addCard, updateCard, cardData } = this.props;
       try {
         this.setState({ loading: true });
         if (Object.keys(cardData).length === 0) {
@@ -81,9 +81,6 @@ class CreateTodo extends Component {
           updateCard(updatedCard);
           toast.success('Successfully updated content!');
         }
-
-        this.setState({ loading: false });
-        onClose();
       } catch (error) {
         toast.error('Failed to get a proper response from our services. Please try again later');
         // eslint-disable-next-line no-console
@@ -93,6 +90,9 @@ class CreateTodo extends Component {
     } else {
       this.validator.showMessages();
     }
+
+    this.setState({ loading: false });
+    this.props.onClose();
   };
 
   render() {

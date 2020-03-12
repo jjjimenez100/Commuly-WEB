@@ -95,8 +95,6 @@ const Home = types
           return accumulator;
         }, {});
 
-        console.log(eventCards);
-
         self.eventCards = eventCards;
       } catch (error) {
         // eslint-disable-next-line no-console

@@ -55,7 +55,6 @@ class CreateScheduledContent extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    this.setState({ loading: true });
     const { cardData = {} } = this.props;
     const { file } = this.state;
     if (Object.keys(cardData).length === 0 && file === null) {
@@ -87,7 +86,8 @@ class CreateScheduledContent extends Component {
       formData.append('scheduledEventContent', JSON.stringify(scheduledEventContent));
 
       try {
-        const { addCard, updateCard, onClose } = this.props;
+        this.setState({ loading: true });
+        const { addCard, updateCard } = this.props;
 
         if (Object.keys(cardData).length === 0) {
           const { data } = await CardService.createNewContentCard(formData);
@@ -103,9 +103,6 @@ class CreateScheduledContent extends Component {
           await updateCard(updatedCard);
           toast.success('Successfully updated content!');
         }
-
-        this.setState({ loading: false });
-        onClose();
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
@@ -114,6 +111,9 @@ class CreateScheduledContent extends Component {
     } else {
       this.validator.showMessages();
     }
+
+    this.setState({ loading: false });
+    this.props.onClose();
   };
 
   render() {
