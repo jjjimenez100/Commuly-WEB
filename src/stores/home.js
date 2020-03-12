@@ -223,14 +223,9 @@ const Home = types
         const patchMessage = patchType.toLowerCase();
         const body = { cardId, patchType };
         yield UserService.markTodo(userId, body);
-        const updatedTodoCards = self.todoCards.map(todoCard => {
-          const { _id: id } = todoCard;
-          if (id === cardId) {
-            return { ...todoCard, status: patchType };
-          }
-          return { ...todoCard };
-        });
-        self.todoCards = updatedTodoCards;
+        self.todoCards = [...self.todoCards].filter(({ _id }) => _id !== cardId);
+        self.teamCards = [...self.teamCards].filter(({ _id }) => _id !== cardId);
+        self.searchCards();
         toast.success(`Successfully marked todo as ${patchMessage}!`);
       } catch (error) {
         toast.error('Failed to mark todo. Please try again later.');
