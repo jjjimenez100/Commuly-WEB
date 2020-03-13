@@ -274,10 +274,35 @@ const ContentCard = cardData => {
     const renderUnpin = isPinned && isAllowedToUnpin;
     const renderPin = !isPinned && isAllowedToPin;
     const renderDropdown = renderPin || renderUnpin;
+    const pinTypeText = lodash.startCase(pinType.toLowerCase());
+
     if (renderDropdown) {
       return (
         <DropdownContainer className="content-card-dropdown">
           {renderPinDropdownItems(renderPin, renderUnpin)}
+        </DropdownContainer>
+      );
+    }
+
+    if (!isAllowedToUnpin) {
+      return (
+        <DropdownContainer className="content-card-dropdown">
+          <>
+            <Button
+              onClick={() => {}}
+              icon={PinIcon}
+              size="small"
+              className="content-card-pinned-button"
+            >
+              <Typography variant="subtitle">{pinTypeText} Pinned Post</Typography>
+            </Button>
+            <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
+              <DropdownMenuItem
+                text={`Unpin Post as ${pinTypeText}`}
+                onClick={() => unpinCardHandler(cardData, pinType)}
+              />
+            </DropdownMenu>
+          </>
         </DropdownContainer>
       );
     }
