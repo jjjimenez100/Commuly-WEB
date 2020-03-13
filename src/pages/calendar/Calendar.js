@@ -5,6 +5,7 @@ import { Typography, Button, CreateContent } from 'components';
 import { PlusIcon } from 'assets/icons';
 import { SCHEDULED_CONTENT, TODO_CONTENT } from 'constants/card';
 import moment from 'moment';
+import { isEmployee } from '../../utils/user';
 
 const localizer = momentLocalizer(moment);
 
@@ -50,9 +51,11 @@ class Calendar extends Component {
           <Typography variant="h1" className="calendar-title">
             Calendar
           </Typography>
-          <Button icon={PlusIcon} size="small" onClick={this.handleModalOpen}>
-            Add Scheduled Event
-          </Button>
+          {!isEmployee() ? (
+            <Button icon={PlusIcon} size="small" onClick={this.handleModalOpen}>
+              Add Scheduled Event
+            </Button>
+          ) : null}
         </div>
         <BigCalendar
           localizer={localizer}
