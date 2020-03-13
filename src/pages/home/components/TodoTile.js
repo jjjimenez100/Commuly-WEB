@@ -23,13 +23,15 @@ const TodoTile = props => {
       <Typography variant="subtitle">{moment(startDate).format('LL')}</Typography>
       <div className="home-todo-radio-title">
         <Typography>{title}</Typography>
-        <Button
-          inline
-          className="home-todo-radio-edit"
-          onClick={() => handleModalOpen(TODO_CONTENT, { _id: id, todoContent })}
-        >
-          <img src={EditIcon} alt="edit" />
-        </Button>
+        {!isEmployee() ? (
+          <Button
+            inline
+            className="home-todo-radio-edit"
+            onClick={() => handleModalOpen(TODO_CONTENT, { _id: id, todoContent })}
+          >
+            <img src={EditIcon} alt="edit" />
+          </Button>
+        ) : null}
       </div>
       <Typography variant="subtitle">
         {startTime === endTime
