@@ -49,7 +49,10 @@ class Home extends Component {
       modalOpen: false,
       dropdownOpen: false,
       viewResponsesModal: false,
+      isCalendarTileOpen: false,
+      activeCalendarTile: null,
     };
+
     const { searchCards } = this.props.store.home;
     this.search = debounce(() => searchCards(), 300);
   }
@@ -206,21 +209,50 @@ class Home extends Component {
     );
   };
 
+  handleClickCalendarDay = clicked => {
+    const { eventCards } = this.props.store.home;
+    const { activeCalendarTile, isCalendarTileOpen } = this.state;
+    const clickedDate = moment(clicked).format('YYYY-MM-DD');
+
+    if (eventCards[clickedDate]) {
+      if (isCalendarTileOpen) {
+        if (activeCalendarTile.getTime() === clicked.getTime()) {
+          this.setState({ isCalendarTileOpen: false, activeCalendarTile: null });
+        } else {
+          this.setState({ activeCalendarTile: clicked });
+        }
+      } else {
+        this.setState({ isCalendarTileOpen: true, activeCalendarTile: clicked });
+      }
+    }
+  };
+
   // sidebar calendar
   renderCalendar = eventCards => {
     const renderCalendarTile = ({ date }) => {
       const newDate = moment(date).format('YYYY-MM-DD');
       if (eventCards[newDate]) {
         return (
-          <div className="home-calendar-tile">
-            {eventCards[newDate].map(event => {
-              return <EventTile key={event._id} {...event} />;
-            })}
-          </div>
+          <>
+            <div className="home-calendar-mark">
+              <div className="home-calendar-circle" />
+            </div>
+            <div
+              className={`home-calendar-tile ${
+                this.state.isCalendarTileOpen &&
+                this.state.activeCalendarTile.getTime() === date.getTime()
+                  ? 'home-calendar-tile-visible'
+                  : ''
+              }`}
+            >
+              {eventCards[newDate].map(event => {
+                return <EventTile key={event._id} {...event} />;
+              })}
+            </div>
+          </>
         );
       }
-
-      return null;
+      return <div className="home-calendar-mark" />;
     };
 
     return (
@@ -231,6 +263,7 @@ class Home extends Component {
         <Line />
         <Calendar
           calendarType="US"
+          onClickDay={this.handleClickCalendarDay}
           onChange={this.onChange}
           value={this.state.date}
           tileContent={renderCalendarTile}
@@ -296,7 +329,7 @@ class Home extends Component {
               {this.renderScheduledEvents(scheduledCards)}
             </div>
           </div>
-          <div className="home-announcements">
+          <div className="home-announcements sticky">
             <div className="home-announcements-title">
               <Typography variant="h4">Announcements</Typography>
             </div>

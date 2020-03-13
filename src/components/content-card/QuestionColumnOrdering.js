@@ -93,11 +93,11 @@ class QuestionColumnOrdering extends Component {
   };
 
   render() {
-    const { question } = this.props.columnReorderingContent;
+    const { title = '', question } = this.props.columnReorderingContent;
     return (
       <div className="content-generic content-column-order">
         <Typography variant="h4" className="content-generic-title">
-          Title here
+          {title}
         </Typography>
         <Typography variant="body">{question}</Typography>
         <div className="content-column-order-container">
