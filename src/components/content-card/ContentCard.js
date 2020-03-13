@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import lodash from 'lodash';
 import {
   Card,
   Button,
@@ -63,11 +64,10 @@ const ContentCard = cardData => {
     contentCardType,
     questionCardType,
     reactions,
+    pinType,
+    isAllowedToPin,
+    isAllowedToUnpin,
     isPinned,
-    pinType = '',
-    hasPinnedCardAsEmployee,
-    hasPinnedCardAsProgramAdministrator,
-    hasPinnedCardAsSupervisor,
     ...props
   } = cardData;
 
@@ -186,7 +186,9 @@ const ContentCard = cardData => {
       } else if (role === EMPLOYEE_ROLE) {
         await UserService.pinCardToUserStream(userId, cardId);
       }
-      toast.success('Successfully pinned card!');
+      // temp workaround
+      window.location.reload();
+      // toast.success('Successfully pinned card!');
     } catch (error) {
       toast.error('Failed to pin card. Please try again later.');
     }
@@ -206,72 +208,81 @@ const ContentCard = cardData => {
       } else if (role === EMPLOYEE_ROLE) {
         await UserService.unpinCardToUserStream(userId, cardId);
       }
-      toast.success('Successfully unpinned card!');
+      // temp workaround
+      window.location.reload();
+      // toast.success('Successfully unpinned card!');
     } catch (error) {
       toast.error('Failed to pin card. Please try again later.');
     }
   };
 
-  const renderPinOptions = (isPinned, pinType = '') => {
-    const { role } = getUserDetails();
+  const renderPinDropdownItems = (renderPin, renderUnpin) => {
+    const pinTypeText = lodash.startCase(pinType.toLowerCase());
     if (isPinned) {
-      let pinPostText = '';
-      if (pinType === EMPLOYEE_ROLE && role === EMPLOYEE_ROLE && hasPinnedCardAsEmployee === true) {
-        pinPostText = 'Unpin Post';
-      } else if (
-        pinType === SUPERVISOR_ROLE &&
-        role === SUPERVISOR_ROLE &&
-        hasPinnedCardAsSupervisor === true
-      ) {
-        pinPostText = 'Unpin Post as Supervisor';
-      } else if (
-        pinType === PROGRAM_ADMINISTRATOR_ROLE &&
-        role === PROGRAM_ADMINISTRATOR_ROLE &&
-        hasPinnedCardAsProgramAdministrator === true
-      ) {
-        pinPostText = 'Unpin Post as Program Admin';
-      } else if (hasPinnedCardAsEmployee) {
-        pinPostText = 'Unpin Post';
+      if (renderUnpin) {
+        return (
+          <>
+            <Button
+              onClick={() => handleDropdownOpen('pin')}
+              icon={PinIcon}
+              size="small"
+              className="content-card-pinned-button"
+            >
+              <Typography variant="subtitle">{pinTypeText} Pinned Post</Typography>
+            </Button>
+            <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
+              <DropdownMenuItem
+                text={`Unpin Post as ${pinTypeText}`}
+                onClick={() => unpinCardHandler(cardData, pinType)}
+              />
+            </DropdownMenu>
+          </>
+        );
       }
       return (
-        <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
-          <DropdownMenuItem text={pinPostText} onClick={() => unpinCardHandler(cardData, role)} />
-        </DropdownMenu>
+        <Button
+          onClick={() => {}}
+          icon={PinIcon}
+          size="small"
+          className="content-card-pinned-button"
+        >
+          <Typography variant="subtitle">Pinned Post as ${pinTypeText}</Typography>
+        </Button>
       );
     }
 
-    let pinPostText = '';
-    if (role === EMPLOYEE_ROLE && hasPinnedCardAsEmployee === false) {
-      pinPostText = 'Pin Post';
-    } else if (role === SUPERVISOR_ROLE && hasPinnedCardAsSupervisor === false) {
-      pinPostText = 'Pin Post as Supervisor';
-    } else if (
-      role === PROGRAM_ADMINISTRATOR_ROLE &&
-      hasPinnedCardAsProgramAdministrator === false
-    ) {
-      pinPostText = 'Pin Post as Program Admin';
-    } else if (hasPinnedCardAsEmployee === false) {
-      pinPostText = 'Pin Post';
+    if (renderPin) {
+      return (
+        <>
+          <Button onClick={() => handleDropdownOpen('pin')} inline>
+            <img src={PinBlackIcon} alt="pin-icon" />
+          </Button>
+
+          <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
+            <DropdownMenuItem
+              text={`Pin Post as ${pinTypeText}`}
+              onClick={() => pinCardHandler(cardData, pinType)}
+            />
+          </DropdownMenu>
+        </>
+      );
     }
-    return (
-      <DropdownMenu visible={dropdownOpen && activeDropdown === 'pin'}>
-        <DropdownMenuItem text={pinPostText} onClick={() => pinCardHandler(cardData, role)} />
-      </DropdownMenu>
-    );
+    return null;
   };
 
-  const getPinType = () => {
-    if (pinType === EMPLOYEE_ROLE) {
-      return 'Your ';
-    }
-    if (pinType === SUPERVISOR_ROLE) {
-      return 'Supervisor ';
-    }
-    if (pinType === PROGRAM_ADMINISTRATOR_ROLE) {
-      return 'Program Administrator ';
+  const renderPinDropdownOptions = () => {
+    const renderUnpin = isPinned && isAllowedToUnpin;
+    const renderPin = !isPinned && isAllowedToPin;
+    const renderDropdown = renderPin || renderUnpin;
+    if (renderDropdown) {
+      return (
+        <DropdownContainer className="content-card-dropdown">
+          {renderPinDropdownItems(renderPin, renderUnpin)}
+        </DropdownContainer>
+      );
     }
 
-    return '';
+    return null;
   };
 
   const isNotEmployeeRole = () => {
@@ -296,26 +307,9 @@ const ContentCard = cardData => {
   return (
     <Card className={`content-card ${isPinned && 'content-card-pinned'}`}>
       <div className="content-card-title">
-        <Typography variant="h5">New Supervisor Post</Typography>
+        <Typography variant="h5">New Post</Typography>
         <div className="content-card-buttons">
-          <DropdownContainer className="content-card-dropdown">
-            {isPinned ? (
-              <Button
-                onClick={() => handleDropdownOpen('pin')}
-                icon={PinIcon}
-                size="small"
-                className="content-card-pinned-button"
-              >
-                <Typography variant="subtitle">{getPinType()}Pinned Post</Typography>
-              </Button>
-            ) : (
-              <Button onClick={() => handleDropdownOpen('pin')} inline>
-                <img src={PinBlackIcon} alt="pin-icon" />
-              </Button>
-            )}
-            {renderPinOptions(isPinned, pinType)}
-          </DropdownContainer>
-
+          {renderPinDropdownOptions()}
           {isNotEmployeeRole() ? (
             <DropdownContainer className="content-card-dropdown">
               <Button inline onClick={() => handleDropdownOpen('options')}>

@@ -34,7 +34,7 @@ import {
 } from 'assets/icons';
 
 import { getUserDetails } from 'utils/jwt';
-import { EMPLOYEE_ROLE } from 'constants/user';
+import { EMPLOYEE_ROLE, PROGRAM_ADMINISTRATOR_ROLE, SUPERVISOR_ROLE } from 'constants/user';
 import { boardData, CreateContentButtons } from './data';
 
 import EventTile from './components/EventTile';
@@ -96,18 +96,47 @@ class Home extends Component {
 
   renderAnnouncements = (
     data,
-    {
-      removeQuestionCard,
-      pinCard,
-      unpinCard,
-      hasPinnedCardAsEmployee,
-      hasPinnedCardAsProgramAdministrator,
-      hasPinnedCardAsSupervisor,
-      markTodo,
-    }
+    { removeQuestionCard, pinCard, unpinCard, pinnedCards, markTodo }
   ) => {
+    const { role } = getUserDetails();
+    const hasEmployeePinnedCard = Object.keys(pinnedCards[EMPLOYEE_ROLE] || {}).length !== 0;
+    const hasProgramAdministratorPinnedCard =
+      Object.keys(pinnedCards[PROGRAM_ADMINISTRATOR_ROLE] || {}).length !== 0;
+    const hasSupervisorPinnedCard = Object.keys(pinnedCards[SUPERVISOR_ROLE] || {}).length !== 0;
+
+    const isAllowedToUnpin =
+      (role === EMPLOYEE_ROLE && hasEmployeePinnedCard) ||
+      (role === PROGRAM_ADMINISTRATOR_ROLE && hasProgramAdministratorPinnedCard) ||
+      (role === SUPERVISOR_ROLE && hasSupervisorPinnedCard);
+    const isAllowedToPin =
+      (role === EMPLOYEE_ROLE && !hasEmployeePinnedCard) ||
+      (role === PROGRAM_ADMINISTRATOR_ROLE && !hasProgramAdministratorPinnedCard) ||
+      (role === SUPERVISOR_ROLE && !hasSupervisorPinnedCard);
+
     if (data.length > 0) {
-      return data.map(announcement => {
+      const pinnedCardsView = Object.keys(pinnedCards)
+        .filter(key => Object.keys(pinnedCards[key]).length !== 0)
+        .map(key => {
+          const announcement = pinnedCards[key];
+          return (
+            <ContentCard
+              key={announcement._id}
+              handleModalOpen={this.handleModalOpen}
+              handleViewResponses={this.openViewResponsesModal}
+              removeQuestionCard={removeQuestionCard}
+              pinCard={pinCard}
+              unpinCard={unpinCard}
+              markTodo={markTodo}
+              isPinned
+              isAllowedToPin={isAllowedToPin}
+              isAllowedToUnpin={isAllowedToUnpin}
+              pinType={role}
+              {...announcement}
+            />
+          );
+        });
+
+      const cardsView = data.map(announcement => {
         return (
           <ContentCard
             key={announcement._id}
@@ -116,14 +145,16 @@ class Home extends Component {
             removeQuestionCard={removeQuestionCard}
             pinCard={pinCard}
             unpinCard={unpinCard}
-            hasPinnedCardAsEmployee={hasPinnedCardAsEmployee}
-            hasPinnedCardAsProgramAdministrator={hasPinnedCardAsProgramAdministrator}
-            hasPinnedCardAsSupervisor={hasPinnedCardAsSupervisor}
             markTodo={markTodo}
+            isAllowedToPin={isAllowedToPin}
+            isAllowedToUnpin={isAllowedToUnpin}
+            pinType={role}
             {...announcement}
           />
         );
       });
+
+      return [...pinnedCardsView, ...cardsView];
     }
     return <Card className="home-announcements-empty">No announcements yet!</Card>;
   };

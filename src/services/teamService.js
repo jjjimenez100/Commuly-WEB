@@ -9,7 +9,7 @@ const TeamService = {
       pinType,
       patchType: PIN_CARD_TEAM,
     };
-    return httpService.patch(`user/${teamId}`, data, additionalConfig);
+    return httpService.patch(`team/${teamId}`, data, additionalConfig);
   },
   unpinCardToTeamStream(teamId, cardId, additionalConfig = {}) {
     const data = {
@@ -17,7 +17,7 @@ const TeamService = {
       cardId,
       patchType: UNPIN_CARD_TEAM,
     };
-    return httpService.patch(`user/${teamId}`, data, additionalConfig);
+    return httpService.patch(`team/${teamId}`, data, additionalConfig);
   },
 };
 

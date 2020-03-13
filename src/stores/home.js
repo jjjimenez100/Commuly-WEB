@@ -31,20 +31,19 @@ const Home = types
     searchQuery: types.frozen(),
     eventCards: types.frozen(),
 
-    hasPinnedCardAsEmployee: types.frozen(),
-    hasPinnedCardAsProgramAdministrator: types.frozen(),
-    hasPinnedCardAsSupervisor: types.frozen(),
+    pinnedCards: types.frozen(),
+    filteredPinnedCards: types.frozen(),
   })
   .actions(self => ({
     getCards: flow(function*() {
       try {
         const { userId } = getUserDetails();
         const { data } = yield UserService.getCardsByUser(userId);
-        const { scheduledCards, teamCards, todoCards, pinnedCards, user } = data;
+        const { scheduledCards, teamCards, todoCards, user } = data;
         const {
-          hasPinnedCardAsEmployee,
-          hasPinnedCardAsProgramAdministrator,
-          hasPinnedCardAsSupervisor,
+          employeePinnedCard = {},
+          programAdministratorPinnedCard = {},
+          supervisorPinnedCard = {},
         } = user;
 
         self.scheduledCards = scheduledCards;
@@ -56,14 +55,15 @@ const Home = types
         self.todoCards = todoCards;
         self.filteredTodoCards = todoCards;
 
-        self.pinnedCards = pinnedCards;
-        self.filteredPinnedCards = pinnedCards;
-
         self.user = user;
 
-        self.hasPinnedCardAsEmployee = hasPinnedCardAsEmployee;
-        self.hasPinnedCardAsProgramAdministrator = hasPinnedCardAsProgramAdministrator;
-        self.hasPinnedCardAsSupervisor = hasPinnedCardAsSupervisor;
+        const pinnedCards = {
+          [PROGRAM_ADMINISTRATOR_ROLE]: programAdministratorPinnedCard,
+          [SUPERVISOR_ROLE]: supervisorPinnedCard,
+          [EMPLOYEE_ROLE]: employeePinnedCard,
+        };
+        self.pinnedCards = pinnedCards;
+        self.filteredPinnedCards = pinnedCards;
 
         const eventCards = [...todoCards, ...scheduledCards].reduce((accumulator, currentValue) => {
           let startDate = '';
@@ -102,34 +102,23 @@ const Home = types
         // handle error here
       }
     }),
-    changePinStatus(pinType, booleanValue) {
-      if (pinType === EMPLOYEE_ROLE) {
-        self.hasPinnedCardAsEmployee = booleanValue;
-      } else if (pinType === SUPERVISOR_ROLE) {
-        self.hasPinnedCardAsSupervisor = booleanValue;
-      } else if (pinType === PROGRAM_ADMINISTRATOR_ROLE) {
-        self.hasPinnedCardAsProgramAdministrator = booleanValue;
-      }
+    setPinnedCard(pinnedCardData, pinType) {
+      const newPinnedCards = { ...self.pinnedCards };
+      newPinnedCards[pinType] = pinnedCardData;
+
+      self.pinnedCards = newPinnedCards;
     },
     pinCard(pinnedCardData, pinType) {
-      self.changePinStatus(pinType, true);
-      const { _id: cardId } = pinnedCardData;
-      const newPinnedCardData = { ...pinnedCardData, isPinned: true, pinType };
-      const { teamCards } = self;
-      self.teamCards = self.insertCardAtStartAndRemoveExistingCard(
-        teamCards,
-        cardId,
-        newPinnedCardData
-      );
+      self.setPinnedCard(pinnedCardData, pinType);
+      // remove on team cards
+      const { _id: id } = pinnedCardData;
+      self.teamCards = self.teamCards.filter(({ _id }) => _id !== id);
       self.searchCards();
     },
     unpinCard(pinnedCardData, pinType) {
-      self.changePinStatus(pinType, false);
-      const { _id: cardId } = pinnedCardData;
-      const newPinnedCardData = { ...pinnedCardData, isPinned: false, pinType: '' };
-
-      const { teamCards } = self;
-      self.teamCards = self.removeCardAndInsertAtEnd(teamCards, cardId, newPinnedCardData);
+      self.setPinnedCard({}, pinType);
+      // insert back to team cards
+      self.teamCards = [...self.teamCards, pinnedCardData];
       self.searchCards();
     },
     addCard(cardData) {
@@ -264,9 +253,9 @@ export const store = Home.create({
   currentCardData: {},
   searchQuery: '',
   eventCards: {},
-  hasPinnedCardAsEmployee: false,
-  hasPinnedCardAsProgramAdministrator: false,
-  hasPinnedCardAsSupervisor: false,
+
+  pinnedCards: {},
+  filteredPinnedCards: [],
 });
 
 export default Home;
