@@ -41,8 +41,10 @@
   }
 
   &-reacts {
-    display: flex;
+    display: inline-flex;
     padding: 0 $spacing-small $spacing-small $spacing-small;
+    margin-top: $spacing-small;
+    width: 100%;
   }
 
   &-react {
@@ -99,7 +101,7 @@
 
   .content-generic {
     padding: $spacing-base $spacing-large $spacing-base $spacing-large;
-    margin: $spacing-small 0;
+    margin-top: $spacing-small;
     box-shadow: inset 0px 8px 8px -10px rgba($neutral-m-color, 0.3), inset 0px -8px 8px -10px rgba($neutral-m-color, 0.3);
 
     &-title {

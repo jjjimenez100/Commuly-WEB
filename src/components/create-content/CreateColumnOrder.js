@@ -6,14 +6,22 @@ import { SendIcon } from 'assets/icons';
 import { getUserDetails } from 'utils/jwt';
 import { COLUMN_ORDERING_QUESTION, QUESTION_CARD } from 'constants/card';
 import CardService from 'services/cardService';
+import { toast } from 'react-toastify';
 
 class CreateColumnOrder extends Component {
   constructor(props) {
     super(props);
+    const { columnReorderingContent = {} } = this.props.cardData;
+    const {
+      title = '',
+      question = '',
+      choices = ['Option 1', 'Option 2', 'Option 3'],
+    } = columnReorderingContent;
+
     this.state = {
-      title: '',
-      question: '',
-      options: ['Option 1', 'Option 2', 'Option 3'],
+      title,
+      question,
+      options: [...choices],
       optionDragIndex: -1,
       loading: false,
     };
@@ -79,13 +87,14 @@ class CreateColumnOrder extends Component {
     e.preventDefault();
     if (this.validator.allValid()) {
       const { team, userId: owner } = getUserDetails();
-      const { question, options: choices } = this.state;
+      const { title, question, options: choices } = this.state;
       const body = {
         owner,
         team,
         cardType: QUESTION_CARD,
         questionCardType: COLUMN_ORDERING_QUESTION,
         columnReorderingContent: {
+          title,
           question,
           choices,
         },
@@ -93,11 +102,22 @@ class CreateColumnOrder extends Component {
 
       try {
         this.setState({ loading: true });
-        const { data } = await CardService.createNewContentCard(body);
 
-        await this.props.addCard(data.savedCard);
-        this.setState({ loading: false });
-        this.props.onClose();
+        const { addCard, updateCard, cardData } = this.props;
+        if (Object.keys(cardData).length === 0) {
+          const {
+            data: { savedCard },
+          } = await CardService.createNewContentCard(body);
+          addCard(savedCard);
+          toast.success('Successfully added new question!');
+        } else {
+          const { _id: cardId } = cardData;
+          const {
+            data: { updatedCard },
+          } = await CardService.updateContentCard(cardId, body);
+          updateCard(updatedCard);
+          toast.success('Successfully updated question!');
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.log(error);
@@ -106,10 +126,13 @@ class CreateColumnOrder extends Component {
     } else {
       this.validator.showMessages();
     }
+
+    this.setState({ loading: false });
+    this.props.onClose();
   };
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, cardData = {} } = this.props;
     const { optionDragIndex } = this.state;
     this.validator.purgeFields();
     return (
@@ -183,7 +206,7 @@ class CreateColumnOrder extends Component {
             icon={SendIcon}
             onClick={this.handleSubmit}
           >
-            Post
+            {Object.keys(cardData).length === 0 ? 'Post' : 'Update'}
           </Button>
         </ModalFooter>
       </>

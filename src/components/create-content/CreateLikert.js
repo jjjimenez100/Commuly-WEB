@@ -76,9 +76,6 @@ class CreateLikert extends Component {
           updateCard(updatedCard);
           toast.success('Successfully updated question!');
         }
-
-        this.setState({ loading: false });
-        this.props.onClose();
       } catch (error) {
         toast.error('Failed to get a proper response from our services. Please try again later');
         // eslint-disable-next-line no-console
@@ -88,6 +85,9 @@ class CreateLikert extends Component {
     } else {
       this.validator.showMessages();
     }
+
+    this.setState({ loading: false });
+    this.props.onClose();
   };
 
   render() {
